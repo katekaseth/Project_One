@@ -15,6 +15,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import styled from "styled-components";
 
 const useStyles = makeStyles({
   root: {}
@@ -71,6 +72,22 @@ function CategoryCards() {
   );
 }
 
+const StyledCard = styled(Card)`
+  max-height: 250px;
+  width: 200px;
+`;
+
+const StyledH2 = styled.h2`
+  font-family: Roboto, sans-serif;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  font-weight: bold;
+`;
+
+const StyledImage = styled(CardMedia)`
+  object-fit: scale-down;
+`;
+
 function SingleCategCard(props) {
   const classes = useStyles();
   const cardStyle = {
@@ -84,29 +101,24 @@ function SingleCategCard(props) {
   const h2Style = {
     fontFamily: "Roboto, sans-serif",
     textTransform: "uppercase",
-    fontSize: "24px",
+    fontSize: "1.2rem",
     fontWeight: "bold"
   };
 
   return (
     <Grid item xs={12} sm={4}>
-      <Card className={classes.root}>
-        <CardActionArea>
-          <CardContent>
-            <CardMedia
-              style={cardStyle}
-              component="img"
-              alt={props.title}
-              image={props.image}
-              title={props.title}
-            />
-            <h2 style={h2Style}>{props.title}</h2>
-            {/* <Typography gutterBottom variant="h5" component="h2">
+      <StyledCard className={classes.root}>
+        <StyledImage
+          component="img"
+          alt={props.title}
+          image={props.image}
+          title={props.title}
+        />
+        <StyledH2>{props.title}</StyledH2>
+        {/* <Typography gutterBottom variant="h5" component="h2">
               {props.title}
             </Typography> */}
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      </StyledCard>
     </Grid>
   );
 }
