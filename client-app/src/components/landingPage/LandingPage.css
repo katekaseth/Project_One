@@ -1,0 +1,25 @@
+.title {
+  font-family: "Encode Sans", sans-serif;
+  font-weight: bold;
+  font-size: 5rem;
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.subtitle {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.title2 {
+  font-family: "Encode Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.circle-image {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
