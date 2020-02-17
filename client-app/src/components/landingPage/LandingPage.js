@@ -15,8 +15,6 @@ const useStyles = makeStyles({
 });
 
 export default function LandingPage() {
-  const classes = useStyles();
-
   return (
     <div>
       <Grid
@@ -66,7 +64,17 @@ export default function LandingPage() {
           </Card>
         </Grid>
       </Grid>
+      <PersonaCards></PersonaCards>
+      <CapstoneLandingInfo></CapstoneLandingInfo>
+    </div>
+  );
+}
 
+function PersonaCards() {
+  const classes = useStyles();
+
+  return (
+    <div>
       <Grid container alignItems="center" justify="center">
         <Grid item>
           <h2 className="title2">We're making your job easier.</h2>
@@ -78,7 +86,8 @@ export default function LandingPage() {
         direction="row"
         alignItems="center"
         justify="center"
-        spacing="5">
+        spacing="5"
+        style={{ minWidth: "100vw" }}>
         <Grid item xs={3}>
           <Card>
             <CardContent>
@@ -132,8 +141,6 @@ export default function LandingPage() {
           </Card>
         </Grid>
       </Grid>
-
-      <CapstoneLandingInfo></CapstoneLandingInfo>
     </div>
   );
 }
