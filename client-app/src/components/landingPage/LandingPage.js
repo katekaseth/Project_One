@@ -9,8 +9,8 @@ import { CapstoneLandingInfo } from "./CapstoneLandingInfo";
 const useStyles = makeStyles({
   img: {
     borderRadius: "50%",
-    width: "50%",
-    height: "50%"
+    width: "70%",
+    height: "70%"
   }
 });
 
@@ -126,7 +126,7 @@ function PersonaCards() {
         alignItems="center"
         justify="center"
         spacing="5"
-        style={{ minWidth: "100vw" }}>
+        className="centerPadding">
         {personaData.map(elem => {
           return (
             <Grid item md={3}>
@@ -140,7 +140,7 @@ function PersonaCards() {
           );
         })}
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} className="centerPadding">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit.
           Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam
