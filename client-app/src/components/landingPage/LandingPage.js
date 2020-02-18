@@ -17,68 +17,107 @@ const useStyles = makeStyles({
 export default function LandingPage() {
   return (
     <div>
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: "100vh" }}>
-        <Grid item xs={4}>
-          <h1 className="title">UW Analytics</h1>
-        </Grid>
-
-        <Grid item xs={6}>
-          <p className="subtitle">
-            We are creating a consolidated data platform that enables UW
-            academic and administrative units to efficiently and easily navigate
-            the University’s data so they can achieve more with analytics.
-          </p>
-        </Grid>
-      </Grid>
-
-      <Grid container direction="row">
-        <Grid item xs={4}>
-          <Card>
-            <CardContent>
-              <img src={hr_icon}></img>
-              <p>helloood askdlfjale lsdjfoieuwpar aslkdfjaei </p>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Card>
-            <CardContent>
-              <img src={hr_icon}></img>
-              <p>helloood askdlfjale lsdjfoieuwpar aslkdfjaei </p>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Card>
-            <CardContent>
-              <img src={hr_icon}></img>
-              <p>helloood askdlfjale lsdjfoieuwpar aslkdfjaei </p>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <Title></Title>
+      <DescriptionCards></DescriptionCards>
       <PersonaCards></PersonaCards>
       <CapstoneLandingInfo></CapstoneLandingInfo>
     </div>
   );
 }
 
+function Title() {
+  return (
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justify="center"
+      style={{ minHeight: "100vh" }}>
+      <Grid item>
+        <h1 className="title">UW Analytics</h1>
+      </Grid>
+
+      <Grid item xs={6}>
+        <p className="subtitle">
+          We are creating a consolidated data platform that enables UW academic
+          and administrative units to efficiently and easily navigate the
+          University’s data so they can achieve more with analytics.
+        </p>
+      </Grid>
+    </Grid>
+  );
+}
+
+function DescriptionCards() {
+  const data = [
+    {
+      imgSrc: hr_icon,
+      title: "Efficient Design",
+      desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente."
+    },
+    {
+      imgSrc: hr_icon,
+      title: "One-Stop Shop",
+      desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente."
+    },
+    {
+      imgSrc: hr_icon,
+      title: "Informed Decisions",
+      desc:
+        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente."
+    }
+  ];
+  return (
+    <Grid container direction="row">
+      {data.map(elem => {
+        return (
+          <Grid item xs={4}>
+            <Card className="no-round-corner">
+              <CardContent>
+                <img src={elem.imgSrc}></img>
+                <h3>{elem.title}</h3>
+                <p>{elem.desc}</p>
+              </CardContent>
+            </Card>
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
+}
+
 function PersonaCards() {
   const classes = useStyles();
+  const personaData = [
+    {
+      imgSrc: kateka,
+      name: "Dean"
+    },
+    {
+      imgSrc: kateka,
+      name: "Advisor"
+    },
+    {
+      imgSrc: kateka,
+      name: "Researcher"
+    },
+    {
+      imgSrc: kateka,
+      name: "Analyst"
+    }
+  ];
 
   return (
-    <div>
-      <Grid container alignItems="center" justify="center">
-        <Grid item>
-          <h2 className="title2">We're making your job easier.</h2>
-        </Grid>
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justify="center"
+      className="gray-background">
+      <Grid item>
+        <h2 className="title2">We're making your job easier.</h2>
       </Grid>
 
       <Grid
@@ -88,59 +127,26 @@ function PersonaCards() {
         justify="center"
         spacing="5"
         style={{ minWidth: "100vw" }}>
-        <Grid item xs={3}>
-          <Card>
-            <CardContent>
-              <img src={kateka} className={classes.img}></img>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem
-                repellendus quasi fuga nesciunt dolorum nulla magnam veniam
-                sapiente, fugiat! Commodi sequi non animi ea dolor molestiae
-                iste.
-              </p>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card>
-            <CardContent>
-              <img src={kateka} className={classes.img}></img>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem
-                repellendus quasi fuga nesciunt dolorum nulla magnam veniam
-                sapiente, fugiat! Commodi sequi non animi ea dolor molestiae
-                iste.
-              </p>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card>
-            <CardContent>
-              <img src={kateka} className={classes.img}></img>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem
-                repellendus quasi fuga nesciunt dolorum nulla magnam veniam
-                sapiente, fugiat! Commodi sequi non animi ea dolor molestiae
-                iste.
-              </p>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card>
-            <CardContent>
-              <img src={kateka} className={classes.img}></img>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem
-                repellendus quasi fuga nesciunt dolorum nulla magnam veniam
-                sapiente, fugiat! Commodi sequi non animi ea dolor molestiae
-                iste.
-              </p>
-            </CardContent>
-          </Card>
-        </Grid>
+        {personaData.map(elem => {
+          return (
+            <Grid item md={3}>
+              <Card className="no-box-shadow gray-background">
+                <CardContent>
+                  <img src={elem.imgSrc} className={classes.img}></img>
+                  <h3>{elem.name}</h3>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
-    </div>
+      <Grid item xs={12}>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam
+          sapiente.
+        </p>
+      </Grid>
+    </Grid>
   );
 }
