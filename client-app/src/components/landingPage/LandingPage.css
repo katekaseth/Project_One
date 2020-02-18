@@ -54,3 +54,16 @@ h3 {
   padding-left: 25%;
   padding-right: 25%;
 }
+
+.uw-background {
+  background: linear-gradient(
+      180deg,
+      rgba(75, 46, 131, 0.55) 0%,
+      rgba(75, 46, 131, 0.46) 22.92%,
+      rgba(255, 255, 255, 0) 59.9%,
+      rgba(80, 51, 134, 0.12) 99.99%
+    ),
+    url("../../images/bg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}

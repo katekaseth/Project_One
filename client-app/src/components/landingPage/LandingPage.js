@@ -32,7 +32,8 @@ function Title() {
       direction="column"
       alignItems="center"
       justify="center"
-      style={{ minHeight: "100vh" }}>
+      style={{ minHeight: "100vh" }}
+      className="uw-background">
       <Grid item>
         <h1 className="title">UW Analytics</h1>
       </Grid>
