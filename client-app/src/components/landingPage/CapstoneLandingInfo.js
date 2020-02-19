@@ -33,11 +33,11 @@ export function CapstoneLandingInfo() {
 function GoalStatement() {
   return (
     <div className="goal-statement">
-      <h2 className="title2">
+      <p className="title2">
         We are creating a consolidated data platform that enables UW academic
         and administrative units to efficiently and easily navigate the
         University’s data so they can achieve more with analytics.
-      </h2>
+      </p>
     </div>
   );
 }
@@ -81,7 +81,7 @@ function TeamMember({ name, position, contact, image }) {
     <Card className="encode-sans team-member-card">
       <CardMedia component="img" image={image} />
       <CardContent>
-        <h3>{name}</h3>
+        <p className="name">{name}</p>
         <p>{position}</p>
         <p>{contact}</p>
       </CardContent>
@@ -93,10 +93,10 @@ function Section1() {
   return (
     <Grid container alignItems="center" direction="row">
       <Grid xs item className="encode-sans">
-        <h3>Filtered Search Report</h3>
+        <h3>Find what you need faster.</h3>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          We’ve completely redone tagging and filtering so you can quickly find
+          what you need.
         </p>
       </Grid>
       <Grid xs item>
@@ -113,10 +113,10 @@ function Section2() {
         <img className="screenshot-img" src={reportView} />
       </Grid>
       <Grid xs item className="encode-sans">
-        <h3>Clear Report Metadata</h3>
+        <h3>Learn more about your data.</h3>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          We provide consistent metadata for all reports, vizulations, and
+          cubes. It is easy to find and use for all users.
         </p>
       </Grid>
     </Grid>

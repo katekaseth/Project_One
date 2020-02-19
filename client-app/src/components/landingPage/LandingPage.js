@@ -1,8 +1,11 @@
 import React from "react";
-import { Grid, Card, CardContent, makeStyles } from "@material-ui/core";
+import { Grid, Card, CardContent, Fade, makeStyles } from "@material-ui/core";
 import "./LandingPage.css";
 import hr_icon from "../../icons/hr.png";
 import kateka from "../../images/kateka.png";
+import shop from "../../icons/online-shop.png";
+import qa from "../../icons/q&a.png";
+import graph from "../../icons/graph.png";
 
 import { CapstoneLandingInfo } from "./CapstoneLandingInfo";
 
@@ -52,34 +55,34 @@ function Title() {
 function DescriptionCards() {
   const data = [
     {
-      imgSrc: hr_icon,
+      imgSrc: graph,
       title: "Efficient Design",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente."
+        "A streamline design flows allows you to find what you need faster and explore useful data previously buried in clunky UI."
     },
     {
-      imgSrc: hr_icon,
+      imgSrc: shop,
       title: "One-Stop Shop",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente."
+        "With all University data aggregated in one place, time will no longer be wasted on looking for the right portal."
     },
     {
-      imgSrc: hr_icon,
+      imgSrc: qa,
       title: "Informed Decisions",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente."
+        "Use our portal to answer questions about the University and make informed decisions supported by data."
     }
   ];
   return (
     <Grid container direction="row">
       {data.map(elem => {
         return (
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Card className="no-round-corner">
-              <CardContent>
+              <CardContent style={{ marginTop: "25px" }}>
                 <img src={elem.imgSrc}></img>
                 <h3>{elem.title}</h3>
-                <p>{elem.desc}</p>
+                <p className="centerPadding">{elem.desc}</p>
               </CardContent>
             </Card>
           </Grid>
@@ -118,7 +121,7 @@ function PersonaCards() {
       justify="center"
       className="gray-background">
       <Grid item>
-        <h2 className="title2">We're making your job easier.</h2>
+        <h2>We're making your job easier.</h2>
       </Grid>
 
       <Grid
@@ -141,11 +144,15 @@ function PersonaCards() {
           );
         })}
       </Grid>
-      <Grid item xs={12} className="centerPadding">
+      <Grid
+        item
+        xs={12}
+        className="centerPadding"
+        style={{ marginBottom: "30px" }}>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Rerepellendus quasi fuga nesciunt dolorum nulla magnam veniam
-          sapiente.
+          These are just a few job titles within University of Washington that
+          need the data provided by our portal. A better portal means more time
+          analyzing data and less time looking for it.
         </p>
       </Grid>
     </Grid>
