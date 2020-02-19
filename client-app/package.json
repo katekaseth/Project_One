@@ -13,7 +13,10 @@
     "react-icons": "^3.9.0",
     "react-scripts": "3.3.1"
   },
+  "homepage": "https://katekaseth.github.io/Project_One/",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

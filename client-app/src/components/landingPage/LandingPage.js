@@ -1,19 +1,23 @@
 import React from "react";
 import { Grid, Card, CardContent, Fade, makeStyles } from "@material-ui/core";
 import "./LandingPage.css";
-import hr_icon from "../../icons/hr.png";
 import kateka from "../../images/kateka.png";
 import shop from "../../icons/online-shop.png";
 import qa from "../../icons/q&a.png";
 import graph from "../../icons/graph.png";
+
+import p1 from "../../images/p1.png";
+import p2 from "../../images/p2.png";
+import p3 from "../../images/p3.png";
+import p4 from "../../images/p4.png";
 
 import { CapstoneLandingInfo } from "./CapstoneLandingInfo";
 
 const useStyles = makeStyles({
   img: {
     borderRadius: "50%",
-    width: "70%",
-    height: "70%"
+    width: "90%",
+    height: "90%"
   }
 });
 
@@ -96,19 +100,19 @@ function PersonaCards() {
   const classes = useStyles();
   const personaData = [
     {
-      imgSrc: kateka,
+      imgSrc: p1,
       name: "Dean"
     },
     {
-      imgSrc: kateka,
+      imgSrc: p2,
       name: "Advisor"
     },
     {
-      imgSrc: kateka,
+      imgSrc: p3,
       name: "Researcher"
     },
     {
-      imgSrc: kateka,
+      imgSrc: p4,
       name: "Analyst"
     }
   ];
