@@ -1,10 +1,10 @@
 .uw-background {
   background: linear-gradient(
       180deg,
-      rgba(75, 46, 131, 0.55) 0%,
-      rgba(75, 46, 131, 0.46) 22.92%,
-      rgba(255, 255, 255, 0) 59.9%,
-      rgba(80, 51, 134, 0.12) 99.99%
+      rgba(75, 46, 131, 0.6) 15%,
+      rgba(75, 46, 131, 0.56) 24%,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(92, 76, 122, 0.5) 100%
     ),
     url("../../images/bg.png");
   background-size: cover;
@@ -21,7 +21,7 @@
 
 .subtitle {
   font-family: "Roboto", sans-serif;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   color: #ffffff;
 }
 
@@ -51,8 +51,8 @@ h3 {
 
 .circle-image {
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 90%;
+  height: 90%;
 }
 
 .no-box-shadow {

@@ -10,82 +10,79 @@ import reportView from "../../images/reportView.png";
 
 export function CapstoneLandingInfo() {
   return (
-    <Grid
-      alignItems="center"
-      jusify="center"
-      direction="column"
-      spacing={10}
-      container>
-      {/* <Grid item xs={8}>
-        <GoalStatement />
-      </Grid> */}
-      <Grid item style={{ marginTop: "50px" }}>
-        <Section1 />
+    <div>
+      <Grid
+        alignItems="center"
+        jusify="center"
+        direction="column"
+        spacing={10}
+        container>
+        <Grid item style={{ marginTop: "50px" }}>
+          <Section1 />
+        </Grid>
+        <Grid item>
+          <Section2 />
+        </Grid>
       </Grid>
-      <Grid item>
-        <Section2 />
-      </Grid>
-      <TeamMembers />
-    </Grid>
-  );
-}
 
-function GoalStatement() {
-  return (
-    <div className="goal-statement">
-      <p className="title2">
-        We are creating a consolidated data platform that enables UW academic
-        and administrative units to efficiently and easily navigate the
-        University’s data so they can achieve more with analytics.
-      </p>
+      <div
+        className="gray-background"
+        style={{ paddingTop: "25px", marginTop: "25px" }}>
+        <h2 className="encode-sans">Team Members</h2>
+        <TeamMembers />
+      </div>
     </div>
   );
 }
 
 function TeamMembers() {
   return (
-    <Grid>
-      <h2 className="encode-sans">Team Members</h2>
-      <Grid container spacing={2}>
-        <TeamMember
-          name="Akoly Vongdala"
-          position="Project Manager, Designer"
-          contact="akolyv@uw.edu"
-          image={akoly}
-        />
-        <TeamMember
-          name="Amelia Shull"
-          position="Designer, Developer"
-          contact="ashull@uw.edu"
-          image={amelia}
-        />
-        <TeamMember
-          name="Katie Clark"
-          position="Developer, Data Science"
-          contact="ktc29@uw.edu"
-          image={katie}
-        />
-        <TeamMember
-          name="Kateka Seth"
-          position="Developer, Data Science"
-          contact="kateks@uw.edu"
-          image={kateka}
-        />
-      </Grid>
+    <Grid
+      jusify="center"
+      direction="row"
+      className="centerPadding"
+      style={{ textAlign: "left" }}
+      container>
+      <TeamMember
+        name="Akoly Vongdala"
+        position="Manager, Designer"
+        contact="akolyv@uw.edu"
+        image={akoly}
+      />
+      <TeamMember
+        name="Amelia Shull"
+        position="Designer, Developer"
+        contact="ashull@uw.edu"
+        image={amelia}
+      />
+      <TeamMember
+        name="Katie Clark"
+        position="Developer"
+        contact="ktc29@uw.edu"
+        image={katie}
+      />
+      <TeamMember
+        name="Kateka Seth"
+        position="Developer"
+        contact="kateks@uw.edu"
+        image={kateka}
+      />
     </Grid>
   );
 }
 
 function TeamMember({ name, position, contact, image }) {
   return (
-    <Card className="encode-sans team-member-card">
-      <CardMedia component="img" image={image} />
-      <CardContent>
-        <p className="name">{name}</p>
-        <p>{position}</p>
-        <p>{contact}</p>
-      </CardContent>
-    </Card>
+    <Grid xs={12} md={3} item spacing={3}>
+      <Card className="encode-sans no-box-shadow team-member-card no-round-corner">
+        <CardMedia component="img" image={image}></CardMedia>
+        <CardContent>
+          <p className="name">{name}</p>
+          <p>{position}</p>
+          <p>{contact}</p>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 }
 
