@@ -2,11 +2,13 @@ import React from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import { Grid, InputBase } from '@material-ui/core';
 
-export function SearchBar() {
+import { PAGES } from '../stringConstants';
+
+export function SearchBar({setPage}) {
 
     const handleKeyPress = (event) => {
         if(event.key === 'Enter'){
-            alert('You searched for something!')
+            setPage(PAGES.search);
         }
     }
 
@@ -23,7 +25,6 @@ export function SearchBar() {
             <Grid item xs>
                 <InputBase
                     xs
-                    multiline
                     placeholder="Hit enter to search..."
                     className="search-input"
                     label="search"

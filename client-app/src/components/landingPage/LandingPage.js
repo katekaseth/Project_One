@@ -3,25 +3,24 @@ import { Grid } from '@material-ui/core';
 
 import { SubjectAreaCards } from './SubjectAreaCards';
 import { SearchBar } from '../SearchBar';
-import { CapstoneLandingInfo } from './CapstoneLandingInfo';
 
-export default function LandingPage() {
+export default (props) => {
     return (
-        <Grid 
+        <Grid
+            className='landing-page'
             container 
             justify='center'
             alignItems='center'
-            id='landing-page'
-            spacing={10}
             direction='column'
+            spacing={10}
         >
             <Grid item className='title-header'>
-                <h1>Business Intelligence Portal</h1>
+                <h1>UW Analytics</h1>
             </Grid>
             <Grid 
                 item
                 className='search-bar-container'>
-                <SearchBar/>
+                <SearchBar {...props}/>
             </Grid>
             <Grid 
                 item
@@ -30,8 +29,19 @@ export default function LandingPage() {
                 className='subject-card-container'>
                 <SubjectAreaCards/>
             </Grid>
-            <Grid xs={8} item className='capstone-info'>
-                <CapstoneLandingInfo/>
+            <Grid 
+                item
+                container 
+                justify='center'
+                className='subject-card-container'>
+                <SubjectAreaCards/>
+            </Grid>
+            <Grid 
+                item
+                container 
+                justify='center'
+                className='subject-card-container'>
+                <SubjectAreaCards/>
             </Grid>
         </Grid>
     )
