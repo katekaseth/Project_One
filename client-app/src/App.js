@@ -9,6 +9,7 @@ import { PAGES } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
+import ResultPage from './components/resultPage/ResultPage';
 
 function App() {
     const [page, setPage] = useState('/');
@@ -38,7 +39,7 @@ function App() {
                 <SearchPage {...GLOBAL_ACTIONS}/>
             </Route>
             <Route path={PAGES.result}>
-
+                <ResultPage {...GLOBAL_ACTIONS}/>
             </Route> 
         </Switch>
     </div>

@@ -2,9 +2,10 @@ import React from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { FaGraduationCap } from "react-icons/fa";
 
+import { PAGES } from '../../stringConstants';
 import { TagChip } from '../Chips';
 
-export const SearchResults = () => {
+export const SearchResults = ({setPage}) => {
     let fakeResults = getFakeResults();
     return (
         <Grid 
@@ -14,16 +15,20 @@ export const SearchResults = () => {
         >
             {
                 fakeResults.map(result => {
-                    return <SearchResult result={result}/>
+                    return <SearchResult onClick={setPage} result={result}/>
                 })
             }
         </Grid>
     );
 };
 
-const SearchResult = ({result}) => {
+const SearchResult = ({onClick, result}) => {
     return (
-        <Paper square className='search-result'>
+        <Paper 
+            square 
+            className='search-result'
+            onClick={() => onClick(PAGES.result)}
+        >
             <Grid 
                 container 
                 direction='column'

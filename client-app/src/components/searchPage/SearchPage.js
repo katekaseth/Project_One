@@ -42,7 +42,7 @@ export default (props) => {
                 </Grid>
                 <Grid item>
                     <FilterChips filterState={filterState} changeFilter={changeFilter}/>
-                    <SearchResults/>
+                    <SearchResults {...props}/>
                 </Grid>
             </Grid>
         </Grid>

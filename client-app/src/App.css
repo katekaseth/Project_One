@@ -126,6 +126,7 @@ body, html {
 /* Search results */
 .search-result {
   margin-top: 40px;
+  cursor: pointer;
 }
 
 /* font */

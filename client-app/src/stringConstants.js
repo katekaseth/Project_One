@@ -16,8 +16,8 @@ export const FILTER_OPTIONS = {
             masterData: 'Master Data',
         }
     },
-    DASHBOARD_TYPE: {
-        groupLabel: 'Dashboard Type',
+    TOOL_TYPE: {
+        groupLabel: 'Tool Type',
         filters: {
             reports: 'Reports',
             visualizations: 'Visualizations',
@@ -31,7 +31,7 @@ export const FILTER_OPTIONS = {
         }
     },
     DATABASE: {
-        groupLabel: 'Dashboard Type',
+        groupLabel: 'Database',
         filters: {
             palceholder: 'Placeholder'
         }
