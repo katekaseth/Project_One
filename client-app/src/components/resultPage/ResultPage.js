@@ -11,10 +11,10 @@ export default ({filterState, setPage}) => {
             <Grid>
                 <NavPath searchPath={getSearchPath(filterState)} setPage={setPage}/>
             </Grid>
-            <Grid>
+            <Grid className='result-overview-container'>
                 <ResultOverview/>
             </Grid>
-            <Grid>
+            <Grid className='result-metadata-container'>
                 <ResultMetadata/>
             </Grid>
         </Grid>
@@ -37,7 +37,7 @@ const getSearchPath = (filterState) => {
 
 const NavPath =  ({searchPath, setPage}) => {
     return (
-        <Grid container spacing={1}>
+        <Grid container>
             <Grid item>
                 <Typography variant='body2'>HOME</Typography>
             </Grid>

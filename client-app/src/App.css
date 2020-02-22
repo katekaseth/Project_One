@@ -86,14 +86,6 @@ body, html {
   padding-top: calc(20vh);
 }
 
-.result-page-container, .search-page-container {
-  background-color: #E5E5E5;
-  height: calc(100vh);
-  padding-top: 40px;
-  padding-right: 60px;
-  padding-left: 60px;
-}
-
 /* search bar */
 .search-input {
   font-family: "Encode Sans", sans-serif;
@@ -132,10 +124,26 @@ body, html {
   border-radius: 0px;
 }
 
-/* Search results */
+/* Search page */
 .search-result {
   margin-top: 40px;
   cursor: pointer;
+}
+
+.result-page-container, .search-page-container {
+  background-color: #E5E5E5;
+  height: calc(100vh - 70px);
+  padding-top: 40px;
+  padding-right: 8vw;
+  padding-left: 8vw;
+}
+
+/* Result page */
+.result-overview-container {
+  margin-bottom: 20px;
+}
+.result-metadata-container {
+  
 }
 
 /* font */

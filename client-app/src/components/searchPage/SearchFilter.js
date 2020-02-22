@@ -1,15 +1,17 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { 
     Grid, 
     Paper, 
     ExpansionPanel, 
     ExpansionPanelSummary,
     ExpansionPanelDetails,
-    Radio,
+    Checkbox,
     FormControlLabel,
     FormControl,
     Typography
 } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { FILTER_OPTIONS } from '../../stringConstants';
 
@@ -27,11 +29,14 @@ export const SearchFilter = ({filterState, updateFilterState}) => {
 
 const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
     const filterGroup = FILTER_OPTIONS[subjectKey];
+    const classes = useStyles();
 
     return (
         <Grid>
-            <ExpansionPanel>
-                <ExpansionPanelSummary>
+            <ExpansionPanel className={classes.expansionPannel}>
+                <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                >
                     <Typography variant='h6'>{filterGroup.groupLabel}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
@@ -42,7 +47,7 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
                                     <FormControlLabel
                                         value={filterKey} 
                                         label={filterGroup.filters[filterKey]}
-                                        control={<Radio onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
+                                        control={<Checkbox onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
                                     />
                                 )
                             })
@@ -53,3 +58,9 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
         </Grid>
     )
 }
+
+const useStyles = makeStyles({
+    expansionPannel: {
+      borderRadius: '0px !important',
+    }
+  });
