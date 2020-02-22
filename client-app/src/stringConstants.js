@@ -1,3 +1,10 @@
+import financeIcon  from './icons/svg/financeIcon.svg';
+import researchIcon from './icons/svg/researchIcon.svg';
+import universityAdvancementIcon from './icons/svg/universityAdvancementIcon.svg';
+import academicIcon from './icons/svg/academicIcon.svg';
+import masterDataIcon from './icons/svg/masterDataIcon.svg';
+import humanResourcesIcon from './icons/svg/humanResourcesIcon.svg';
+
 export const PAGES = {
     home: '/',
     search: '/search',
@@ -15,6 +22,14 @@ export const FILTER_OPTIONS = {
             financialResources: 'Financial Resources',
             humanResources: 'Human Resources',
             masterData: 'Master Data',
+        },
+        icons: {
+            academic: academicIcon,
+            research: researchIcon,
+            universityAdvancement: universityAdvancementIcon,
+            financialResources: financeIcon,
+            humanResources: humanResourcesIcon,
+            masterData: masterDataIcon,
         }
     },
     TOOL_TYPE: {

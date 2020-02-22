@@ -2,8 +2,6 @@ import React from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import { Grid, InputBase } from '@material-ui/core';
 
-import { PAGES } from '../stringConstants';
-
 export function SearchBar({setPage}) {
 
     const handleKeyPress = (event) => {

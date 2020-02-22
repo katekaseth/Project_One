@@ -6,7 +6,6 @@ import { Grid } from '@material-ui/core';
 import { SearchBar } from '../SearchBar';
 import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
-import { FILTER_OPTIONS } from '../../stringConstants';
 import { FilterChips } from '../Chips';
 
 export default ({setPage, filterState, updateFilterState}) => {

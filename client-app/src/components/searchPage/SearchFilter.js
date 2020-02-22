@@ -33,7 +33,10 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
 
     return (
         <Grid>
-            <ExpansionPanel className={classes.expansionPannel}>
+            <ExpansionPanel 
+                className={classes.expansionPannel} 
+                defaultExpanded={Object.values(filterState[subjectKey]).includes(true)}
+            >
                 <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
                 >

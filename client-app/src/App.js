@@ -36,11 +36,6 @@ function App() {
                 history.push(PAGES.login);
             },
             search: () => {
-                // don't clear filterState 
-                // when going to result page
-                if (page !== PAGES.result) {
-                    setFilterState(makeFilterState());
-                }
                 setPage(PAGES.search);
                 history.push(PAGES.search);
             },
