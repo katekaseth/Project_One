@@ -71,10 +71,14 @@ function App() {
                 </div>
             </Route>
             <Route path={PAGES.search}>
-                <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                <div className='search-page-container'>
+                    <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                </div>
             </Route>
             <Route path={PAGES.result}>
-                <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                <div  className='result-page-container'>
+                    <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                </div>
             </Route> 
             <Route path={PAGES.login}>
                 <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>

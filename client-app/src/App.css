@@ -21,6 +21,7 @@ body, html {
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
+  padding: 40px;
 }
 
 /* navbar */
@@ -83,6 +84,14 @@ body, html {
 /* Landing page */
 .landing-page {
   padding-top: calc(20vh);
+}
+
+.result-page-container, .search-page-container {
+  background-color: #E5E5E5;
+  height: calc(100vh);
+  padding-top: 40px;
+  padding-right: 60px;
+  padding-left: 60px;
 }
 
 /* search bar */
