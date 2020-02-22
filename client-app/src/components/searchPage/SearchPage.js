@@ -18,14 +18,7 @@ const makeFilterState = () => {
     return filterState;
 };
 
-export default (props) => {
-    const [filterState, setFilterState] = useState(makeFilterState());
-
-    const changeFilter = (subjectKey, filterKey) => {
-        let tempFilterState = {...filterState};
-        tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
-        setFilterState(tempFilterState);
-    }
+export default ({setPage, filterState, updateFilterState}) => {
 
     return (
         <Grid
@@ -33,16 +26,16 @@ export default (props) => {
             className='search-page'
         >
             <Grid item>
-                <SearchFilter filterState={filterState} changeFilter={changeFilter}/>
+                <SearchFilter filterState={filterState} updateFilterState={updateFilterState}/>
             </Grid>
 
             <Grid xs item container direction='column'>
                 <Grid item>
-                    <SearchBar {...props}/>
+                    <SearchBar setPage={setPage}/>
                 </Grid>
                 <Grid item>
-                    <FilterChips filterState={filterState} changeFilter={changeFilter}/>
-                    <SearchResults {...props}/>
+                    <FilterChips filterState={filterState} updateFilterState={updateFilterState}/>
+                    <SearchResults setPage={setPage}/>
                 </Grid>
             </Grid>
         </Grid>

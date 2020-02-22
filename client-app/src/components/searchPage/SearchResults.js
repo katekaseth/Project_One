@@ -15,19 +15,19 @@ export const SearchResults = ({setPage}) => {
         >
             {
                 fakeResults.map(result => {
-                    return <SearchResult onClick={setPage} result={result}/>
+                    return <SearchResult setPage={setPage} result={result}/>
                 })
             }
         </Grid>
     );
 };
 
-const SearchResult = ({onClick, result}) => {
+const SearchResult = ({setPage, result}) => {
     return (
         <Paper 
             square 
             className='search-result'
-            onClick={() => onClick(PAGES.result)}
+            onClick={() => setPage.result()}
         >
             <Grid 
                 container 

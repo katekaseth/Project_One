@@ -1,24 +1,64 @@
-import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
+import React from 'react';
+import { Grid, Typography } from '@material-ui/core';
 
-export default () => {
+import { ResultOverview } from './ResultOverview';
+import { ResultMetadata } from './ResultMetadata';
+import { FILTER_OPTIONS } from '../../stringConstants';
+
+export default ({filterState, setPage}) => {
     return (
         <Grid>
             <Grid>
-                <NavPath/>
+                <NavPath searchPath={getSearchPath(filterState)} setPage={setPage}/>
             </Grid>
             <Grid>
-                
+                <ResultOverview/>
             </Grid>
             <Grid>
-
+                <ResultMetadata/>
             </Grid>
         </Grid>
     );
 };
 
-const NavPath =  () => {
+const getSearchPath = (filterState) => {
+    let filters = [];
+    Object.keys(filterState).forEach(subjectKey => {
+        Object.keys(filterState[subjectKey]).forEach(filterKey => {
+            filterState[subjectKey][filterKey] && filters.push(FILTER_OPTIONS[subjectKey].filters[filterKey]);
+        });
+    });
+    if (filters.length === 0) {
+        return 'Search';
+    } else {
+        return filters.join(',') + '...'
+    }
+}
+
+const NavPath =  ({searchPath, setPage}) => {
     return (
-        "home > search page > result"
+        <Grid container spacing={1}>
+            <Grid item>
+                <Typography variant='body2'>HOME</Typography>
+            </Grid>
+            <Grid item>
+                <Typography variant='body2'>{'>'}</Typography>
+            </Grid>
+            <Grid item>
+                <Typography 
+                    variant='body2' 
+                    onClick={() => setPage.search()}
+                    style={{ cursor: 'pointer', color: 'blue' }}
+                >
+                    {searchPath}
+                </Typography>
+            </Grid>
+            <Grid item>
+                <Typography variant='body2'>{'>'}</Typography>
+            </Grid>
+            <Grid item>
+                <Typography variant='body2'>RESULT</Typography>
+            </Grid>
+        </Grid>
     );
 }

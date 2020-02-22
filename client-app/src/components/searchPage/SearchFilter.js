@@ -13,19 +13,19 @@ import {
 
 import { FILTER_OPTIONS } from '../../stringConstants';
 
-export const SearchFilter = ({filterState, changeFilter}) => {
+export const SearchFilter = ({filterState, updateFilterState}) => {
     return (
         <Paper square>
             {
                 Object.keys(FILTER_OPTIONS).map((subjectKey) => {
-                    return <FilterGroup filterState={filterState} changeFilter={changeFilter} subjectKey={subjectKey}></FilterGroup>
+                    return <FilterGroup filterState={filterState} updateFilterState={updateFilterState} subjectKey={subjectKey}></FilterGroup>
                 })
             }
         </Paper>
     );
 };
 
-const FilterGroup = ({filterState, changeFilter, subjectKey}) => {
+const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
     const filterGroup = FILTER_OPTIONS[subjectKey];
 
     return (
@@ -42,7 +42,7 @@ const FilterGroup = ({filterState, changeFilter, subjectKey}) => {
                                     <FormControlLabel
                                         value={filterKey} 
                                         label={filterGroup.filters[filterKey]}
-                                        control={<Radio onClick={() => changeFilter(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
+                                        control={<Radio onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
                                     />
                                 )
                             })

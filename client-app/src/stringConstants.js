@@ -2,6 +2,7 @@ export const PAGES = {
     home: '/',
     search: '/search',
     result: '/result',
+    login: '/login',
 };
 
 export const FILTER_OPTIONS = {
@@ -36,4 +37,11 @@ export const FILTER_OPTIONS = {
             palceholder: 'Placeholder'
         }
     },
+}
+
+export const METADATA_TABS = {
+    technicalInfo: 'Technical Info',
+    securityInfo: 'Security Info',
+    sqlQueries: 'SQL Queries',
+    definitions: 'Defintitions',
 }

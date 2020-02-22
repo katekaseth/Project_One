@@ -9,20 +9,20 @@ export const TagChip = ({label}) => {
     );
 };
 
-export const DeletableTagChip = ({label, subjectKey, filterKey, changeFilter}) => {
+export const DeletableTagChip = ({label, subjectKey, filterKey, updateFilterState}) => {
     return (
-        <Chip label={label} onClick={() => changeFilter(subjectKey, filterKey)} onDelete={() => changeFilter(subjectKey, filterKey)} color="primary"/>
+        <Chip label={label} onClick={() => updateFilterState(subjectKey, filterKey)} onDelete={() => updateFilterState(subjectKey, filterKey)} color="primary"/>
     );
 };
 
-export const FilterChips = ({filterState, changeFilter}) => {
+export const FilterChips = ({filterState, updateFilterState}) => {
     let chipArray = [];
 
     Object.keys(filterState).forEach(subjectKey => {
         Object.keys(filterState[subjectKey]).forEach(filterKey => {
             filterState[subjectKey][filterKey] && chipArray.push(
                 <DeletableTagChip 
-                    changeFilter={changeFilter}
+                    updateFilterState={updateFilterState}
                     label={FILTER_OPTIONS[subjectKey].filters[filterKey]} 
                     subjectKey={subjectKey} 
                     filterKey={filterKey}

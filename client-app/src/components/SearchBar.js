@@ -8,7 +8,7 @@ export function SearchBar({setPage}) {
 
     const handleKeyPress = (event) => {
         if(event.key === 'Enter'){
-            setPage(PAGES.search);
+            setPage.search();
         }
     }
 
