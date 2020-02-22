@@ -1,9 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography, CardMedia } from '@material-ui/core';
 import { FaGraduationCap } from "react-icons/fa";
 
 import { TagChip } from '../Chips';
+import { Bookmark } from '../Bookmark';
 
 export const SearchResults = ({setPage}) => {
     let fakeResults = getFakeResults();
@@ -42,7 +43,7 @@ const SearchResult = ({setPage, result}) => {
                         <Typography variant='h6'>{result.title}</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant='body2'>Bookmark icon</Typography>
+                        <Bookmark bookmarked={false}/>
                     </Grid>
                 </Grid>
                 <Grid item>
@@ -74,6 +75,11 @@ const useStyles = makeStyles({
         paddingRight: '15px',
         paddingLeft: '15px',
     },
+    bookmark: {
+        width: '35px',
+        height: 'auto',
+        marginTop: '-10px',
+    }
 });
 
 const getFakeResults = () => {
