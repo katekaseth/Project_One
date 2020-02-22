@@ -1,17 +1,21 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+
 
 import { Chip } from '@material-ui/core';
 import { FILTER_OPTIONS } from '../stringConstants';
 
 export const TagChip = ({label}) => {
+    const classes = useStyles();
     return (
-        <Chip label={label} color="primary"/>
+        <Chip className={classes.chip} label={label} color="primary"/>
     );
 };
 
 export const DeletableTagChip = ({label, subjectKey, filterKey, updateFilterState}) => {
+    const classes = useStyles();
     return (
-        <Chip label={label} onClick={() => updateFilterState(subjectKey, filterKey)} onDelete={() => updateFilterState(subjectKey, filterKey)} color="primary"/>
+        <Chip className={classes.chip} label={label} onClick={() => updateFilterState(subjectKey, filterKey)} onDelete={() => updateFilterState(subjectKey, filterKey)} color="primary"/>
     );
 };
 
@@ -35,3 +39,9 @@ export const FilterChips = ({filterState, updateFilterState}) => {
         chipArray
     );
 };
+
+const useStyles = makeStyles({
+    chip: {
+        marginRight: '10px',
+    },
+});

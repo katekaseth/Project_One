@@ -63,4 +63,4 @@ const useStyles = makeStyles({
     expansionPannel: {
       borderRadius: '0px !important',
     }
-  });
+});

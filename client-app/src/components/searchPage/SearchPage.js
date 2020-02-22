@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+
 import { Grid } from '@material-ui/core';
 
 import { SearchBar } from '../SearchBar';
@@ -7,19 +9,8 @@ import { SearchResults } from './SearchResults';
 import { FILTER_OPTIONS } from '../../stringConstants';
 import { FilterChips } from '../Chips';
 
-const makeFilterState = () => {
-    let filterState = {};
-    Object.keys(FILTER_OPTIONS).forEach(subjectKey => {
-        filterState[subjectKey] = {};
-        Object.keys(FILTER_OPTIONS[subjectKey].filters).forEach(filterKey => {
-            filterState[subjectKey][filterKey] = false;
-        });
-    });
-    return filterState;
-};
-
 export default ({setPage, filterState, updateFilterState}) => {
-
+    const classes = useStyles();
     return (
         <Grid
             container
@@ -29,15 +20,33 @@ export default ({setPage, filterState, updateFilterState}) => {
                 <SearchFilter filterState={filterState} updateFilterState={updateFilterState}/>
             </Grid>
 
-            <Grid xs item container direction='column'>
+            <Grid 
+                xs 
+                item 
+                container 
+                direction='column'
+                className={classes.searchArea}
+            >
                 <Grid item>
                     <SearchBar setPage={setPage}/>
                 </Grid>
-                <Grid item>
-                    <FilterChips filterState={filterState} updateFilterState={updateFilterState}/>
+                <Grid item className={classes.filterChips}>
+                    <FilterChips 
+                        filterState={filterState} 
+                        updateFilterState={updateFilterState}
+                    />
                     <SearchResults setPage={setPage}/>
                 </Grid>
             </Grid>
         </Grid>
     );
 };
+
+const useStyles = makeStyles({
+    searchArea: {
+        marginLeft: '20px',
+    },
+    filterChips: {
+        marginTop: '20px',
+    }
+});

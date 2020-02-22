@@ -124,12 +124,6 @@ body, html {
   border-radius: 0px;
 }
 
-/* Search page */
-.search-result {
-  margin-top: 40px;
-  cursor: pointer;
-}
-
 .result-page-container, .search-page-container {
   background-color: #E5E5E5;
   height: calc(100vh - 70px);

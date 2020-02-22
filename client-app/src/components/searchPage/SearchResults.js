@@ -1,12 +1,13 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { FaGraduationCap } from "react-icons/fa";
 
-import { PAGES } from '../../stringConstants';
 import { TagChip } from '../Chips';
 
 export const SearchResults = ({setPage}) => {
     let fakeResults = getFakeResults();
+
     return (
         <Grid 
             container 
@@ -23,10 +24,12 @@ export const SearchResults = ({setPage}) => {
 };
 
 const SearchResult = ({setPage, result}) => {
+    const classes = useStyles();
+
     return (
         <Paper 
             square 
-            className='search-result'
+            className={classes.searchResult}
             onClick={() => setPage.result()}
         >
             <Grid 
@@ -61,6 +64,17 @@ const SearchResult = ({setPage, result}) => {
         </Paper>
     );
 };
+
+const useStyles = makeStyles({
+    searchResult: {
+        marginTop: '20px',
+        cursor: 'pointer',
+        paddingTop: '10px',
+        paddingBottom: '10px',
+        paddingRight: '15px',
+        paddingLeft: '15px',
+    },
+});
 
 const getFakeResults = () => {
     let results = [];
