@@ -31,8 +31,8 @@ func main() {
 	// set up the sql store
 	dsn := os.Getenv("DSN")
 	if len(dsn) == 0 {
-		// dsn = "root:sqlpassword@tcp(user-store:3306)/users?parseTime=true"
-		dsn = "root:sqlpassword@tcp(localhost:3306)/users?parseTime=true"
+		// dsn = "root:sqlpassword@tcp(user-store:3306)/data?parseTime=true"
+		dsn = "root:sqlpassword@tcp(localhost:3306)/data?parseTime=true"
 	}
 	userStore, err := users.NewMySQLStore(dsn)
 	time.Sleep(1)
