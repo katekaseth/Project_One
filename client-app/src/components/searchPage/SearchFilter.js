@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
     Grid, 
@@ -9,10 +9,12 @@ import {
     Checkbox,
     FormControlLabel,
     FormControl,
-    Typography
+    Typography,
+    Box
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { COLORS } from '../../theme';
 import { FILTER_OPTIONS } from '../../stringConstants';
 
 export const SearchFilter = ({filterState, updateFilterState}) => {
@@ -29,13 +31,17 @@ export const SearchFilter = ({filterState, updateFilterState}) => {
 
 const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
     const filterGroup = FILTER_OPTIONS[subjectKey];
+    const [expanded, setExpanded] = useState(Object.values(filterState[subjectKey]).includes(true));
     const classes = useStyles();
 
     return (
         <Grid>
             <ExpansionPanel 
-                className={classes.expansionPannel} 
-                defaultExpanded={Object.values(filterState[subjectKey]).includes(true)}
+                className={classes.panel} 
+                defaultExpanded={expanded}
+                onChange={(e, expanded) => {
+                    setExpanded(expanded);
+                }}
             >
                 <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -50,7 +56,7 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
                                     <FormControlLabel
                                         value={filterKey} 
                                         label={filterGroup.filters[filterKey]}
-                                        control={<Checkbox onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
+                                        control={<Checkbox color='primary' onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
                                     />
                                 )
                             })
@@ -63,7 +69,7 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
 }
 
 const useStyles = makeStyles({
-    expansionPannel: {
-      borderRadius: '0px !important',
+    panel: {
+        borderRadius: '0px !important'
     }
 });

@@ -8,7 +8,7 @@ import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
 
-export default ({setPage, filterState, updateFilterState}) => {
+export default (props) => {
     const classes = useStyles();
     return (
         <Grid
@@ -16,7 +16,7 @@ export default ({setPage, filterState, updateFilterState}) => {
             className='search-page'
         >
             <Grid item>
-                <SearchFilter filterState={filterState} updateFilterState={updateFilterState}/>
+                <SearchFilter {...props}/>
             </Grid>
 
             <Grid 
@@ -26,15 +26,13 @@ export default ({setPage, filterState, updateFilterState}) => {
                 direction='column'
                 className={classes.searchArea}
             >
-                <Grid item>
-                    <SearchBar setPage={setPage}/>
-                </Grid>
+
+                <SearchBar {...props}/>
+
+
                 <Grid item className={classes.filterChips}>
-                    <FilterChips 
-                        filterState={filterState} 
-                        updateFilterState={updateFilterState}
-                    />
-                    <SearchResults setPage={setPage}/>
+                    <FilterChips  {...props}/>
+                    <SearchResults  {...props}/>
                 </Grid>
             </Grid>
         </Grid>

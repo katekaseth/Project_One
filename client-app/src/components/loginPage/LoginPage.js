@@ -7,6 +7,7 @@ import {
     TextField,
     Button,
     CardMedia,
+    Box
 } from '@material-ui/core';
 
 import wLogo from '../../images/W-Logo.png';
@@ -42,20 +43,20 @@ export default () => {
                     direction='column'
                     className={classes.learnLinks}
                 >
-                    <Typography variant='body2'>
+                    <Typography className={classes.link} variant='body2'>
                         Learn about account recovery options
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography className={classes.link} variant='body2'>
                         Learn about UW NetIDs
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography className={classes.link} variant='body2'>
                         Learn about UW NetID sign-in
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography className={classes.link} variant='body2'>
                         Obtain a UW NetID
                     </Typography>
                     <br/>
-                    <Typography variant='body2'>
+                    <Typography className={classes.link} variant='body2'>
                         Need help?
                     </Typography>
                 </Grid>
@@ -70,11 +71,15 @@ export default () => {
                 <Typography variant='body2'>
                     Sign in reduces how often you have to reauthenticate to access UW resources.
                 </Typography>
+                <br/>
                 <Typography variant='body2'>
-                    Learn how to sign out at the end of your browsing session.
+                    Learn how to <Box className={classes.link} component='span'>sign out</Box> at the end of your browsing session.
                 </Typography>
+                <br/>
                 <Typography variant='body2'>
-                    PRIVACY | TERMS
+                    <Box className={classes.link} component='span'>PRIVACY</Box>
+                    <Box component='span'> | </Box>
+                    <Box className={classes.link} component='span'>TERMS</Box>
                 </Typography>
             </Grid>
         </Grid>
@@ -111,7 +116,7 @@ const LoginComponent = () => {
             </Grid>
 
             <Grid className={classes.items}>
-                <Typography variant='body2'>
+                <Typography className={classes.link} variant='body2'>
                     Forgot your password?
                 </Typography>
             </Grid>
@@ -140,5 +145,10 @@ const useStyles = makeStyles({
     },
     bottomContent: {
         marginTop: '30px',
+    },
+    link: {
+        textDecoration: 'underline',
+        color: 'blue',
+        cursor: 'pointer',
     }
 });

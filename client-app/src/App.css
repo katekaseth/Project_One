@@ -74,36 +74,12 @@ body {
   color: #61dafb;
 }
 
-/* search bar */
-.search-input {
-  font-family: "Encode Sans", sans-serif;
-  font-size: medium;
-  background: none;
-  width: 100%;
-}
-.search-bar {
-  background: #ffffff;
-  border: 1px solid #ffffff;
-  box-sizing: border-box;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 100px;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 45px;
-}
-
-
 .result-page-container, .search-page-container {
   background-color: #E5E5E5;
   height: calc(100vh - 70px);
   padding-top: 40px;
   padding-right: 8vw;
   padding-left: 8vw;
-}
-
-/* Result page */
-.result-overview-container {
-  margin-bottom: 20px;
 }
 
 /* font */

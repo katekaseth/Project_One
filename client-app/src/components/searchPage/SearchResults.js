@@ -29,9 +29,9 @@ const SearchResult = ({setPage, result}) => {
 
     return (
         <Paper 
+            onClick={() => setPage.result()}
             square 
             className={classes.searchResult}
-            onClick={() => setPage.result()}
         >
             <Grid 
                 container 
@@ -40,7 +40,13 @@ const SearchResult = ({setPage, result}) => {
                 <Grid item container justify='space-between'>
                     <Grid xs item container alignItems='center'>
                         <FaGraduationCap/>
-                        <Typography variant='h6'>{result.title}</Typography>
+                        <Typography 
+                            onClick={() => setPage.result()} 
+                            className={classes.resultTitle}
+                            variant='h6'
+                        >
+                            {result.title}
+                        </Typography>
                     </Grid>
                     <Grid item>
                         <Bookmark bookmarked={false}/>
@@ -69,16 +75,16 @@ const SearchResult = ({setPage, result}) => {
 const useStyles = makeStyles({
     searchResult: {
         marginTop: '20px',
-        cursor: 'pointer',
         paddingTop: '10px',
         paddingBottom: '10px',
         paddingRight: '15px',
         paddingLeft: '15px',
     },
-    bookmark: {
-        width: '35px',
-        height: 'auto',
-        marginTop: '-10px',
+    resultTitle: {
+        cursor: 'pointer',
+        '&:hover': {
+            textDecoration: 'underline'
+        }
     }
 });
 

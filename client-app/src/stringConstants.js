@@ -12,6 +12,8 @@ export const PAGES = {
     login: '/login',
 };
 
+export const SEARCH_TERMS = 'SEARCH_TERMS';
+
 export const FILTER_OPTIONS = {
     SUBJECT_AREA: {
         groupLabel: 'Subject Area',

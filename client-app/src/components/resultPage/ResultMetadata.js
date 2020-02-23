@@ -6,6 +6,7 @@ import {
     MenuList, 
     MenuItem 
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { METADATA_TABS } from '../../stringConstants';
 
@@ -13,9 +14,9 @@ export const ResultMetadata = () => {
     const [metadataTab, setMetadataTab] = useState('technicalInfo');
 
     return (
-        <Grid container >
+        <Grid container>
             <Grid item>
-                <MetadataMenu setMetadataTab={setMetadataTab}/>
+                <MetadataMenu metadataTab={metadataTab} setMetadataTab={setMetadataTab}/>
             </Grid>
             <Grid xs item>
                 <Metadata metadataTab={metadataTab}/>
@@ -25,14 +26,16 @@ export const ResultMetadata = () => {
 }
 
 const Metadata = ({metadataTab}) => {
+    const classes = useStyles();
     return (
-        <Paper square>
+        <Paper square className={classes.metadata}>
             <Typography variant='h5'>{METADATA_TABS[metadataTab]}</Typography>
         </Paper>
     );
 }
 
-const MetadataMenu = ({setMetadataTab}) => {
+const MetadataMenu = ({metadataTab, setMetadataTab}) => {
+    const classes = useStyles();
     return (
         <Paper square>
             <MenuList>
@@ -49,3 +52,14 @@ const MetadataMenu = ({setMetadataTab}) => {
         </Paper>
     );
 }
+
+const useStyles = makeStyles({
+    metadata: {
+        padding: '20px',
+        height: '400px',
+        zIndex: '1'
+    },
+    metadataTab: {
+        backgroundColor: 'red'
+    }
+});

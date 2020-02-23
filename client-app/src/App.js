@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { ThemeProvider } from '@material-ui/styles';
 import {
     Switch,
     Route,
     useHistory,
 } from 'react-router-dom';
 
+import { THEME } from './theme';
 import { PAGES } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
@@ -16,17 +18,20 @@ import { FILTER_OPTIONS } from './stringConstants';
 function App() {
     const [page, setPage] = useState('/');
     const [filterState, setFilterState] = useState(makeFilterState());
+    const [searchedTerms, setSearchedTerms] = useState([]);
     const history = useHistory();
 
     const GLOBAL_STATE = {
         page,
         filterState,
+        searchedTerms,
     };
 
     const GLOBAL_ACTIONS = {
         setPage: {
             home: () => {
                 setFilterState(makeFilterState());
+                setSearchedTerms([]);
                 setPage(PAGES.home);
                 history.push(PAGES.home);
             },
@@ -54,32 +59,35 @@ function App() {
             tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
             setFilterState(tempFilterState);
         },
+        setSearchedTerms
     };
 
   return (
-    <div className='app'> 
-        <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
-        <Switch>
-            <Route exact path={PAGES.home}>
-                <div className='landing-page-container'>
-                    <LandingPage {...GLOBAL_ACTIONS}/>
-                </div>
-            </Route>
-            <Route path={PAGES.search}>
-                <div className='search-page-container'>
-                    <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
-                </div>
-            </Route>
-            <Route path={PAGES.result}>
-                <div  className='result-page-container'>
-                    <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
-                </div>
-            </Route> 
-            <Route path={PAGES.login}>
-                <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
-            </Route> 
-        </Switch>
-    </div>
+    <ThemeProvider theme={THEME}>
+        <div className='app'>
+            <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
+            <Switch>
+                <Route exact path={PAGES.home}>
+                    <div className='landing-page-container'>
+                        <LandingPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                    </div>
+                </Route>
+                <Route path={PAGES.search}>
+                    <div className='search-page-container'>
+                        <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                    </div>
+                </Route>
+                <Route path={PAGES.result}>
+                    <div  className='result-page-container'>
+                        <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                    </div>
+                </Route> 
+                <Route path={PAGES.login}>
+                    <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
+                </Route> 
+            </Switch>
+        </div>
+    </ThemeProvider>
   );
 }
 
