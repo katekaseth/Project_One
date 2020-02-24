@@ -92,13 +92,13 @@ func (ms *MySQLStore) Delete(id int64) error {
 //GetAllDocuments returns an array of DocumentSummary of all available documents.
 func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
 	allDocuments := []documents.DocumentSummary{}
-	rows, err := ms.Db.Query(`SELECT title, tool_type, created, updated, description, subject_area FROM documents`)
+	rows, err := ms.Db.Query(`SELECT document_id, title, tool_type, created, updated, description, subject_area FROM documents`)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		var doc documents.DocumentSummary
-		err := rows.Scan(&doc.Title, &doc.ToolType, &doc.Created, &doc.Updated, &doc.Description, &doc.SubjectArea)
+		err := rows.Scan(&doc.DocumentID, &doc.Title, &doc.ToolType, &doc.Created, &doc.Updated, &doc.Description, &doc.SubjectArea)
 		if err != nil {
 			return nil, err
 		}

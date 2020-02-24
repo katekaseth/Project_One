@@ -27,7 +27,7 @@ func TestGetAllSearch(t *testing.T) {
 	ctx.SearchHandler(w, r)
 	recievedDocSummaries := []documents.DocumentSummary{}
 	dec := json.NewDecoder(w.Body)
-	if err := dec.Decode(&recievedDocSummaries); err == nil {
+	if err := dec.Decode(&recievedDocSummaries); err != nil {
 		t.Errorf("failed decoding")
 	}
 }
