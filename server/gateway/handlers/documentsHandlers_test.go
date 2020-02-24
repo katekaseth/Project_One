@@ -4,12 +4,33 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"Project_One/server/gateway/users"
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 )
+
+func TestGetAllSearch(t *testing.T) {
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+
+	w := httptest.NewRecorder()
+
+	query := &documents.DocumentQuery{}
+	queryBody, _ := json.Marshal(query)
+	r, _ := http.NewRequest("GET", "", bytes.NewBuffer(queryBody))
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	r.Header.Set("Content-Type", "application/json")
+
+	ctx.SearchHandler(w, r)
+	recievedDocSummaries := []documents.DocumentSummary{}
+	dec := json.NewDecoder(w.Body)
+	if err := dec.Decode(&recievedDocSummaries); err == nil {
+		t.Errorf("failed decoding")
+	}
+}
 
 func TestGetFilters(t *testing.T) {
 	ctx := getContextHandler()

@@ -47,6 +47,24 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
 	}
+
+	var documents *[]documents.DocumentSummary
+	// if there are no filters, return all documents summaries
+	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 {
+		documents, err = ctx.UserStore.GetAllDocuments()
+		if err != nil {
+			http.Error(w, "Error getting documents", http.StatusInternalServerError)
+			return
+		}
+	}
+	documentsBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentsBytes)
 }
 
 // FilterHandler handles GET requests to /filter and responds with a JSON of the

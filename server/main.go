@@ -58,13 +58,15 @@ func main() {
 	router.HandleFunc("/report/{reportID}", ctx.ReportHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
-	log.Printf("server is listening at %s...", addr)
 
 	tlsKeyPath := os.Getenv("TLSKEY")
 	tlsCertPath := os.Getenv("TLSCERT")
 	if len(tlsKeyPath) == 0 || len(tlsCertPath) == 0 {
-		log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
-	} else {
+		log.Printf("server is listening at %s...", addr)
 		log.Fatal(http.ListenAndServe(addr, wrappedMux))
+	} else {
+		log.Printf("server is now online at %s...", addr)
+		log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
+
 	}
 }

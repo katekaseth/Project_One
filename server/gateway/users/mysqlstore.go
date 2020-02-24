@@ -89,8 +89,25 @@ func (ms *MySQLStore) Delete(id int64) error {
 // Database functions for Documents table Below
 //
 
-//GetFilters returns an array of DocumentQuery which will
-//have available filters in the database.
+//GetAllDocuments returns an array of DocumentSummary of all available documents.
+func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
+	allDocuments := []documents.DocumentSummary{}
+	rows, err := ms.Db.Query(`SELECT title, tool_type, created, updated, description, subject_area FROM documents`)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var doc documents.DocumentSummary
+		err := rows.Scan(&doc.Title, &doc.ToolType, &doc.Created, &doc.Updated, &doc.Description, &doc.SubjectArea)
+		if err != nil {
+			return nil, err
+		}
+		allDocuments = append(allDocuments, doc)
+	}
+	return &allDocuments, nil
+}
+
+//GetFilters returns a DocumentQuery which lists available filters in the database.
 func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
 	allFilters := &documents.DocumentQuery{}
 
