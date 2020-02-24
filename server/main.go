@@ -16,12 +16,8 @@ import (
 func main() {
 	addr := os.Getenv("ADDR")
 	if len(addr) == 0 {
-		// addr = ":443"
 		addr = ":8008"
 	}
-
-	// tlsKeyPath := os.Getenv("TLSKEY")
-	// tlsCertPath := os.Getenv("TLSCERT")
 
 	// session signing key
 	signingKey := os.Getenv("SESSIONKEY")
@@ -32,7 +28,6 @@ func main() {
 	// set up the sql store
 	dsn := os.Getenv("DSN")
 	if len(dsn) == 0 {
-		// dsn = "root:password@tcp(dataStore:3306)/data?parseTime=true"
 		dsn = "root:password@tcp(localhost:3306)/data?parseTime=true"
 	}
 	userStore, err := users.NewMySQLStore(dsn)
@@ -46,7 +41,6 @@ func main() {
 	redisaddr := os.Getenv("REDISADDR")
 	if len(redisaddr) == 0 {
 		redisaddr = "localhost:6379"
-		// redisaddr = "redisServer:6379"
 	}
 	client := redis.NewClient(&redis.Options{
 		Addr: redisaddr,
@@ -65,6 +59,12 @@ func main() {
 
 	wrappedMux := handlers.NewResponseHeader(router)
 	log.Printf("server is listening at %s...", addr)
-	// log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
-	log.Fatal(http.ListenAndServe(addr, wrappedMux))
+
+	tlsKeyPath := os.Getenv("TLSKEY")
+	tlsCertPath := os.Getenv("TLSCERT")
+	if len(tlsKeyPath) == 0 || len(tlsCertPath) == 0 {
+		log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
+	} else {
+		log.Fatal(http.ListenAndServe(addr, wrappedMux))
+	}
 }
