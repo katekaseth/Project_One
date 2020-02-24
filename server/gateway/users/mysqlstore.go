@@ -1,6 +1,7 @@
 package users
 
 import (
+	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
 
@@ -24,9 +25,12 @@ func NewMySQLStore(dsn string) (*MySQLStore, error) {
 	ms := &MySQLStore{
 		Db: db,
 	}
-
 	return ms, nil
 }
+
+//
+// Database functions for Users table Below
+//
 
 //GetByID returns the User with the given ID
 func (ms *MySQLStore) GetByID(id int64) (*User, error) {
@@ -79,4 +83,54 @@ func (ms *MySQLStore) Delete(id int64) error {
 		return err
 	}
 	return nil
+}
+
+//
+// Database functions for Documents table Below
+//
+
+//GetFilters returns an array of DocumentQuery which will
+//have available filters in the database.
+func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
+	allFilters := &documents.DocumentQuery{}
+
+	toolTypes, err := scanSingleFilter(`SELECT DISTINCT tool_type FROM documents`, ms)
+	if err != nil {
+		return nil, err
+	}
+	allFilters.ToolType = toolTypes
+
+	subjectAreas, err := scanSingleFilter(`SELECT DISTINCT subject_area FROM documents`, ms)
+	if err != nil {
+		return nil, err
+	}
+	allFilters.SubjectArea = subjectAreas
+
+	databaseNames, err := scanSingleFilter(`SELECT DISTINCT database_name FROM documents`, ms)
+	if err != nil {
+		return nil, err
+	}
+	allFilters.Database = databaseNames
+
+	return allFilters, nil
+}
+
+// Given the statment to select distinct values from a column and the mysqlstore,
+// return an array of the unique values in that column and error.
+func scanSingleFilter(stmt string, ms *MySQLStore) ([]string, error) {
+	rows, err := ms.Db.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	var types []string
+	for rows.Next() {
+		var entry string
+		err := rows.Scan(&entry)
+		if err != nil {
+			return nil, err
+		}
+		types = append(types, entry)
+	}
+	return types, nil
 }

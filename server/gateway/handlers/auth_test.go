@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"Project_One/server/gateway/sessions"
+	"Project_One/server/gateway/users"
 	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
-	"snake/server/gateway/sessions"
-	"snake/server/gateway/users"
 	"testing"
 	"time"
 
@@ -119,7 +119,7 @@ func TestUsersHandler(t *testing.T) {
 }
 
 func getContextHandler() *HandlerContext {
-	userStore, _ := users.NewMySQLStore("root:sqlpassword@tcp(127.0.0.1:3306)/users?parseTime=true")
+	userStore, _ := users.NewMySQLStore("root:password@tcp(127.0.0.1:3306)/data?parseTime=true")
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: "127.0.0.1:6379",
 	})
@@ -129,9 +129,5 @@ func getContextHandler() *HandlerContext {
 	// reset user ID or test cases fail
 	_, _ = userStore.Db.Exec("alter table users AUTO_INCREMENT = 1")
 
-	// delete all existing scores
-	_, _ = userStore.Db.Exec("delete from scores")
-	// reset score IDs
-	_, _ = userStore.Db.Exec("alter table scores AUTO_INCREMENT = 1")
 	return NewHandlerContext("signing key", sessionStore, userStore)
 }

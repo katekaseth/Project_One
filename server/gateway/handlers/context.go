@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"snake/server/gateway/sessions"
-	"snake/server/gateway/users"
+	"Project_One/server/gateway/sessions"
+	"Project_One/server/gateway/users"
 )
 
 // HandlerContext stores globals that will need to be

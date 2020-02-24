@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"snake/server/gateway/users"
+	"Project_One/server/gateway/users"
 	"time"
 )
 

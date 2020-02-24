@@ -1,12 +1,12 @@
 package main
 
 import (
+	"Project_One/server/gateway/handlers"
+	"Project_One/server/gateway/sessions"
+	"Project_One/server/gateway/users"
 	"log"
 	"net/http"
 	"os"
-	"snake/server/gateway/handlers"
-	"snake/server/gateway/sessions"
-	"snake/server/gateway/users"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -16,6 +16,7 @@ import (
 func main() {
 	addr := os.Getenv("ADDR")
 	if len(addr) == 0 {
+		// addr = ":443"
 		addr = ":8008"
 	}
 
@@ -31,14 +32,14 @@ func main() {
 	// set up the sql store
 	dsn := os.Getenv("DSN")
 	if len(dsn) == 0 {
-		// dsn = "root:sqlpassword@tcp(user-store:3306)/data?parseTime=true"
-		dsn = "root:sqlpassword@tcp(localhost:3306)/data?parseTime=true"
+		// dsn = "root:password@tcp(dataStore:3306)/data?parseTime=true"
+		dsn = "root:password@tcp(localhost:3306)/data?parseTime=true"
 	}
 	userStore, err := users.NewMySQLStore(dsn)
 	time.Sleep(1)
 	err = userStore.Db.Ping()
 	if err != nil {
-		log.Fatalf("userstore db ping: %s", err)
+		log.Fatalf("dataStore db ping: %s", err)
 	}
 
 	// set up redis store
@@ -58,6 +59,9 @@ func main() {
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
+	router.HandleFunc("/search", ctx.SearchHandler)
+	router.HandleFunc("/filter", ctx.FilterHandler)
+	router.HandleFunc("/report/{reportID}", ctx.ReportHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
 	log.Printf("server is listening at %s...", addr)

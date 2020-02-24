@@ -1,14 +1,14 @@
 #!/bin/bash
-docker rm -f userStore
-docker build -t kateks/user-store .
+docker rm -f dataStore
+docker build -t kateks/capstone_store .
 
 # runs a docker container on local for debugging purposes
 docker run -d \
 -p 3306:3306 \
---name userStore \
+--name dataStore \
 -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
 -e MYSQL_DATABASE=data \
-kateks/user-store
+kateks/capstone_store 
 
 # runs local redisServer
 docker rm -f redisServer

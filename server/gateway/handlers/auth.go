@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"Project_One/server/gateway/sessions"
+	"Project_One/server/gateway/users"
 	"encoding/json"
 	"net/http"
-	"snake/server/gateway/sessions"
-	"snake/server/gateway/users"
 	"strings"
 	"time"
 
