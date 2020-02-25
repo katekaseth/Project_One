@@ -11,14 +11,14 @@ import (
 // SearchHandler handles GET requests to /search. It accepts a JSON body that details
 // search queries in this form:
 // {
-//		toolType: ["example", "here"],
-//		subjectArea: [],
-//		supportGroup: [], not this one yet
-//		database: []
+// 		toolType: ["example", "here"],
+// 		subjectArea: [],
+// 		supportGroup: [], not this one yet
+// 		database: []
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -100,9 +100,9 @@ func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(filtersBytes)
 }
 
-// ReportHandler handles GET requests to /report/:reportID and responds with all information
+// DocumentHandler handles GET requests to /document/:documentID and responds with all information
 // for that report.
-func (ctx *HandlerContext) ReportHandler(w http.ResponseWriter, r *http.Request) {
+func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
