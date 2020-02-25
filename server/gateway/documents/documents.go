@@ -4,10 +4,10 @@ import "time"
 
 // DocumentQuery represents the request body to query documents.
 type DocumentQuery struct {
-	ToolType    []string `json:"toolType"`
-	SubjectArea []string `json:"subjectArea"`
+	SubjectArea []string `json:"Subject Area"`
+	ToolType    []string `json:"Tool Type"`
 	// SupportGroup []string `json:"supportGroup"`
-	Database []string `json:"database"`
+	Database []string `json:"Database"`
 }
 
 // Document represents all the information of a document.
@@ -34,4 +34,5 @@ type DocumentSummary struct {
 	Updated     time.Time `json:"updated"`
 	Description string    `json:"description"`
 	SubjectArea string    `json:"subjectArea"`
+	Database    string    `json:"database"`
 }

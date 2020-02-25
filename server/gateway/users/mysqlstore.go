@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	// need it for mysql
 	_ "github.com/go-sql-driver/mysql"
@@ -91,14 +92,67 @@ func (ms *MySQLStore) Delete(id int64) error {
 
 //GetAllDocuments returns an array of DocumentSummary of all available documents.
 func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
+	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents"
+	allDocuments, err := ms.scanDocSummaryQuery(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	return allDocuments, nil
+}
+
+//GetSearchedDocuments returns and array of DocumentSummary that meet the criteria of
+//the passed in query.
+func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) (*[]documents.DocumentSummary, error) {
+	stmt := `SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where `
+	if len(query.SubjectArea) != 0 {
+		stmt += `(subject_area = ` + `"` + query.SubjectArea[0] + `"`
+		for i := 1; i < len(query.SubjectArea); i++ {
+			stmt += " OR subject_area = " + `"` + query.SubjectArea[i] + `"`
+		}
+		stmt += ")"
+	}
+
+	if len(query.ToolType) != 0 {
+		if strings.HasSuffix(stmt, ")") {
+			stmt += " AND "
+		}
+		stmt += "(tool_type = " + `"` + query.ToolType[0] + `"`
+		for i := 1; i < len(query.ToolType); i++ {
+			stmt += " OR tool_type = " + `"` + query.ToolType[i] + `"`
+		}
+		stmt += ")"
+	}
+
+	if len(query.Database) != 0 {
+		if strings.HasSuffix(stmt, ")") {
+			stmt += " AND "
+		}
+		stmt += "(database_name = " + `"` + query.Database[0] + `"`
+		for i := 1; i < len(query.Database); i++ {
+			stmt += " OR database_name = " + `"` + query.Database[i] + `"`
+		}
+		stmt += ")"
+	}
+	allDocuments, err := ms.scanDocSummaryQuery(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	return allDocuments, nil
+}
+
+//Given a statment to query Documents, returns an array of Document Summary returned by the
+//database query.
+func (ms *MySQLStore) scanDocSummaryQuery(stmt string) (*[]documents.DocumentSummary, error) {
 	allDocuments := []documents.DocumentSummary{}
-	rows, err := ms.Db.Query(`SELECT document_id, title, tool_type, created, updated, description, subject_area FROM documents`)
+	rows, err := ms.Db.Query(stmt)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		var doc documents.DocumentSummary
-		err := rows.Scan(&doc.DocumentID, &doc.Title, &doc.ToolType, &doc.Created, &doc.Updated, &doc.Description, &doc.SubjectArea)
+		err := rows.Scan(&doc.DocumentID, &doc.Title, &doc.ToolType, &doc.Created, &doc.Updated, &doc.Description, &doc.SubjectArea, &doc.Database)
 		if err != nil {
 			return nil, err
 		}
@@ -111,19 +165,19 @@ func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
 func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
 	allFilters := &documents.DocumentQuery{}
 
-	toolTypes, err := scanSingleFilter(`SELECT DISTINCT tool_type FROM documents`, ms)
+	toolTypes, err := ms.scanSingleFilter(`SELECT DISTINCT tool_type FROM documents`)
 	if err != nil {
 		return nil, err
 	}
 	allFilters.ToolType = toolTypes
 
-	subjectAreas, err := scanSingleFilter(`SELECT DISTINCT subject_area FROM documents`, ms)
+	subjectAreas, err := ms.scanSingleFilter(`SELECT DISTINCT subject_area FROM documents`)
 	if err != nil {
 		return nil, err
 	}
 	allFilters.SubjectArea = subjectAreas
 
-	databaseNames, err := scanSingleFilter(`SELECT DISTINCT database_name FROM documents`, ms)
+	databaseNames, err := ms.scanSingleFilter(`SELECT DISTINCT database_name FROM documents`)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +188,7 @@ func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
 
 // Given the statment to select distinct values from a column and the mysqlstore,
 // return an array of the unique values in that column and error.
-func scanSingleFilter(stmt string, ms *MySQLStore) ([]string, error) {
+func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 	rows, err := ms.Db.Query(stmt)
 	if err != nil {
 		return nil, err

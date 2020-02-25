@@ -32,6 +32,34 @@ func TestGetAllSearch(t *testing.T) {
 	}
 }
 
+func TestGetQuerySearch(t *testing.T) {
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+
+	w := httptest.NewRecorder()
+
+	query := &documents.DocumentQuery{
+		SubjectArea: []string{"Healthcare", "Financial Resources"},
+		ToolType:    []string{"Report", "Cube"},
+		Database:    []string{"EDWAdminMart"},
+	}
+	queryBody, _ := json.Marshal(query)
+	r, _ := http.NewRequest("GET", "", bytes.NewBuffer(queryBody))
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	r.Header.Set("Content-Type", "application/json")
+
+	ctx.SearchHandler(w, r)
+	recievedDocSummaries := []documents.DocumentSummary{}
+	dec := json.NewDecoder(w.Body)
+	if err := dec.Decode(&recievedDocSummaries); err != nil {
+		t.Errorf("failed decoding")
+	}
+
+	if len(recievedDocSummaries) != 56 {
+		t.Errorf("did not get expected number of documents")
+	}
+}
+
 func TestGetFilters(t *testing.T) {
 	ctx := getContextHandler()
 	sid, _ := GetSID(ctx, t)

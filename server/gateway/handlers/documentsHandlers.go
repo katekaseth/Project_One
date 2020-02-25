@@ -56,6 +56,8 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 			http.Error(w, "Error getting documents", http.StatusInternalServerError)
 			return
 		}
+	} else { // there are filters so we call the database
+		documents, err = ctx.UserStore.GetSearchedDocuments(query)
 	}
 	documentsBytes, err := json.Marshal(documents)
 	if err != nil {
