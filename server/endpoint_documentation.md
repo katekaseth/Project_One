@@ -94,7 +94,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
   - Responses:
     - `200`: Success
     - `401`: User not authenticated
-    - `405`: Method must be GET
+    - `405`: Method must be POST
     - `409`: Can't insert to store, Error beginning a session
     - `415`: Request body must be in JSON, Request is nil
     - `500`: Decoding failed, Error getting documents
@@ -155,7 +155,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
 - ** PLANNED ** `GET /bookmarks`: Responds with a list of all current authenticated user's bookmark.
   - Response body:
 	``` Javascript
-    // An array of document objects. Example:
+    // An array of document summary objects. Example:
     [
         {
             "DocumentID": 1,

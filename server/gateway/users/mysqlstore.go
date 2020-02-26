@@ -210,11 +210,39 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, error) {
 	document := documents.Document{}
 	row := ms.Db.QueryRow(`select * from documents where document_id = ?`, documentID)
-	err := row.Scan(&document.ToolType, &document.Title, &document.Created, &document.Updated,
+	err := row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
 		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea,
-		&document.SqlQuery, &document.Database, &document.DocumentID)
+		&document.SqlQuery, &document.Database)
 	if err != nil {
 		return nil, err
 	}
 	return &document, nil
+}
+
+//InsertNewBookmark will insert a new bookmark of the given documentID for the given
+//userID if the bookmark is not already in the database.
+func (ms *MySQLStore) InsertNewBookmark(documentID int, userID int) error {
+	// check that the bookmark isn't already there
+	var exists bool
+	row := ms.Db.QueryRow(`select exists(select 1 from bookmarks where document_id = ? and user_id = ?)`, documentID, userID)
+	if err := row.Scan(&exists); err != nil {
+		return err
+	}
+	// bookmark is not in database yet so we insert new bookmark
+	if !exists {
+		_, err := ms.Db.Exec(`insert into bookmarks(document_id, user_id) values (?, ?)`, documentID, userID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//DeleteBookmark deletes the bookmark of the documentID of the given userID.
+func (ms *MySQLStore) DeleteBookmark(documentID int, userID int) error {
+	_, err := ms.Db.Exec(`delete from bookmarks where document_id = ? and user_id = ?`, documentID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -16,9 +16,10 @@ docker run -d \
 --network server-net \
 -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
 -e MYSQL_DATABASE=data \
+--restart unless-stopped \
 kateks/capstone_store
 
-docker run -d --network server-net --name redisServer redis
+docker run -d --network server-net --name redisServer --restart unless-stopped redis
 
 docker pull kateks/capstone_api
 docker run -d --name apiServer \

@@ -56,6 +56,8 @@ func main() {
 	router.HandleFunc("/search", ctx.SearchHandler)
 	router.HandleFunc("/filter", ctx.FilterHandler)
 	router.HandleFunc("/documents/{documentID}", ctx.SpecificDocumentHandler)
+	router.HandleFunc("/bookmarks/{documentID}", ctx.SpecificBookmarkHandler)
+	router.HandleFunc("/bookmarks", ctx.BookmarkHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
 

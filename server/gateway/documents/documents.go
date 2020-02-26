@@ -27,7 +27,7 @@ type Document struct {
 
 // DocumentSummary represents a summary of a document.
 type DocumentSummary struct {
-	DocumentID  int       `json:"DocumentID"`
+	DocumentID  int       `json:"documentID"`
 	Title       string    `json:"title"`
 	ToolType    string    `json:"toolType"`
 	Created     time.Time `json:"created"`
@@ -35,4 +35,11 @@ type DocumentSummary struct {
 	Description string    `json:"description"`
 	SubjectArea string    `json:"subjectArea"`
 	Database    string    `json:"database"`
+}
+
+// Bookmark represents a bookmark entry.
+type Bookmark struct {
+	BookmarkID int `json:"bookmarkID"`
+	DocumentID int `json:"documentID"`
+	UserID     int `json:"userID"`
 }

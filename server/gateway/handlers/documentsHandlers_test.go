@@ -12,6 +12,22 @@ import (
 	"time"
 )
 
+func TestPostSpecificBookmark(t *testing.T) {
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "/bookmarks/1", nil)
+	if err != nil {
+		t.Error("Request not working")
+	}
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+	if w.Code != 200 {
+		t.Error(w.Code)
+	}
+}
+
 func TestGetSpecificDocument(t *testing.T) {
 	ctx := getContextHandler()
 	sid, _ := GetSID(ctx, t)
@@ -27,8 +43,7 @@ func TestGetSpecificDocument(t *testing.T) {
 	receivedDoc := documents.Document{}
 	dec := json.NewDecoder(w.Body)
 	if err := dec.Decode(&receivedDoc); err != nil {
-		t.Error(receivedDoc)
-		t.Errorf("failed decoding")
+		t.Error(w.Code)
 	}
 }
 
@@ -40,7 +55,7 @@ func TestGetAllSearch(t *testing.T) {
 
 	query := &documents.DocumentQuery{}
 	queryBody, _ := json.Marshal(query)
-	r, _ := http.NewRequest("GET", "", bytes.NewBuffer(queryBody))
+	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
 	r.Header.Add("Authorization", "Bearer "+string(sid))
 	r.Header.Set("Content-Type", "application/json")
 
@@ -64,7 +79,7 @@ func TestGetQuerySearch(t *testing.T) {
 		Database:    []string{"EDWAdminMart"},
 	}
 	queryBody, _ := json.Marshal(query)
-	r, _ := http.NewRequest("GET", "", bytes.NewBuffer(queryBody))
+	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
 	r.Header.Add("Authorization", "Bearer "+string(sid))
 	r.Header.Set("Content-Type", "application/json")
 
@@ -101,8 +116,11 @@ func TestGetFilters(t *testing.T) {
 }
 
 func GetSID(ctx *HandlerContext, t *testing.T) (sessions.SessionID, *users.User) {
+	// reset bookmarks table
+	_, _ = ctx.UserStore.Db.Exec("delete from bookmarks")
+	_, _ = ctx.UserStore.Db.Exec("alter table bookmarks AUTO_INCREMENT = 1")
+	// reset users table
 	_, _ = ctx.UserStore.Db.Exec("delete from users")
-	// reset user ID or test cases fail
 	_, _ = ctx.UserStore.Db.Exec("alter table users AUTO_INCREMENT = 1")
 
 	validNewUser := &users.NewUser{
