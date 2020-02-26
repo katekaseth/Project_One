@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,7 +24,10 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	checkUserAuthenticated(ctx, w, r)
+	_, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
 
 	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
 		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
@@ -38,7 +42,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	// check that request body can be decoded into DocumentQuery struct
 	query := &documents.DocumentQuery{}
 	dec := json.NewDecoder(r.Body)
-	err := dec.Decode(query)
+	err = dec.Decode(query)
 	if err != nil {
 		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
@@ -102,7 +106,10 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	checkUserAuthenticated(ctx, w, r)
+	_, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
 
 	id, err := strconv.Atoi(url[len("/documents/"):])
 	if err != nil {
@@ -132,7 +139,11 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	sessionState := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
 
 	url := r.URL.Path
 	if !strings.HasPrefix(url, "/bookmarks/") {
@@ -140,13 +151,20 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
+	documentID, err := strconv.Atoi(url[len("/bookmarks/"):])
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
 	if r.Method == "POST" {
-		documentID, err := strconv.Atoi(url[len("/bookmarks/"):])
-		if err != nil {
+		if err := ctx.UserStore.InsertNewBookmark(documentID, userID); err != nil {
 			http.Error(w, "Internal fail", http.StatusInternalServerError)
 			return
 		}
-		if err := ctx.UserStore.InsertNewBookmark(documentID, int(sessionState.User.ID)); err != nil {
+	} else if r.Method == "DELETE" {
+		log.Println(documentID)
+		log.Println(userID)
+		if err := ctx.UserStore.DeleteBookmark(documentID, userID); err != nil {
 			http.Error(w, "Internal fail", http.StatusInternalServerError)
 			return
 		}
@@ -161,15 +179,19 @@ func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
+	// sessionState, err := checkUserAuthenticated(ctx, w, r)
+	// if err != nil {
+	// 	return
+	// }
 }
 
 // check if current user is authenticated; return status unauthorized if not
-func checkUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) *SessionState {
+func checkUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) (*SessionState, error) {
 	sessionState := &SessionState{}
 	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
 	if err != nil {
 		http.Error(w, "User not authenticated", http.StatusUnauthorized)
-		return sessionState
+		return nil, err
 	}
-	return sessionState
+	return sessionState, nil
 }

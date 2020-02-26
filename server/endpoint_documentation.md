@@ -138,14 +138,14 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `405`: Method must be GET
     - `500`: Internal server error
 
-- ** PLANNED ** `POST /bookmarks/:documentID`: Adds the specifed document to the current authenticated user's bookmarks.
+- `POST /bookmarks/:documentID`: Adds the specifed document to the current authenticated user's bookmarks.
   - Responses:
     - `200`: Success
     - `401`: User not authenticated
     - `405`: Method must be POST
     - `500`: Internal server error
 
-- ** PLANNED ** `DELETE /bookmarks/:documentID`: Deletes the specifed document from the current authenticated user's bookmarks.
+- `DELETE /bookmarks/:documentID`: Deletes the specifed document from the current authenticated user's bookmarks.
   - Responses:
     - `200`: Success
     - `401`: User not authenticated

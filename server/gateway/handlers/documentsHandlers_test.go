@@ -28,6 +28,37 @@ func TestPostSpecificBookmark(t *testing.T) {
 	}
 }
 
+func TestDeleteSpecificBookmark(t *testing.T) {
+	// insert some bookmarks
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "/bookmarks/1", nil)
+	if err != nil {
+		t.Error("Request not working")
+	}
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+	if w.Code != 200 {
+		t.Error("insert failed")
+	}
+	r, err = http.NewRequest("POST", "/bookmarks/3", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	r, err = http.NewRequest("POST", "/bookmarks/5", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+
+	// test delete
+	r, err = http.NewRequest("DELETE", "/bookmarks/5", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	if err != nil {
+		t.Error("Request not working")
+	}
+	ctx.SpecificBookmarkHandler(w, r)
+	if w.Code != 200 {
+		t.Error("delete failed")
+	}
+}
+
 func TestGetSpecificDocument(t *testing.T) {
 	ctx := getContextHandler()
 	sid, _ := GetSID(ctx, t)
