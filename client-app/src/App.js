@@ -18,6 +18,8 @@ function App() {
     const [page, setPage] = useState('/');
     // What is currently being filtered on
     const [filterState, setFilterState] = useState(null);
+    // Selected subject from landing page
+    const [selectedSubject, setSelectedSubject] = useState('');
     // Terms the user has searched on
     const [searchedTerms, setSearchedTerms] = useState([]);
     const history = useHistory();
@@ -28,11 +30,13 @@ function App() {
     }
 
     const clearFilterState = () => {
+        filterState !== null && 
         Object.keys(filterState).forEach(categoryKey => {
             Object.keys(filterState[categoryKey]).forEach(filterKey => {
                 filterState[categoryKey][filterKey] = false;
             });
         });
+        setSearchedTerms('');
         setFilterState(filterState);
     };
 
@@ -41,9 +45,19 @@ function App() {
         Object.keys(availableFilters).forEach(categoryKey => {
             tempFilterState[categoryKey] = {};
             availableFilters[categoryKey].forEach(filterKey => {
-                tempFilterState[categoryKey][filterKey] = false;
+                if (selectedSubject == filterKey) {
+                    tempFilterState[categoryKey][filterKey] = true;
+                } else {
+                    tempFilterState[categoryKey][filterKey] = false;
+                }
             })
         });
+        setFilterState(tempFilterState);
+    };
+
+    const updateFilterState = (subjectKey, filterKey) => {
+        let tempFilterState = {...filterState};
+        tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
         setFilterState(tempFilterState);
     };
 
@@ -81,17 +95,14 @@ function App() {
             },
         },
         clearFilterState,
-        updateFilterState: (subjectKey, filterKey) => {
-            let tempFilterState = {...filterState};
-            tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
-            setFilterState(tempFilterState);
-        },
+        updateFilterState,
         setSearchedTerms,
         fetchFilters,
-        setSelectedSubjectArea: (selectedSubjectArea) => {
-            if (filterState['Subject Area'] != null && filterState['Subject Area'][selectedSubjectArea] != null) {
-                filterState['Subject Area'][selectedSubjectArea] = true;
-                setFilterState(filterState);
+        setSelectedSubject: (subjectArea) => {
+            if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
+                updateFilterState('Subject Area', subjectArea)
+            } else if (filterState === null) {
+                setSelectedSubject(subjectArea);
             }
         }
     };

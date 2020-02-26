@@ -4,9 +4,9 @@ import { Grid } from '@material-ui/core';
 import { SubjectAreaCard } from './SubjectAreaCard';
 import { SUBJECT_AREA_ICONS } from '../../stringConstants';
 
-export  function SubjectAreaCards({setPage, setSelectedSubjectArea}) {
+export  function SubjectAreaCards({setPage, setSelectedSubject}) {
     const selectSubjectArea = (filterKey) => {
-        setSelectedSubjectArea(filterKey)
+        setSelectedSubject(filterKey)
         setPage.search();
     };
 
@@ -32,9 +32,3 @@ export  function SubjectAreaCards({setPage, setSelectedSubjectArea}) {
         </Grid>
     )
 }
-
-/*
-    <Grid item>
-        <SubjectAreaCard title='Services & Resources'icon={servicesIcon} />
-    </Grid>
-*/

@@ -9,6 +9,7 @@ export const API = {
     URL: 'https://api.katekaseth.me/',
     LOGIN: 'sessions',
     FILTER: 'filter',
+    SEARCH: 'search',
 };
 
 export const PAGES = {

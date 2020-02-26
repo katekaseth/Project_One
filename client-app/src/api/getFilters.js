@@ -8,7 +8,7 @@ export const getFiltersApi = () => {
         url: API.URL + API.FILTER,
         headers: {
             'Content-Type': 'application/json',
-            'authorization': sessionStorage.getItem('sessionId')
+            'Authorization': sessionStorage.getItem('sessionId')
         }
     });
 }

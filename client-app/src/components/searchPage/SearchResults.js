@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography, CardMedia } from '@material-ui/core';
 import { FaGraduationCap } from "react-icons/fa";
 
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
+import { searchEndpoint } from '../../api/search';
 
-export const SearchResults = ({setPage}) => {
-    let fakeResults = getFakeResults();
+export const SearchResults = ({setPage, filterState}) => {
+    const [results, setResults] = useState(null);
 
+    const fetchResults = async () => {
+        const response = await searchEndpoint(filterState);
+        setResults(response.data);
+    }
+
+    fetchResults();
+
+    if (results === null) return (<div></div>);
     return (
         <Grid 
             container 
@@ -16,7 +25,7 @@ export const SearchResults = ({setPage}) => {
             className='search-result-container'
         >
             {
-                fakeResults.map(result => {
+                results.map(result => {
                     return <SearchResult setPage={setPage} result={result}/>
                 })
             }
@@ -57,14 +66,11 @@ const SearchResult = ({setPage, result}) => {
                 </Grid>
                 <Grid item container alignItems='center' justify='space-between'>
                     <Grid item>
-                        {
-                            result.tags.map(tagLabel => {
-                                return <TagChip label={tagLabel}/>
-                            })
-                        }
+                        <TagChip label={result.subjectArea}/>
+                        <TagChip label={result.toolType}/>
                     </Grid>
                     <Grid item>
-                        <Typography variant='body2'>{`Updated ${result.lastUpdated}`}</Typography>
+                        <Typography variant='body2'>{`Updated ${result.updated}`}</Typography>
                     </Grid>
                 </Grid>
             </Grid>
