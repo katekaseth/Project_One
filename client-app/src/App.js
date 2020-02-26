@@ -104,7 +104,7 @@ function App() {
             } else if (filterState === null) {
                 setSelectedSubject(subjectArea);
             }
-        }
+        },
     };
 
     if (sessionStorage.getItem('sessionId') == null) {

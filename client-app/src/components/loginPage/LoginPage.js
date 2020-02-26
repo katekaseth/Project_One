@@ -93,7 +93,6 @@ const LoginComponent = ({setPage}) => {
     const [password, setPassword] = useState('');
 
     const handleKeyPress = (event) => {
-        console.log(event.key)
         if(event.key === 'Enter') {
             loginApi(username, password, setPage);
         }
