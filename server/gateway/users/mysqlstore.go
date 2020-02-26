@@ -205,3 +205,16 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 	}
 	return types, nil
 }
+
+//GetSpecificDocument returns a Document object that matches the given documentID.
+func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, error) {
+	document := documents.Document{}
+	row := ms.Db.QueryRow(`select * from documents where document_id = ?`, documentID)
+	err := row.Scan(&document.ToolType, &document.Title, &document.Created, &document.Updated,
+		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea,
+		&document.SqlQuery, &document.Database, &document.DocumentID)
+	if err != nil {
+		return nil, err
+	}
+	return &document, nil
+}

@@ -114,7 +114,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `405`: Method must be GET
     - `500`: Internal server error
 
-- ** PLANNED ** `GET /documents/:documentID`: Returns the document with given documentID.
+- `GET /documents/:documentID`: Returns the document with given documentID.
   - Response body:
 	``` Javascript
     // A single full document object. Example:

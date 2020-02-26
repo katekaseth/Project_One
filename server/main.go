@@ -45,7 +45,7 @@ func main() {
 	client := redis.NewClient(&redis.Options{
 		Addr: redisaddr,
 	})
-	sessionStore := sessions.NewRedisStore(client, time.Hour)
+	sessionStore := sessions.NewRedisStore(client, time.Hour*9)
 
 	ctx := handlers.NewHandlerContext(signingKey, sessionStore, userStore)
 
@@ -55,7 +55,7 @@ func main() {
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
 	router.HandleFunc("/search", ctx.SearchHandler)
 	router.HandleFunc("/filter", ctx.FilterHandler)
-	router.HandleFunc("/report/{reportID}", ctx.ReportHandler)
+	router.HandleFunc("/documents/{documentID}", ctx.SpecificDocumentHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
 

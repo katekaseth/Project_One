@@ -12,6 +12,26 @@ import (
 	"time"
 )
 
+func TestGetSpecificDocument(t *testing.T) {
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("GET", "/documents/1", nil)
+	if err != nil {
+		t.Error("Request not working")
+	}
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+
+	ctx.SpecificDocumentHandler(w, r)
+	receivedDoc := documents.Document{}
+	dec := json.NewDecoder(w.Body)
+	if err := dec.Decode(&receivedDoc); err != nil {
+		t.Error(receivedDoc)
+		t.Errorf("failed decoding")
+	}
+}
+
 func TestGetAllSearch(t *testing.T) {
 	ctx := getContextHandler()
 	sid, _ := GetSID(ctx, t)

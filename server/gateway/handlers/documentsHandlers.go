@@ -5,6 +5,7 @@ import (
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -17,8 +18,8 @@ import (
 // 		database: []
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+	if r.Method != "POST" {
+		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -100,14 +101,51 @@ func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(filtersBytes)
 }
 
-// DocumentHandler handles GET requests to /document/:documentID and responds with all information
+// SpecificDocumentHandler handles GET requests to /document/:documentID and responds with all information
 // for that report.
-func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Request) {
+func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+		return
+	}
 
+	url := r.URL.Path
+	if strings.HasPrefix(url, "/document/") {
+		http.Error(w, "Bad URL", http.StatusBadRequest)
+		return
+	}
+
+	sessionState := &SessionState{}
+	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	// vars := mux.Vars(r)
+	// log.Println(vars)
+	id, err := strconv.Atoi(url[len("/document/")+1:])
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	document, err := ctx.UserStore.GetSpecificDocument(id)
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	documentBytes, err := json.Marshal(document)
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentBytes)
 }
 
 // BookmarkHandler handles GET to /bookmark and responds with a list of all authenticated
-// user's bookmark. It also handles POST requests to /bookmark/:reportID to add or remove
+// user's bookmark. It also handles POST requests to /bookmark/:documentID to add or remove
 // a bookmark for the specified report.
 func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Request) {
 
