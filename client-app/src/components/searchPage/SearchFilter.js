@@ -14,14 +14,11 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { COLORS } from '../../theme';
-import { FILTER_OPTIONS } from '../../stringConstants';
-
 export const SearchFilter = ({filterState, updateFilterState}) => {
     return (
         <Paper square>
             {
-                Object.keys(FILTER_OPTIONS).map((subjectKey) => {
+                Object.keys(filterState).map((subjectKey) => {
                     return <FilterGroup filterState={filterState} updateFilterState={updateFilterState} subjectKey={subjectKey}></FilterGroup>
                 })
             }
@@ -30,7 +27,6 @@ export const SearchFilter = ({filterState, updateFilterState}) => {
 };
 
 const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
-    const filterGroup = FILTER_OPTIONS[subjectKey];
     const [expanded, setExpanded] = useState(Object.values(filterState[subjectKey]).includes(true));
     const classes = useStyles();
 
@@ -46,16 +42,16 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
                 <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
                 >
-                    <Typography variant='h6'>{filterGroup.groupLabel}</Typography>
+                    <Typography variant='h6'>{subjectKey}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <FormControl>
                         {
-                            Object.keys(filterGroup.filters).map((filterKey) => {
+                            Object.keys(filterState[subjectKey]).map((filterKey) => {
                                 return (
                                     <FormControlLabel
                                         value={filterKey} 
-                                        label={filterGroup.filters[filterKey]}
+                                        label={filterKey}
                                         control={<Checkbox color='primary' onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
                                     />
                                 )

@@ -2,13 +2,11 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 
 import { SubjectAreaCard } from './SubjectAreaCard';
-import { FILTER_OPTIONS } from '../../stringConstants';
+import { SUBJECT_AREA_ICONS } from '../../stringConstants';
 
-export  function SubjectAreaCards({setPage, updateFilterState}) {
-    const { SUBJECT_AREA } = FILTER_OPTIONS;
-
+export  function SubjectAreaCards({setPage, setSelectedSubjectArea}) {
     const selectSubjectArea = (filterKey) => {
-        updateFilterState('SUBJECT_AREA', filterKey)
+        setSelectedSubjectArea(filterKey)
         setPage.search();
     };
 
@@ -19,13 +17,13 @@ export  function SubjectAreaCards({setPage, updateFilterState}) {
             justify='center'
         >
             {
-                Object.keys(SUBJECT_AREA.filters).map(filterKey => {
+                Object.keys(SUBJECT_AREA_ICONS).map(filterKey => {
                     return (
                         <Grid item>
                             <SubjectAreaCard
                                 onClick={() => selectSubjectArea(filterKey)}
-                                title={SUBJECT_AREA.filters[filterKey]} 
-                                icon={SUBJECT_AREA.icons[filterKey]}
+                                title={filterKey} 
+                                icon={SUBJECT_AREA_ICONS[filterKey]}
                             />
                         </Grid>
                     );

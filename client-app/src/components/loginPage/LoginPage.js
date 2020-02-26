@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles'
 import { 
     Grid, 
@@ -12,8 +12,9 @@ import {
 
 import wLogo from '../../images/W-Logo.png';
 import wordmarkLogo from '../../images/Wordmark-Stacked.png'
+import { loginApi } from '../../api/login';
 
-export default () => {
+export default ({setPage}) => {
     const classes = useStyles();
 
     return (
@@ -34,7 +35,7 @@ export default () => {
                     alignItems='flex-end'
                     direction='column'
                 >
-                    <LoginComponent/>
+                    <LoginComponent setPage={setPage}/>
                 </Grid>
                 <Divider orientation='vertical' flexItem/>
                 <Grid 
@@ -86,8 +87,16 @@ export default () => {
     );
 }
 
-const LoginComponent = () => {
+const LoginComponent = ({setPage}) => {
     const classes = useStyles();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleKeyPress = (event) => {
+        if(event.key === 'Enter') {
+            loginApi(username, password, setPage);
+        }
+    }
 
     return (
         <Grid
@@ -108,11 +117,11 @@ const LoginComponent = () => {
             </Grid>
 
             <Grid item className={classes.items}>
-                <TextField size='small' label='UW NetID' variant='outlined' />
+                <TextField onChange={(e) => setUsername(e.target.value)} size='small' label='UW NetID' variant='outlined' />
             </Grid>
 
             <Grid item className={classes.items}>
-                <TextField size='small' label='Password' type='password' variant='outlined' />
+                <TextField onChange={(e) => setPassword(e.target.value)} size='small' label='Password' type='password' variant='outlined' />
             </Grid>
 
             <Grid className={classes.items}>
@@ -122,7 +131,7 @@ const LoginComponent = () => {
             </Grid>
 
             <Grid item className={classes.items}>
-                <Button variant="contained" color="primary">Sign in</Button>
+                <Button variant="contained"color="primary" onKeyPress={handleKeyPress} onClick={() => loginApi(username, password, setPage)}>Sign in</Button>
             </Grid>
         </Grid>
     );

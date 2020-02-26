@@ -1,25 +1,52 @@
 import React, { useState } from 'react';
-import { ThemeProvider } from '@material-ui/styles';
 import {
     Switch,
     Route,
     useHistory,
 } from 'react-router-dom';
 
-import { THEME } from './theme';
 import { PAGES } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
 import ResultPage from './components/resultPage/ResultPage';
 import LoginPage from './components/loginPage/LoginPage';
-import { FILTER_OPTIONS } from './stringConstants';
+import { getFiltersApi } from './api/getFilters';
 
 function App() {
+    // Page route, / is root
     const [page, setPage] = useState('/');
-    const [filterState, setFilterState] = useState(makeFilterState());
+    // What is currently being filtered on
+    const [filterState, setFilterState] = useState(null);
+    // Terms the user has searched on
     const [searchedTerms, setSearchedTerms] = useState([]);
     const history = useHistory();
+
+    const fetchFilters = async () => {
+        const response = await getFiltersApi();
+        buildFilterState(response.data);
+    }
+
+    const clearFilterState = () => {
+        Object.keys(filterState).forEach(categoryKey => {
+            Object.keys(filterState[categoryKey]).forEach(filterKey => {
+                filterState[categoryKey][filterKey] = false;
+            });
+        });
+        setFilterState(filterState);
+    };
+
+    const buildFilterState = (availableFilters) => {
+        let tempFilterState = {};
+        Object.keys(availableFilters).forEach(categoryKey => {
+            tempFilterState[categoryKey] = {};
+            availableFilters[categoryKey].forEach(filterKey => {
+                tempFilterState[categoryKey][filterKey] = false;
+            })
+        });
+        setFilterState(tempFilterState);
+    };
+
 
     const GLOBAL_STATE = {
         page,
@@ -30,17 +57,19 @@ function App() {
     const GLOBAL_ACTIONS = {
         setPage: {
             home: () => {
-                setFilterState(makeFilterState());
+                clearFilterState();
                 setSearchedTerms([]);
                 setPage(PAGES.home);
                 history.push(PAGES.home);
             },
             login: () => {
-                setFilterState(makeFilterState());
+                clearFilterState();
                 setPage(PAGES.login);
                 history.push(PAGES.login);
             },
             search: () => {
+                // don't clear filterState
+                // when going to search page
                 setPage(PAGES.search);
                 history.push(PAGES.search);
             },
@@ -51,19 +80,29 @@ function App() {
                 history.push(PAGES.result);
             },
         },
-        clearFilterState: () => {
-            setFilterState(makeFilterState());
-        },
+        clearFilterState,
         updateFilterState: (subjectKey, filterKey) => {
             let tempFilterState = {...filterState};
             tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
             setFilterState(tempFilterState);
         },
-        setSearchedTerms
+        setSearchedTerms,
+        fetchFilters,
+        setSelectedSubjectArea: (selectedSubjectArea) => {
+            if (filterState['Subject Area'] != null && filterState['Subject Area'][selectedSubjectArea] != null) {
+                filterState['Subject Area'][selectedSubjectArea] = true;
+                setFilterState(filterState);
+            }
+        }
     };
 
-  return (
-    <ThemeProvider theme={THEME}>
+    if (sessionStorage.getItem('sessionId') == null) {
+        return (
+            <LoginPage setPage={GLOBAL_ACTIONS.setPage}/>
+        );
+    }
+
+    return (
         <div className='app'>
             <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
             <Switch>
@@ -87,19 +126,7 @@ function App() {
                 </Route> 
             </Switch>
         </div>
-    </ThemeProvider>
-  );
+    );
 }
-
-const makeFilterState = () => {
-    let filterState = {};
-    Object.keys(FILTER_OPTIONS).forEach(subjectKey => {
-        filterState[subjectKey] = {};
-        Object.keys(FILTER_OPTIONS[subjectKey].filters).forEach(filterKey => {
-            filterState[subjectKey][filterKey] = false;
-        });
-    });
-    return filterState;
-};
 
 export default App;

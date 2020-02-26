@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 import { Chip, Typography } from '@material-ui/core';
-import { FILTER_OPTIONS } from '../stringConstants';
 
 export const TagChip = ({label}) => {
     const classes = useStyles();
@@ -12,12 +11,12 @@ export const TagChip = ({label}) => {
     );
 };
 
-export const DeletableTagChip = ({label, subjectKey, filterKey, updateFilterState}) => {
+export const DeletableTagChip = ({subjectKey, filterKey, updateFilterState}) => {
     const classes = useStyles();
     return (
         <Chip 
             className={classes.chip} 
-            label={label} onClick={() => updateFilterState(subjectKey, filterKey)} 
+            label={filterKey} onClick={() => updateFilterState(subjectKey, filterKey)} 
             onDelete={() => updateFilterState(subjectKey, filterKey)} 
             color='secondary'
         />
@@ -33,7 +32,6 @@ export const FilterChips = ({filterState, updateFilterState, clearFilterState}) 
             filterState[subjectKey][filterKey] && chipArray.push(
                 <DeletableTagChip 
                     updateFilterState={updateFilterState}
-                    label={FILTER_OPTIONS[subjectKey].filters[filterKey]} 
                     subjectKey={subjectKey} 
                     filterKey={filterKey}
                 />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Grid } from '@material-ui/core';
@@ -9,7 +9,15 @@ import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
 
 export default (props) => {
+
+    useEffect(() => {
+        if (props.filterState == null) {
+            props.fetchFilters();
+        }
+    }, []);
+    
     const classes = useStyles();
+    if (props.filterState == null) return <div></div>
     return (
         <Grid
             container

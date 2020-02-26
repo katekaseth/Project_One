@@ -5,6 +5,12 @@ import academicIcon from './icons/svg/academicIcon.svg';
 import masterDataIcon from './icons/svg/masterDataIcon.svg';
 import humanResourcesIcon from './icons/svg/humanResourcesIcon.svg';
 
+export const API = {
+    URL: 'https://api.katekaseth.me/',
+    LOGIN: 'sessions',
+    FILTER: 'filter',
+};
+
 export const PAGES = {
     home: '/',
     search: '/search',
@@ -14,47 +20,14 @@ export const PAGES = {
 
 export const SEARCH_TERMS = 'SEARCH_TERMS';
 
-export const FILTER_OPTIONS = {
-    SUBJECT_AREA: {
-        groupLabel: 'Subject Area',
-        filters: {
-            academic: 'Academic',
-            research: 'Research',
-            universityAdvancement: 'University Advancement',
-            financialResources: 'Financial Resources',
-            humanResources: 'Human Resources',
-            masterData: 'Master Data',
-        },
-        icons: {
-            academic: academicIcon,
-            research: researchIcon,
-            universityAdvancement: universityAdvancementIcon,
-            financialResources: financeIcon,
-            humanResources: humanResourcesIcon,
-            masterData: masterDataIcon,
-        }
-    },
-    TOOL_TYPE: {
-        groupLabel: 'Tool Type',
-        filters: {
-            reports: 'Reports',
-            visualizations: 'Visualizations',
-            cubes: 'Cubes',
-        }
-    },
-    SUPPORT_GROUP: {
-        groupLabel: 'Support Group',
-        filters: {
-            palceholder: 'Placeholder'
-        }
-    },
-    DATABASE: {
-        groupLabel: 'Database',
-        filters: {
-            palceholder: 'Placeholder'
-        }
-    },
-}
+export const SUBJECT_AREA_ICONS = {
+    Academic: academicIcon,
+    Research: researchIcon,
+    ['University Advancement']: universityAdvancementIcon,
+    ['Financial Resources']: financeIcon,
+    ['Human Resources']: humanResourcesIcon,
+    ['Master Data']: masterDataIcon,
+};
 
 export const METADATA_TABS = {
     technicalInfo: 'Technical Info',

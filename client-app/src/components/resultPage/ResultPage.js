@@ -3,7 +3,6 @@ import { Grid, Typography } from '@material-ui/core';
 
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
-import { FILTER_OPTIONS } from '../../stringConstants';
 
 export default ({filterState, setPage}) => {
     return (
@@ -25,7 +24,7 @@ const getSearchPath = (filterState) => {
     let filters = [];
     Object.keys(filterState).forEach(subjectKey => {
         Object.keys(filterState[subjectKey]).forEach(filterKey => {
-            filterState[subjectKey][filterKey] && filters.push(FILTER_OPTIONS[subjectKey].filters[filterKey]);
+            filterState[subjectKey][filterKey] && filters.push(filterKey);
         });
     });
     if (filters.length === 0) {
