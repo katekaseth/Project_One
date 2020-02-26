@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { API } from '../stringConstants';
+import { API, SESSION } from '../stringConstants';
 
 export const getFiltersApi = () => {
     return axios({
@@ -8,7 +8,7 @@ export const getFiltersApi = () => {
         url: API.URL + API.FILTER,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': sessionStorage.getItem('sessionId')
+            'Authorization': sessionStorage.getItem(SESSION.SESSION_ID)
         }
     });
 }

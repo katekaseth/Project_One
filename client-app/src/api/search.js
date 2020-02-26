@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { API } from '../stringConstants';
+import { API, SESSION } from '../stringConstants';
 
 export const searchEndpoint = (filterState) => {
     let body = {};
@@ -19,7 +19,7 @@ export const searchEndpoint = (filterState) => {
         data: body,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': sessionStorage.getItem('sessionId')
+            'Authorization': sessionStorage.getItem(SESSION.SESSION_ID)
         }
     });
 };

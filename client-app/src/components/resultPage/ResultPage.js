@@ -21,6 +21,10 @@ export default ({filterState, setPage}) => {
 };
 
 const getSearchPath = (filterState) => {
+    if (filterState === null) {
+        return 'Search';
+    }
+    
     let filters = [];
     Object.keys(filterState).forEach(subjectKey => {
         Object.keys(filterState[subjectKey]).forEach(filterKey => {

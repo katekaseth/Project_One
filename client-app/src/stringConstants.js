@@ -36,3 +36,10 @@ export const METADATA_TABS = {
     sqlQueries: 'SQL Queries',
     definitions: 'Defintitions',
 }
+
+export const SESSION = {
+    SESSION_ID: 'sessionId',
+    NEW_SESSION: 'newSession',
+    EXPIRE_SESSION: 'expireSession',
+    CHANNEL_NAME: 'uw_analytics_bc',
+}

@@ -5,7 +5,7 @@ import {
     useHistory,
 } from 'react-router-dom';
 
-import { PAGES } from './stringConstants';
+import { PAGES, SESSION } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
@@ -107,7 +107,7 @@ function App() {
         },
     };
 
-    if (sessionStorage.getItem('sessionId') == null) {
+    if (sessionStorage.getItem(SESSION.SESSION_ID) == null) {
         return (
             <LoginPage setPage={GLOBAL_ACTIONS.setPage}/>
         );
