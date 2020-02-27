@@ -152,7 +152,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `405`: Method must be POST
     - `500`: Internal server error
 
-- ** PLANNED ** `GET /bookmarks`: Responds with a list of all current authenticated user's bookmark.
+- `GET /bookmarks`: Responds with a list of all current authenticated user's bookmark.
   - Response body:
 	``` Javascript
     // An array of document summary objects. Example:

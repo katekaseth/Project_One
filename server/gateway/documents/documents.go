@@ -12,6 +12,7 @@ type DocumentQuery struct {
 
 // Document represents all the information of a document.
 type Document struct {
+	DocumentID  int       `json:"documentID"`
 	ToolType    string    `json:"toolType"`
 	Title       string    `json:"title"`
 	Created     time.Time `json:"created"`
@@ -22,7 +23,6 @@ type Document struct {
 	SubjectArea string    `json:"subjectArea"`
 	SqlQuery    string    `json:"sqlQuery"`
 	Database    string    `json:"database"`
-	DocumentID  int       `json:"id"`
 }
 
 // DocumentSummary represents a summary of a document.
