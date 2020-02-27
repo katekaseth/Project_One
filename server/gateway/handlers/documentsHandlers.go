@@ -172,17 +172,32 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 	w.WriteHeader(http.StatusOK)
 }
 
-// BookmarkHandler handles GET to /bookmark and responds with a list of all authenticated
-// user's bookmark.
+// BookmarkHandler handles GET to /bookmarks and responds with a list of all authenticated
+// user's bookmark in document summary form.
 func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
-	// sessionState, err := checkUserAuthenticated(ctx, w, r)
-	// if err != nil {
-	// 	return
-	// }
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
+	documents, err := ctx.UserStore.GetBookmarks(userID)
+	if err != nil {
+		http.Error(w, "Internal error", http.StatusInternalServerError)
+		return
+	}
+	documentBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentBytes)
+
 }
 
 // check if current user is authenticated; return status unauthorized if not

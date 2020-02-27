@@ -28,6 +28,41 @@ func TestPostSpecificBookmark(t *testing.T) {
 	}
 }
 
+func TestGetBookmark(t *testing.T) {
+	// insert some bookmarks
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "/bookmarks/1", nil)
+	if err != nil {
+		t.Error("Request not working")
+	}
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+	if w.Code != 200 {
+		t.Error("insert failed")
+	}
+	r, err = http.NewRequest("POST", "/bookmarks/3", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+	r, err = http.NewRequest("POST", "/bookmarks/5", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+
+	// test get
+	r, err = http.NewRequest("GET", "/bookmarks", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.BookmarkHandler(w, r)
+	recievedDocSummaries := []documents.DocumentSummary{}
+	dec := json.NewDecoder(w.Body)
+	if err := dec.Decode(&recievedDocSummaries); err != nil {
+		t.Error(err)
+		t.Error(w.Code)
+		t.Error(recievedDocSummaries)
+		t.Errorf("failed decoding")
+	}
+}
+
 func TestDeleteSpecificBookmark(t *testing.T) {
 	// insert some bookmarks
 	ctx := getContextHandler()
@@ -44,11 +79,13 @@ func TestDeleteSpecificBookmark(t *testing.T) {
 	}
 	r, err = http.NewRequest("POST", "/bookmarks/3", nil)
 	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
 	r, err = http.NewRequest("POST", "/bookmarks/5", nil)
 	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
 
 	// test delete
-	r, err = http.NewRequest("DELETE", "/bookmarks/5", nil)
+	r, err = http.NewRequest("DELETE", "/bookmarks/1", nil)
 	r.Header.Add("Authorization", "Bearer "+string(sid))
 	if err != nil {
 		t.Error("Request not working")
