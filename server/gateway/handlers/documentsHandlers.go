@@ -4,10 +4,11 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // SearchHandler handles GET requests to /search. It accepts a JSON body that details
@@ -100,23 +101,28 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	url := r.URL.Path
-	if !strings.HasPrefix(url, "https://api.katekaseth.me/documents/") {
+	var documentID int
+	// get user id from the url path
+	vars := mux.Vars(r)
+	documentID, err := strconv.Atoi(vars["documentID"])
+
+	// url := r.URL.Path
+	if err != nil {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
 	}
 
-	_, err := checkUserAuthenticated(ctx, w, r)
+	_, err = checkUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
 
-	id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
+	// id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
 	}
-	document, err := ctx.UserStore.GetSpecificDocument(id)
+	document, err := ctx.UserStore.GetSpecificDocument(documentID)
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
@@ -145,14 +151,14 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 	}
 	userID := int(sessionState.User.ID)
 
-	url := r.URL.Path
-	log.Println(url)
-	if !strings.HasPrefix(url, "https://api.katekaseth.me/bookmarks/") {
+	// get user id from the url path
+	vars := mux.Vars(r)
+	documentID, err := strconv.Atoi(vars["documentID"])
+	if err != nil {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
 	}
 
-	documentID, err := strconv.Atoi(url[len("https://api.katekaseth.me/bookmarks/"):])
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
@@ -163,8 +169,6 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 			return
 		}
 	} else if r.Method == "DELETE" {
-		log.Println(documentID)
-		log.Println(userID)
 		if err := ctx.UserStore.DeleteBookmark(documentID, userID); err != nil {
 			http.Error(w, "Internal fail", http.StatusInternalServerError)
 			return

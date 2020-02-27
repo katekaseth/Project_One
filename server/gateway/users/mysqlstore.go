@@ -4,7 +4,6 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
-	"log"
 	"strings"
 
 	// need it for mysql
@@ -159,7 +158,6 @@ func (ms *MySQLStore) scanDocSummaryQuery(stmt string) (*[]documents.DocumentSum
 		}
 		allDocuments = append(allDocuments, doc)
 	}
-	log.Println(allDocuments)
 	return &allDocuments, nil
 }
 
@@ -253,7 +251,6 @@ func (ms *MySQLStore) DeleteBookmark(documentID int, userID int) error {
 func (ms *MySQLStore) GetBookmarks(userID int) (*[]documents.DocumentSummary, error) {
 	stmt := fmt.Sprintf("SELECT b.document_id, d.title, d.tool_type, d.created, d.updated, d.description, d.subject_area, d.database_name FROM bookmarks AS b JOIN users AS u ON b.user_id = u.id JOIN documents AS d ON d.document_id = b.document_id WHERE b.user_id = (%d)", userID)
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
-	log.Println(allDocuments)
 	if err != nil {
 		return nil, err
 	}
