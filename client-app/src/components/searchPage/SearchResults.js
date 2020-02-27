@@ -36,7 +36,7 @@ const SearchResult = ({setPage, result}) => {
 
     return (
         <Paper 
-            onClick={() => setPage.result()}
+            onClick={() => setPage.result(result.documentID)}
             square 
             className={classes.searchResult}
         >
@@ -48,7 +48,7 @@ const SearchResult = ({setPage, result}) => {
                     <Grid xs item container alignItems='center'>
                         <FaGraduationCap/>
                         <Typography 
-                            onClick={() => setPage.result()} 
+                            onClick={() => setPage.result(result.documentID)} 
                             className={classes.resultTitle}
                             variant='h6'
                         >

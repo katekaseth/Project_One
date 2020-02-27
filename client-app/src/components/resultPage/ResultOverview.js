@@ -5,7 +5,7 @@ import { Grid, Paper, Typography, Button, Box } from '@material-ui/core';
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 
-export const ResultOverview = () => {
+export const ResultOverview = ({result}) => {
     const classes = useStyles();
 
     return (
@@ -16,30 +16,36 @@ export const ResultOverview = () => {
             >
                 <Grid item container justify='space-between'>
                     <Grid item>
-                        <Typography variant='h4'>Report Title</Typography>
+                        <Typography variant='h4'>{result.title}</Typography>
                     </Grid>
                     <Grid item container xs justify='flex-end'>
                         <Bookmark bookmarked={true}/>
-                        <Button className={classes.runButton} variant="contained" color="primary">Run Report</Button>
+                        <Button 
+                            className={classes.runButton}
+                            variant='contained'
+                            color='primary'
+                        >
+                            Run Report
+                        </Button>
                     </Grid>
                 </Grid>
                 <Grid item>
                     <Typography className={classes.description} variant='body1'>
-                        This report displays a list of grant and contract budgets in advance funding status for a selected Org Code structure. No historical information is reported.
+                        {result.description}
                     </Typography>
                 </Grid>
                 <Grid item container>
                     <Grid item xs container alignItems='center'>
                         <Grid>
-                            <TagChip label='Academic'/>
-                            <TagChip label='Report'/>
+                            <TagChip label={result.subjectArea}/>
+                            <TagChip label={result.toolType}/>
                         </Grid>
                         <Grid>
                             <NoAccess/>
                         </Grid>
                     </Grid>
                     <Grid item container xs={2} justify='flex-end' alignItems='flex-end'>
-                        <Typography variant='body2'>Updated Jan 1, 2020</Typography>
+                        <Typography variant='body2'>{'Updated ' + result.updated}</Typography>
                     </Grid>
                 </Grid>
             </Grid>

@@ -10,6 +10,7 @@ export const API = {
     LOGIN: 'sessions',
     FILTER: 'filter',
     SEARCH: 'search',
+    DOCUMENTS: 'documents',
 };
 
 export const PAGES = {

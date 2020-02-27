@@ -1,20 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
+import { getResultEndpoint } from '../../api/documents';
 
-export default ({filterState, setPage}) => {
+export default ({filterState, setPage, selectedResult}) => {
+    const [result, setResult] = useState(null);
+
+    const fetchResult = async (selectedResult) => {
+        const response = await getResultEndpoint(selectedResult);
+        setResult(response.data);
+    }
+
+    useEffect(() => {
+        fetchResult(selectedResult);
+    }, []);
+
+    if (selectedResult === null || result === null) return (<div></div>);
+    console.log(result);
     return (
         <Grid>
             <Grid>
                 <NavPath searchPath={getSearchPath(filterState)} setPage={setPage}/>
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview/>
+                <ResultOverview result={result}/>
             </Grid>
             <Grid className='result-metadata-container'>
-                <ResultMetadata/>
+                <ResultMetadata result={result}/>
             </Grid>
         </Grid>
     );

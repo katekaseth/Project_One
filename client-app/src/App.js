@@ -25,6 +25,8 @@ function App() {
     const [searchedTerms, setSearchedTerms] = useState([]);
     // Search results
     const [results, setResults] = useState(null);
+    // Selected result
+    const [selectedResult, setSelectedResult] = useState(null);
     const history = useHistory();
 
     // Fetches filters and calls /search for
@@ -36,6 +38,7 @@ function App() {
 
     const fetchResults = async () => {
         const response = await searchEndpoint(filterState, searchedTerms);
+        // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
         setResults(response.data);
     }
 
@@ -81,6 +84,7 @@ function App() {
         filterState,
         searchedTerms,
         results,
+        selectedResult
     };
 
     const GLOBAL_ACTIONS = {
@@ -102,9 +106,10 @@ function App() {
                 setPage(PAGES.search);
                 history.push(PAGES.search);
             },
-            result: () => {
+            result: (resultId) => {
                 // don't clear filterState 
                 // when going to result page
+                setSelectedResult(resultId);
                 setPage(PAGES.result);
                 history.push(PAGES.result);
             },
