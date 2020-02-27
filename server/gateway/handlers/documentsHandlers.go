@@ -101,7 +101,7 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	}
 
 	url := r.URL.Path
-	if !strings.HasPrefix(url, "/documents/") {
+	if !strings.HasPrefix(url, "https://api.katekaseth.me/documents/") {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
 	}
@@ -111,7 +111,7 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	id, err := strconv.Atoi(url[len("/documents/"):])
+	id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
@@ -146,12 +146,13 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 	userID := int(sessionState.User.ID)
 
 	url := r.URL.Path
-	if !strings.HasPrefix(url, "/bookmarks/") {
+	log.Println(url)
+	if !strings.HasPrefix(url, "https://api.katekaseth.me/bookmarks/") {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
 	}
 
-	documentID, err := strconv.Atoi(url[len("/bookmarks/"):])
+	documentID, err := strconv.Atoi(url[len("https://api.katekaseth.me/bookmarks/"):])
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
