@@ -6,12 +6,13 @@ import bookmarkedIcon from '../icons/svg/bookmarked.svg';
 import unbookmarkedIcon from '../icons/svg/unbookmarked.svg';
 
 
-export const Bookmark = () => {
+export const Bookmark = ({style}) => {
     const classes = useStyles();
     const [bookmarked, setBookmarked] = useState(false);
    
     return (
         <CardMedia 
+            style={style}
             className={classes.bookmark} 
             src={bookmarked ? bookmarkedIcon : unbookmarkedIcon} 
             component='img'

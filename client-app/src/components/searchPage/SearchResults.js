@@ -56,7 +56,7 @@ const SearchResult = ({setPage, result}) => {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Bookmark bookmarked={false}/>
+                        <Bookmark style={{marginTop: '-10px'}} bookmarked={false}/>
                     </Grid>
                 </Grid>
                 <Grid item>
@@ -91,32 +91,3 @@ const useStyles = makeStyles({
         }
     }
 });
-
-const getFakeResults = () => {
-    let results = [];
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    return results;
-};
