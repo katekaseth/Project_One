@@ -1,38 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Switch,
     Route,
     useHistory,
 } from 'react-router-dom';
 
-import { PAGES } from './stringConstants';
+import { PAGES, SESSION } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
 import ResultPage from './components/resultPage/ResultPage';
 import LoginPage from './components/loginPage/LoginPage';
 import { getFiltersApi } from './api/getFilters';
+import { searchEndpoint } from './api/search';
 
 function App() {
     // Page route, / is root
     const [page, setPage] = useState('/');
     // What is currently being filtered on
     const [filterState, setFilterState] = useState(null);
+    // Selected subject from landing page
+    const [selectedSubject, setSelectedSubject] = useState('');
     // Terms the user has searched on
     const [searchedTerms, setSearchedTerms] = useState([]);
+    // Search results
+    const [results, setResults] = useState(null);
+    // Selected result
+    const [selectedResult, setSelectedResult] = useState(null);
     const history = useHistory();
 
+    // Fetches filters and calls /search for
+    // results relating to that filter
     const fetchFilters = async () => {
         const response = await getFiltersApi();
         buildFilterState(response.data);
     }
 
+    const fetchResults = async () => {
+        const response = await searchEndpoint(filterState, searchedTerms);
+        // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
+        setResults(response.data);
+    }
+
     const clearFilterState = () => {
+        filterState !== null && 
         Object.keys(filterState).forEach(categoryKey => {
             Object.keys(filterState[categoryKey]).forEach(filterKey => {
                 filterState[categoryKey][filterKey] = false;
             });
         });
+        setSearchedTerms('');
         setFilterState(filterState);
     };
 
@@ -41,10 +58,24 @@ function App() {
         Object.keys(availableFilters).forEach(categoryKey => {
             tempFilterState[categoryKey] = {};
             availableFilters[categoryKey].forEach(filterKey => {
-                tempFilterState[categoryKey][filterKey] = false;
+                if (selectedSubject == filterKey) {
+                    tempFilterState[categoryKey][filterKey] = true;
+                } else {
+                    tempFilterState[categoryKey][filterKey] = false;
+                }
             })
         });
         setFilterState(tempFilterState);
+    };
+
+    const updateFilterState = (subjectKey, filterKey) => {
+        let tempFilterState = {...filterState};
+        tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
+        if (filterKey === selectedSubject) {
+            setSelectedSubject('');
+        }
+        setFilterState(tempFilterState);
+        fetchResults();
     };
 
 
@@ -52,6 +83,8 @@ function App() {
         page,
         filterState,
         searchedTerms,
+        results,
+        selectedResult
     };
 
     const GLOBAL_ACTIONS = {
@@ -73,30 +106,36 @@ function App() {
                 setPage(PAGES.search);
                 history.push(PAGES.search);
             },
-            result: () => {
+            result: (resultId) => {
                 // don't clear filterState 
                 // when going to result page
+                setSelectedResult(resultId);
                 setPage(PAGES.result);
                 history.push(PAGES.result);
             },
         },
         clearFilterState,
-        updateFilterState: (subjectKey, filterKey) => {
-            let tempFilterState = {...filterState};
-            tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
-            setFilterState(tempFilterState);
+        updateFilterState,
+        setSearchedTerms: (searchTerms) => {
+            setSearchedTerms(searchTerms);
+            fetchResults();
         },
-        setSearchedTerms,
-        fetchFilters,
-        setSelectedSubjectArea: (selectedSubjectArea) => {
-            if (filterState['Subject Area'] != null && filterState['Subject Area'][selectedSubjectArea] != null) {
-                filterState['Subject Area'][selectedSubjectArea] = true;
-                setFilterState(filterState);
+        setSelectedSubject: (subjectArea) => {
+            if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
+                updateFilterState('Subject Area', subjectArea)
+            } else if (filterState === null) {
+                setSelectedSubject(subjectArea);
             }
-        }
+        },
     };
 
-    if (sessionStorage.getItem('sessionId') == null) {
+    useEffect(() => {
+        if (filterState === null) {
+            fetchFilters();
+        } 
+    }, []);
+
+    if (sessionStorage.getItem(SESSION.SESSION_ID) == null) {
         return (
             <LoginPage setPage={GLOBAL_ACTIONS.setPage}/>
         );

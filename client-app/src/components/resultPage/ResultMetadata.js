@@ -3,14 +3,14 @@ import {
     Grid, 
     Paper, 
     Typography,
-    Box
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { COLORS } from '../../theme';
 import { METADATA_TABS } from '../../stringConstants';
+import { TechnicalInfo, SecurityInfo, SqlQuery, Definitions } from './MetadataTabs';
 
-export const ResultMetadata = () => {
+export const ResultMetadata = ({result}) => {
     const [metadataTab, setMetadataTab] = useState('technicalInfo');
 
     return (
@@ -19,17 +19,38 @@ export const ResultMetadata = () => {
                 <MetadataMenu metadataTab={metadataTab} setMetadataTab={setMetadataTab}/>
             </Grid>
             <Grid xs item>
-                <Metadata metadataTab={metadataTab}/>
+                <Metadata result={result} metadataTab={metadataTab}/>
             </Grid>
         </Grid>
     );
 }
 
-const Metadata = ({metadataTab}) => {
+const Metadata = ({metadataTab, result}) => {
     const classes = useStyles();
+    let tabContent
+    switch(METADATA_TABS[metadataTab]) {
+        case METADATA_TABS.technicalInfo:
+            tabContent = <TechnicalInfo {...result}/>
+            break;
+        case METADATA_TABS.securityInfo:
+            tabContent = <SecurityInfo {...result}/>
+            break;
+        case METADATA_TABS.sqlQueries:
+            tabContent = <SqlQuery {...result}/>
+            break;
+        case METADATA_TABS.definitions:
+            tabContent = <Definitions {...result}/>
+            break;
+        default:
+            tabContent = <div></div>
+    }
+
     return (
         <Paper square className={classes.metadata}>
             <Typography variant='h5'>{METADATA_TABS[metadataTab]}</Typography>
+            {
+                tabContent
+            }
         </Paper>
     );
 }

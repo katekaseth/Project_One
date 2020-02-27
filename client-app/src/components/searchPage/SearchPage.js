@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Grid } from '@material-ui/core';
@@ -8,16 +8,9 @@ import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
 
-export default (props) => {
-
-    useEffect(() => {
-        if (props.filterState == null) {
-            props.fetchFilters();
-        }
-    }, []);
-    
+export default (props) => {    
     const classes = useStyles();
-    if (props.filterState == null) return <div></div>
+    if (props.filterState == null) return <div>Error fetching available filters, try refreshing.</div>
     return (
         <Grid
             container
@@ -40,7 +33,7 @@ export default (props) => {
 
                 <Grid item className={classes.filterChips}>
                     <FilterChips  {...props}/>
-                    <SearchResults  {...props}/>
+                    <SearchResults {...props}/>
                 </Grid>
             </Grid>
         </Grid>

@@ -9,6 +9,8 @@ export const API = {
     URL: 'https://api.katekaseth.me/',
     LOGIN: 'sessions',
     FILTER: 'filter',
+    SEARCH: 'search',
+    DOCUMENTS: 'documents',
 };
 
 export const PAGES = {
@@ -34,4 +36,11 @@ export const METADATA_TABS = {
     securityInfo: 'Security Info',
     sqlQueries: 'SQL Queries',
     definitions: 'Defintitions',
+}
+
+export const SESSION = {
+    SESSION_ID: 'sessionId',
+    NEW_SESSION: 'newSession',
+    EXPIRE_SESSION: 'expireSession',
+    CHANNEL_NAME: 'uw_analytics_bc',
 }

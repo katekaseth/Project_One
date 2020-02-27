@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, CardMedia } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import { FaGraduationCap } from "react-icons/fa";
 
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 
-export const SearchResults = ({setPage}) => {
-    let fakeResults = getFakeResults();
+const NUM_PER_PAGE = 5;
+
+export const SearchResults = ({setPage, results}) => {
+    const [pagination, setPagination] = useState(0);
+
+    if (results === null) return (<div></div>);
+    let pageNum = parseInt(results.length / NUM_PER_PAGE) + (results.length % NUM_PER_PAGE === 0 && results.length > NUM_PER_PAGE? 0 : 1);
 
     return (
         <Grid 
@@ -16,10 +22,11 @@ export const SearchResults = ({setPage}) => {
             className='search-result-container'
         >
             {
-                fakeResults.map(result => {
+                results.slice(pagination * NUM_PER_PAGE, (pagination + 1) * NUM_PER_PAGE).map(result => {
                     return <SearchResult setPage={setPage} result={result}/>
                 })
             }
+            <Pagination onChange={(e, value) => setPagination(value)} count={pageNum}/>
         </Grid>
     );
 };
@@ -29,7 +36,7 @@ const SearchResult = ({setPage, result}) => {
 
     return (
         <Paper 
-            onClick={() => setPage.result()}
+            onClick={() => setPage.result(result.documentID)}
             square 
             className={classes.searchResult}
         >
@@ -41,7 +48,7 @@ const SearchResult = ({setPage, result}) => {
                     <Grid xs item container alignItems='center'>
                         <FaGraduationCap/>
                         <Typography 
-                            onClick={() => setPage.result()} 
+                            onClick={() => setPage.result(result.documentID)} 
                             className={classes.resultTitle}
                             variant='h6'
                         >
@@ -57,14 +64,11 @@ const SearchResult = ({setPage, result}) => {
                 </Grid>
                 <Grid item container alignItems='center' justify='space-between'>
                     <Grid item>
-                        {
-                            result.tags.map(tagLabel => {
-                                return <TagChip label={tagLabel}/>
-                            })
-                        }
+                        <TagChip label={result.subjectArea}/>
+                        <TagChip label={result.toolType}/>
                     </Grid>
                     <Grid item>
-                        <Typography variant='body2'>{`Updated ${result.lastUpdated}`}</Typography>
+                        <Typography variant='body2'>{`Updated ${result.updated}`}</Typography>
                     </Grid>
                 </Grid>
             </Grid>

@@ -10,16 +10,15 @@ import {
     FormControlLabel,
     FormControl,
     Typography,
-    Box
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-export const SearchFilter = ({filterState, updateFilterState}) => {
+export const SearchFilter = (props) => {
     return (
         <Paper square>
             {
-                Object.keys(filterState).map((subjectKey) => {
-                    return <FilterGroup filterState={filterState} updateFilterState={updateFilterState} subjectKey={subjectKey}></FilterGroup>
+                Object.keys(props.filterState).map((subjectKey) => {
+                    return <FilterGroup {...props} subjectKey={subjectKey}></FilterGroup>
                 })
             }
         </Paper>
@@ -29,6 +28,10 @@ export const SearchFilter = ({filterState, updateFilterState}) => {
 const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
     const [expanded, setExpanded] = useState(Object.values(filterState[subjectKey]).includes(true));
     const classes = useStyles();
+
+    const changeFilter = (subjectKey, filterKey) => {
+        updateFilterState(subjectKey, filterKey);
+    }
 
     return (
         <Grid>
@@ -52,7 +55,7 @@ const FilterGroup = ({filterState, updateFilterState, subjectKey}) => {
                                     <FormControlLabel
                                         value={filterKey} 
                                         label={filterKey}
-                                        control={<Checkbox color='primary' onClick={() => updateFilterState(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
+                                        control={<Checkbox color='primary' onClick={() => changeFilter(subjectKey, filterKey)} checked={filterState[subjectKey][filterKey]} />}
                                     />
                                 )
                             })

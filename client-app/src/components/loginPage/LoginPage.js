@@ -117,11 +117,24 @@ const LoginComponent = ({setPage}) => {
             </Grid>
 
             <Grid item className={classes.items}>
-                <TextField onChange={(e) => setUsername(e.target.value)} size='small' label='UW NetID' variant='outlined' />
+                <TextField 
+                    onKeyPress={handleKeyPress}
+                    onChange={(e) => setUsername(e.target.value)}
+                    size='small'
+                    label='UW NetID'
+                    variant='outlined'
+                />
             </Grid>
 
             <Grid item className={classes.items}>
-                <TextField onChange={(e) => setPassword(e.target.value)} size='small' label='Password' type='password' variant='outlined' />
+                <TextField
+                    onKeyPress={handleKeyPress}
+                    onChange={(e) => setPassword(e.target.value)}
+                    size='small'
+                    label='Password'
+                    type='password'
+                    variant='outlined'
+                />
             </Grid>
 
             <Grid className={classes.items}>
@@ -131,7 +144,7 @@ const LoginComponent = ({setPage}) => {
             </Grid>
 
             <Grid item className={classes.items}>
-                <Button variant="contained"color="primary" onKeyPress={handleKeyPress} onClick={() => loginApi(username, password, setPage)}>Sign in</Button>
+                <Button variant='contained' color='primary' onClick={() => loginApi(username, password, setPage)}>Sign in</Button>
             </Grid>
         </Grid>
     );
