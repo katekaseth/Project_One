@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import { FaGraduationCap } from "react-icons/fa";
 
-import { TagChip } from '../Chips';
-import { Bookmark } from '../Bookmark';
+import { SearchResult } from './SearchResult';
 
 const NUM_PER_PAGE = 5;
 
@@ -30,64 +28,3 @@ export const SearchResults = ({setPage, results}) => {
         </Grid>
     );
 };
-
-const SearchResult = ({setPage, result}) => {
-    const classes = useStyles();
-
-    return (
-        <Paper 
-            onClick={() => setPage.result(result.documentID)}
-            square 
-            className={classes.searchResult}
-        >
-            <Grid 
-                container 
-                direction='column'
-            >
-                <Grid item container justify='space-between'>
-                    <Grid xs item container alignItems='center'>
-                        <FaGraduationCap/>
-                        <Typography 
-                            onClick={() => setPage.result(result.documentID)} 
-                            className={classes.resultTitle}
-                            variant='h6'
-                        >
-                            {result.title}
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Bookmark style={{marginTop: '-10px'}} bookmarked={false}/>
-                    </Grid>
-                </Grid>
-                <Grid item>
-                    <Typography variant='body2'>{result.description}</Typography>
-                </Grid>
-                <Grid item container alignItems='center' justify='space-between'>
-                    <Grid item>
-                        <TagChip label={result.subjectArea}/>
-                        <TagChip label={result.toolType}/>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant='body2'>{`Updated ${result.updated}`}</Typography>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Paper>
-    );
-};
-
-const useStyles = makeStyles({
-    searchResult: {
-        marginTop: '20px',
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        paddingRight: '15px',
-        paddingLeft: '15px',
-    },
-    resultTitle: {
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline'
-        }
-    }
-});
