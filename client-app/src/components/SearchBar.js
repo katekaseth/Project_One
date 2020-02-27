@@ -10,8 +10,7 @@ export function SearchBar({setPage, setSearchedTerms, searchedTerms}) {
         if(event.key === 'Enter') {
             let textInput = event.target.value;
             let inputArray = textInput.split(',').map(searchTerm => {
-                let trimmed = searchTerm.trim();
-                return trimmed.substring(0, 1).toUpperCase() + trimmed.substring(1).toLowerCase();
+                return searchTerm.trim();
             })
             setSearchedTerms(inputArray);
             setPage.search();

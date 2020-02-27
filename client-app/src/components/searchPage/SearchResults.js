@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, CardMedia } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import { FaGraduationCap } from "react-icons/fa";
 
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
-import { searchEndpoint } from '../../api/search';
 
-export const SearchResults = ({setPage, filterState}) => {
-    const [results, setResults] = useState(null);
+const NUM_PER_PAGE = 5;
 
-    const fetchResults = async () => {
-        const response = await searchEndpoint(filterState);
-        setResults(response.data);
-    }
-
-    fetchResults();
+export const SearchResults = ({setPage, results}) => {
+    const [pagination, setPagination] = useState(0);
 
     if (results === null) return (<div></div>);
+    let pageNum = parseInt(results.length / NUM_PER_PAGE) + (results.length % NUM_PER_PAGE === 0 && results.length > NUM_PER_PAGE? 0 : 1);
+
     return (
         <Grid 
             container 
@@ -25,10 +22,11 @@ export const SearchResults = ({setPage, filterState}) => {
             className='search-result-container'
         >
             {
-                results.map(result => {
+                results.slice(pagination * NUM_PER_PAGE, (pagination + 1) * NUM_PER_PAGE).map(result => {
                     return <SearchResult setPage={setPage} result={result}/>
                 })
             }
+            <Pagination onChange={(e, value) => setPagination(value)} count={pageNum}/>
         </Grid>
     );
 };

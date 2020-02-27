@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Switch,
     Route,
@@ -12,6 +12,7 @@ import SearchPage from './components/searchPage/SearchPage';
 import ResultPage from './components/resultPage/ResultPage';
 import LoginPage from './components/loginPage/LoginPage';
 import { getFiltersApi } from './api/getFilters';
+import { searchEndpoint } from './api/search';
 
 function App() {
     // Page route, / is root
@@ -22,11 +23,20 @@ function App() {
     const [selectedSubject, setSelectedSubject] = useState('');
     // Terms the user has searched on
     const [searchedTerms, setSearchedTerms] = useState([]);
+    // Search results
+    const [results, setResults] = useState(null);
     const history = useHistory();
 
+    // Fetches filters and calls /search for
+    // results relating to that filter
     const fetchFilters = async () => {
         const response = await getFiltersApi();
         buildFilterState(response.data);
+    }
+
+    const fetchResults = async () => {
+        const response = await searchEndpoint(filterState, searchedTerms);
+        setResults(response.data);
     }
 
     const clearFilterState = () => {
@@ -58,7 +68,11 @@ function App() {
     const updateFilterState = (subjectKey, filterKey) => {
         let tempFilterState = {...filterState};
         tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
+        if (filterKey === selectedSubject) {
+            setSelectedSubject('');
+        }
         setFilterState(tempFilterState);
+        fetchResults();
     };
 
 
@@ -66,6 +80,7 @@ function App() {
         page,
         filterState,
         searchedTerms,
+        results,
     };
 
     const GLOBAL_ACTIONS = {
@@ -96,8 +111,10 @@ function App() {
         },
         clearFilterState,
         updateFilterState,
-        setSearchedTerms,
-        fetchFilters,
+        setSearchedTerms: (searchTerms) => {
+            setSearchedTerms(searchTerms);
+            fetchResults();
+        },
         setSelectedSubject: (subjectArea) => {
             if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea)
@@ -106,6 +123,12 @@ function App() {
             }
         },
     };
+
+    useEffect(() => {
+        if (filterState === null) {
+            fetchFilters();
+        } 
+    }, []);
 
     if (sessionStorage.getItem(SESSION.SESSION_ID) == null) {
         return (

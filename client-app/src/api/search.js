@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { API, SESSION } from '../stringConstants';
 
-export const searchEndpoint = (filterState) => {
+export const searchEndpoint = (filterState, searchedTerms) => {
     let body = {};
     Object.keys(filterState).forEach(categoryKey => {
         body[categoryKey] = [];
@@ -12,6 +12,7 @@ export const searchEndpoint = (filterState) => {
             }
         });
     });
+    body.searchedTerms = searchedTerms;
 
     return axios({
         method: 'post',
