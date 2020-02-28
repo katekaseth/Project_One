@@ -12,7 +12,6 @@ export const SearchResults = ({setPage, results}) => {
 
     if (results === null) return (<div></div>);
     let pageNum = parseInt(results.length / NUM_PER_PAGE) + (results.length % NUM_PER_PAGE === 0 && results.length > NUM_PER_PAGE? 0 : 1);
-
     return (
         <Grid 
             container 

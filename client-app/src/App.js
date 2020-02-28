@@ -93,11 +93,13 @@ function App() {
                 clearFilterState();
                 setSearchedTerms([]);
                 setPage(PAGES.home);
+                setResults(null);
                 history.push(PAGES.home);
             },
             login: () => {
                 clearFilterState();
                 setPage(PAGES.login);
+                setResults(null);
                 history.push(PAGES.login);
             },
             search: () => {
@@ -111,6 +113,7 @@ function App() {
                 // when going to result page
                 setSelectedResult(resultId);
                 setPage(PAGES.result);
+                setResults(null);
                 history.push(PAGES.result);
             },
         },
