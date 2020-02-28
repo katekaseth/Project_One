@@ -104,8 +104,8 @@ All endpoints require authenticated user in the form of an authorization bearer 
 	``` Javascript
     {
         "Subject Area": ["array", "of", "filters"],
-        "Tool Type": ["array", "of", "filters"],
-        "Database": ["array", "of", "filters"],
+        "Tool Type": [],
+        "Database": [],
     }
 	```
   - Responses:
