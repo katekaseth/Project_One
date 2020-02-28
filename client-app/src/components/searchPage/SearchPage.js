@@ -16,7 +16,7 @@ export default (props) => {
             container
             className='search-page'
         >
-            <Grid item>
+            <Grid xs={3} item>
                 <SearchFilter {...props}/>
             </Grid>
 
