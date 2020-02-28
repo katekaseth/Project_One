@@ -64,15 +64,14 @@
 
 All endpoints require authenticated user in the form of an authorization bearer token. Add request header: `Authorization: Bearer <token>`
 
-- `GET /search`: Returns a list of documents matching the body query.
+- `POST /search`: Returns a list of documents matching the body query.
   - Request body: 
 	``` Javascript
-    // Note that the terms should match those give by the /filter endpoints exactly.
+    // Note that the terms should match those given by the /filter endpoints exactly.
 	{
-        // Can also use "Subject Area", "Tool Type", "Database".
-        subjectArea: ["array", "of", "filters"],
-		toolType: ["array", "of", "filters"],
-		database: ["array", "of", "filters"],
+    "Subject Area": ["array", "of", "filters"],
+		"Tool Type": [],
+		"Database": [],
 	}
 	```
   - Response body:
@@ -88,6 +87,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
             "description": "Displays a graph...",
             "subjectArea": "Financial Resources",
             "database": "EDWAdminMart"
+            "isBookmarked": "false"
         }
     ]
 	```

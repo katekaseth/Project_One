@@ -25,10 +25,11 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	_, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
+	userID := int(sessionState.User.ID)
 
 	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
 		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
@@ -49,7 +50,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	var documents *[]documents.DocumentSummary
+	var documents []documents.DocumentSummary
 	// if there are no filters, return all documents summaries
 	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 {
 		documents, err = ctx.UserStore.GetAllDocuments()
@@ -60,14 +61,35 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	} else { // there are filters so we call the database
 		documents, err = ctx.UserStore.GetSearchedDocuments(query)
 	}
-	documentsBytes, err := json.Marshal(documents)
+	// add bookmarked field
+	docIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
 	if err != nil {
 		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	for i := 0; i < len(documents); i++ {
+		documents[i].Bookmarked = contains(docIDs, documents[i].DocumentID)
+	}
+
+	// marshal to json
+	documentsBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(documentsBytes)
+}
+
+// TODO: make this logn at some point
+func contains(arr []int, n int) bool {
+	for _, elem := range arr {
+		if elem == n {
+			return true
+		}
+	}
+	return false
 }
 
 // FilterHandler handles GET requests to /filter and responds with a JSON of the

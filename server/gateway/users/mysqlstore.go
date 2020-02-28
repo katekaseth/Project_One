@@ -91,7 +91,7 @@ func (ms *MySQLStore) Delete(id int64) error {
 //
 
 //GetAllDocuments returns an array of DocumentSummary of all available documents.
-func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) GetAllDocuments() ([]documents.DocumentSummary, error) {
 	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents"
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
@@ -103,7 +103,7 @@ func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
 
 //GetSearchedDocuments returns and array of DocumentSummary that meet the criteria of
 //the passed in query.
-func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]documents.DocumentSummary, error) {
 	stmt := `SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where `
 	if len(query.SubjectArea) != 0 {
 		stmt += `(subject_area = ` + `"` + query.SubjectArea[0] + `"`
@@ -144,7 +144,7 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) (*[]d
 
 //Given a statment to query Documents, returns an array of Document Summary returned by the
 //database query.
-func (ms *MySQLStore) scanDocSummaryQuery(stmt string) (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) scanDocSummaryQuery(stmt string) ([]documents.DocumentSummary, error) {
 	allDocuments := []documents.DocumentSummary{}
 	rows, err := ms.Db.Query(stmt)
 	if err != nil {
@@ -158,7 +158,7 @@ func (ms *MySQLStore) scanDocSummaryQuery(stmt string) (*[]documents.DocumentSum
 		}
 		allDocuments = append(allDocuments, doc)
 	}
-	return &allDocuments, nil
+	return allDocuments, nil
 }
 
 //GetFilters returns a DocumentQuery which lists available filters in the database.
@@ -248,11 +248,30 @@ func (ms *MySQLStore) DeleteBookmark(documentID int, userID int) error {
 }
 
 //GetBookmarks returns the document summaries of all the given user's bookmarked documents.
-func (ms *MySQLStore) GetBookmarks(userID int) (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) GetBookmarks(userID int) ([]documents.DocumentSummary, error) {
 	stmt := fmt.Sprintf("SELECT b.document_id, d.title, d.tool_type, d.created, d.updated, d.description, d.subject_area, d.database_name FROM bookmarks AS b JOIN users AS u ON b.user_id = u.id JOIN documents AS d ON d.document_id = b.document_id WHERE b.user_id = (%d)", userID)
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err
 	}
 	return allDocuments, nil
+}
+
+//GetBookmarkedDocumentID returns an array of documentIDs that has been bookmarked by the given user.
+func (ms *MySQLStore) GetBookmarkedDocumentID(userID int) ([]int, error) {
+	stmt := fmt.Sprintf("SELECT b.document_id FROM bookmarks AS b JOIN users AS u ON b.user_id = u.id JOIN documents AS d ON d.document_id = b.document_id WHERE b.user_id = (%d)", userID)
+	var docIDs []int
+	rows, err := ms.Db.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var id int
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		docIDs = append(docIDs, id)
+	}
+	return docIDs, nil
 }
