@@ -19,7 +19,7 @@ export const ResultOverview = ({result}) => {
                         <Typography variant='h4'>{result.title}</Typography>
                     </Grid>
                     <Grid item container xs justify='flex-end'>
-                        <Bookmark bookmarked={true}/>
+                        <Bookmark isBookmarked={result.isBookmarked} documentId={result.documentID}/>
                         <Button 
                             className={classes.runButton}
                             variant='contained'

@@ -11,6 +11,7 @@ export const API = {
     FILTER: 'filter',
     SEARCH: 'search',
     DOCUMENTS: 'documents',
+    BOOKMARK: 'bookmarks',
 };
 
 export const PAGES = {

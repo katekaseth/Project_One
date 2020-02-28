@@ -76,13 +76,13 @@ function App() {
     fetchResults();
   };
 
-  const GLOBAL_STATE = {
-    page,
-    filterState,
-    searchedTerms,
-    results,
-    selectedResult
-  };
+    const GLOBAL_STATE = {
+        page,
+        filterState,
+        searchedTerms,
+        results,
+        selectedResult
+    };
 
   const GLOBAL_ACTIONS = {
     setPage: {
