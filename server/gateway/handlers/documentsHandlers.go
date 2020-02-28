@@ -14,10 +14,10 @@ import (
 // SearchHandler handles GET requests to /search. It accepts a JSON body that details
 // search queries in this form:
 // {
-// 		toolType: ["example", "here"],
-// 		subjectArea: [],
-// 		supportGroup: [], not this one yet
-// 		database: []
+// 		Tool Type: ["example", "here"],
+// 		Subject Area: [],
+// 		Database: []
+// 		Support Group: [],
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
@@ -25,10 +25,11 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	_, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
+	userID := int(sessionState.User.ID)
 
 	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
 		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
@@ -49,9 +50,9 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	var documents *[]documents.DocumentSummary
+	var documents []documents.DocumentSummary
 	// if there are no filters, return all documents summaries
-	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 {
+	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SupportGroup) == 0 {
 		documents, err = ctx.UserStore.GetAllDocuments()
 		if err != nil {
 			http.Error(w, "Error getting documents", http.StatusInternalServerError)
@@ -60,9 +61,20 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	} else { // there are filters so we call the database
 		documents, err = ctx.UserStore.GetSearchedDocuments(query)
 	}
-	documentsBytes, err := json.Marshal(documents)
+	// add bookmarked field
+	docIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
 	if err != nil {
 		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	for i := 0; i < len(documents); i++ {
+		documents[i].Bookmarked = contains(docIDs, documents[i].DocumentID)
+	}
+
+	// marshal to json
+	documentsBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -70,11 +82,21 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(documentsBytes)
 }
 
+// TODO: make this logn at some point
+func contains(arr []int, n int) bool {
+	for _, elem := range arr {
+		if elem == n {
+			return true
+		}
+	}
+	return false
+}
+
 // FilterHandler handles GET requests to /filter and responds with a JSON of the
 // available filter options in the database.
 func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -112,10 +134,11 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	_, err = checkUserAuthenticated(ctx, w, r)
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
+	userID := int(sessionState.User.ID)
 
 	// id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
 	if err != nil {
@@ -127,6 +150,15 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
 	}
+
+	// add bookmarked field
+	docIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
+	if err != nil {
+		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	document.Bookmarked = contains(docIDs, document.DocumentID)
+
 	documentBytes, err := json.Marshal(document)
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
@@ -151,7 +183,8 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 	}
 	userID := int(sessionState.User.ID)
 
-	// get user id from the url path
+	// get document id from the url path
+	// NOTE: for some reason mux.Vars only works when it's deployed.
 	vars := mux.Vars(r)
 	documentID, err := strconv.Atoi(vars["documentID"])
 	if err != nil {

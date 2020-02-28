@@ -145,6 +145,7 @@ func TestGetQuerySearch(t *testing.T) {
 		SubjectArea: []string{"Healthcare", "Financial Resources"},
 		ToolType:    []string{"Report", "Cube"},
 		Database:    []string{"EDWAdminMart"},
+		// SupportGroup: []string{"ORIS"},
 	}
 	queryBody, _ := json.Marshal(query)
 	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
@@ -159,6 +160,7 @@ func TestGetQuerySearch(t *testing.T) {
 	}
 
 	if len(recievedDocSummaries) != 56 {
+		t.Error(recievedDocSummaries)
 		t.Errorf("did not get expected number of documents")
 	}
 }
