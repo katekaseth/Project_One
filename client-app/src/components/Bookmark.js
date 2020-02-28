@@ -5,21 +5,33 @@ import { CardMedia } from '@material-ui/core';
 import bookmarkedIcon from '../icons/svg/bookmarked.svg';
 import unbookmarkedIcon from '../icons/svg/unbookmarked.svg';
 
+import { bookmarkEndpoint, unbookmarkEndpoint } from '../api/bookmarks';
 
-export const Bookmark = ({style}) => {
+
+export const Bookmark = ({style, documentId, isBookmarked}) => {
+    const [bookmarkState, setBookmarkState] = useState(isBookmarked);
     const classes = useStyles();
-    const [bookmarked, setBookmarked] = useState(false);
+
+    const handleClick = async (e) => {
+        e.stopPropagation();
+        let response;
+        if (bookmarkState) {
+            response = await unbookmarkEndpoint(documentId);
+        } else {
+            response = await bookmarkEndpoint(documentId);
+        }
+        if (response.status === 200) {
+            setBookmarkState(!bookmarkState);
+        }
+    };
    
     return (
         <CardMedia 
             style={style}
             className={classes.bookmark} 
-            src={bookmarked ? bookmarkedIcon : unbookmarkedIcon} 
+            src={bookmarkState ? bookmarkedIcon : unbookmarkedIcon} 
             component='img'
-            onClick={(e) => {
-                e.stopPropagation();
-                setBookmarked(!bookmarked);
-            }}
+            onClick={handleClick}
         />
     );
 }

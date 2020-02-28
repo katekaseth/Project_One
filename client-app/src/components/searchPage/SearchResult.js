@@ -59,7 +59,7 @@ export const SearchResult = ({setPage, result}) => {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Bookmark style={{marginTop: '-15px'}} bookmarked={false}/>
+                        <Bookmark style={{marginTop: '-15px'}} isBookmarked={result.isBookmarked} documentId={result.documentID}/>
                     </Grid>
                 </Grid>
                 <Grid item>
