@@ -134,10 +134,11 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	_, err = checkUserAuthenticated(ctx, w, r)
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
+	userID := int(sessionState.User.ID)
 
 	// id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
 	if err != nil {
@@ -149,6 +150,15 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
 	}
+
+	// add bookmarked field
+	docIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
+	if err != nil {
+		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	document.Bookmarked = contains(docIDs, document.DocumentID)
+
 	documentBytes, err := json.Marshal(document)
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
