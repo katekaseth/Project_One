@@ -23,6 +23,7 @@ type Document struct {
 	SubjectArea string    `json:"subjectArea"`
 	SqlQuery    string    `json:"sqlQuery"`
 	Database    string    `json:"database"`
+	Bookmarked  bool      `json:"isBookmarked"`
 }
 
 // DocumentSummary represents a summary of a document.
@@ -35,6 +36,7 @@ type DocumentSummary struct {
 	Description string    `json:"description"`
 	SubjectArea string    `json:"subjectArea"`
 	Database    string    `json:"database"`
+	Bookmarked  bool      `json:"isBookmarked"`
 }
 
 // Bookmark represents a bookmark entry.

@@ -151,7 +151,8 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 	}
 	userID := int(sessionState.User.ID)
 
-	// get user id from the url path
+	// get document id from the url path
+	// NOTE: for some reason mux.Vars only works when it's deployed.
 	vars := mux.Vars(r)
 	documentID, err := strconv.Atoi(vars["documentID"])
 	if err != nil {
