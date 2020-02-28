@@ -1,0 +1,5 @@
+General
+- Use hooks and arrow functions, don't use state and classes
+- Don't use the CSS file unless the style is something repeated across the site, otherwise use material-ui's makeStyle()
+- Make a branch off master w/ a descriptive name, when task it completed, submit PR
+- Don't approve PR w/o reviewing code

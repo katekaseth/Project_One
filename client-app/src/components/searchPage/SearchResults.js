@@ -1,12 +1,18 @@
-import React from 'react';
-import { Grid, Paper, Typography } from '@material-ui/core';
-import { FaGraduationCap } from "react-icons/fa";
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 
-import { PAGES } from '../../stringConstants';
-import { TagChip } from '../Chips';
+import { SearchResult } from './SearchResult';
 
-export const SearchResults = ({setPage}) => {
-    let fakeResults = getFakeResults();
+const NUM_PER_PAGE = 5;
+
+export const SearchResults = ({setPage, results}) => {
+    const [pagination, setPagination] = useState(0);
+
+    if (results === null) return (<div></div>);
+    let pageNum = parseInt(results.length / NUM_PER_PAGE) + (results.length % NUM_PER_PAGE === 0 && results.length > NUM_PER_PAGE? 0 : 1);
+
     return (
         <Grid 
             container 
@@ -14,79 +20,11 @@ export const SearchResults = ({setPage}) => {
             className='search-result-container'
         >
             {
-                fakeResults.map(result => {
-                    return <SearchResult onClick={setPage} result={result}/>
+                results.slice(pagination * NUM_PER_PAGE, (pagination + 1) * NUM_PER_PAGE).map(result => {
+                    return <SearchResult setPage={setPage} result={result}/>
                 })
             }
+            <Pagination onChange={(e, value) => setPagination(value)} count={pageNum}/>
         </Grid>
     );
-};
-
-const SearchResult = ({onClick, result}) => {
-    return (
-        <Paper 
-            square 
-            className='search-result'
-            onClick={() => onClick(PAGES.result)}
-        >
-            <Grid 
-                container 
-                direction='column'
-            >
-                <Grid item container justify='space-between'>
-                    <Grid xs item container alignItems='center'>
-                        <FaGraduationCap/>
-                        <Typography variant='h6'>{result.title}</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant='body2'>Bookmark icon</Typography>
-                    </Grid>
-                </Grid>
-                <Grid item>
-                    <Typography variant='body2'>{result.description}</Typography>
-                </Grid>
-                <Grid item container alignItems='center' justify='space-between'>
-                    <Grid item>
-                        {
-                            result.tags.map(tagLabel => {
-                                return <TagChip label={tagLabel}/>
-                            })
-                        }
-                    </Grid>
-                    <Grid item>
-                        <Typography variant='body2'>{`Updated ${result.lastUpdated}`}</Typography>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Paper>
-    );
-};
-
-const getFakeResults = () => {
-    let results = [];
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    results.push({
-        title: 'Test',
-        description: 'This is a description',
-        tags: ['Academic', 'Report'],
-        lastUpdated: 'Jan 1, 2020',
-    });
-    return results;
 };
