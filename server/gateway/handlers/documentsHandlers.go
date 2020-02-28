@@ -14,10 +14,10 @@ import (
 // SearchHandler handles GET requests to /search. It accepts a JSON body that details
 // search queries in this form:
 // {
-// 		toolType: ["example", "here"],
-// 		subjectArea: [],
-// 		supportGroup: [], not this one yet
-// 		database: []
+// 		Tool Type: ["example", "here"],
+// 		Subject Area: [],
+// 		Database: []
+// 		Support Group: [],
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
@@ -52,7 +52,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 
 	var documents []documents.DocumentSummary
 	// if there are no filters, return all documents summaries
-	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 {
+	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SupportGroup) == 0 {
 		documents, err = ctx.UserStore.GetAllDocuments()
 		if err != nil {
 			http.Error(w, "Error getting documents", http.StatusInternalServerError)
@@ -96,7 +96,7 @@ func contains(arr []int, n int) bool {
 // available filter options in the database.
 func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
 

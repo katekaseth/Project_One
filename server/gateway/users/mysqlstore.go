@@ -134,6 +134,17 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]do
 		}
 		stmt += ")"
 	}
+
+	if len(query.SupportGroup) != 0 {
+		if strings.HasSuffix(stmt, ")") {
+			stmt += " AND "
+		}
+		stmt += "(support_group = " + `"` + query.SupportGroup[0] + `"`
+		for i := 1; i < len(query.SupportGroup); i++ {
+			stmt += " OR support_group = " + `"` + query.SupportGroup[i] + `"`
+		}
+		stmt += ")"
+	}
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err
@@ -183,6 +194,12 @@ func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
 	}
 	allFilters.Database = databaseNames
 
+	supportGroups, err := ms.scanSingleFilter(`SELECT DISTINCT support_group FROM documents`)
+	if err != nil {
+		return nil, err
+	}
+	allFilters.SupportGroup = supportGroups
+
 	return allFilters, nil
 }
 
@@ -211,7 +228,7 @@ func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, 
 	document := documents.Document{}
 	row := ms.Db.QueryRow(`select * from documents where document_id = ?`, documentID)
 	err := row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
-		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea,
+		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
 		&document.SqlQuery, &document.Database)
 	if err != nil {
 		return nil, err
