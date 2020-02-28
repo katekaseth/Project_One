@@ -40,14 +40,14 @@ export const loginApi = (username, password, setPage) => {
         },
         headers: {'Content-Type': 'application/json' }
     })
-    .then(function (response) {
+    .then(response => {
         let sessionId = response.headers.authorization
         sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
         newSessionId(sessionId);
         setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
         setPage.home();
     })
-    .catch(function (err) {
+    .catch(err => {
         console.log(err);
     });
 }

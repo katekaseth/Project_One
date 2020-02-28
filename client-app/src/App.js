@@ -76,13 +76,58 @@ function App() {
     fetchResults();
   };
 
-  const GLOBAL_STATE = {
-    page,
-    filterState,
-    searchedTerms,
-    results,
-    selectedResult
-  };
+    const GLOBAL_STATE = {
+        page,
+        filterState,
+        searchedTerms,
+        results,
+        selectedResult
+    };
+
+    const GLOBAL_ACTIONS = {
+        setPage: {
+            home: () => {
+                clearFilterState();
+                setSearchedTerms([]);
+                setPage(PAGES.home);
+                setResults(null);
+                history.push(PAGES.home);
+            },
+            login: () => {
+                clearFilterState();
+                setPage(PAGES.login);
+                setResults(null);
+                history.push(PAGES.login);
+            },
+            search: () => {
+                // don't clear filterState
+                // when going to search page
+                setPage(PAGES.search);
+                history.push(PAGES.search);
+            },
+            result: (resultId) => {
+                // don't clear filterState 
+                // when going to result page
+                setSelectedResult(resultId);
+                setPage(PAGES.result);
+                setResults(null);
+                history.push(PAGES.result);
+            },
+        },
+        clearFilterState,
+        updateFilterState,
+        setSearchedTerms: (searchTerms) => {
+            setSearchedTerms(searchTerms);
+            fetchResults();
+        },
+        setSelectedSubject: (subjectArea) => {
+            if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
+                updateFilterState('Subject Area', subjectArea)
+            } else if (filterState === null) {
+                setSelectedSubject(subjectArea);
+            }
+        },
+    };
 
   const GLOBAL_ACTIONS = {
     setPage: {
