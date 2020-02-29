@@ -8,6 +8,7 @@ type DocumentQuery struct {
 	ToolType     []string `json:"Tool Type"`
 	Database     []string `json:"Database"`
 	SupportGroup []string `json:"Support Group"`
+	SearchTerm   []string `json:"searchTerms"`
 }
 
 // Document represents all the information of a document.

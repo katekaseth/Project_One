@@ -52,7 +52,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 
 	var documents []documents.DocumentSummary
 	// if there are no filters, return all documents summaries
-	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SupportGroup) == 0 {
+	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SearchTerm) == 0 {
 		documents, err = ctx.UserStore.GetAllDocuments()
 		if err != nil {
 			http.Error(w, "Error getting documents", http.StatusInternalServerError)
