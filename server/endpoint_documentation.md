@@ -64,15 +64,14 @@
 
 All endpoints require authenticated user in the form of an authorization bearer token. Add request header: `Authorization: Bearer <token>`
 
-- `GET /search`: Returns a list of documents matching the body query.
+- `POST /search`: Returns a list of documents matching the body query.
   - Request body: 
 	``` Javascript
-    // Note that the terms should match those give by the /filter endpoints exactly.
+    // Note that the terms should match those given by the /filter endpoints exactly.
 	{
-        // Can also use "Subject Area", "Tool Type", "Database".
-        subjectArea: ["array", "of", "filters"],
-		toolType: ["array", "of", "filters"],
-		database: ["array", "of", "filters"],
+    "Subject Area": ["array", "of", "filters"],
+		"Tool Type": [],
+		"Database": [],
 	}
 	```
   - Response body:
@@ -88,13 +87,14 @@ All endpoints require authenticated user in the form of an authorization bearer 
             "description": "Displays a graph...",
             "subjectArea": "Financial Resources",
             "database": "EDWAdminMart"
+            "isBookmarked": "false"
         }
     ]
 	```
   - Responses:
     - `200`: Success
     - `401`: User not authenticated
-    - `405`: Method must be GET
+    - `405`: Method must be POST
     - `409`: Can't insert to store, Error beginning a session
     - `415`: Request body must be in JSON, Request is nil
     - `500`: Decoding failed, Error getting documents
@@ -104,8 +104,8 @@ All endpoints require authenticated user in the form of an authorization bearer 
 	``` Javascript
     {
         "Subject Area": ["array", "of", "filters"],
-        "Tool Type": ["array", "of", "filters"],
-        "Database": ["array", "of", "filters"],
+        "Tool Type": [],
+        "Database": [],
     }
 	```
   - Responses:
@@ -114,7 +114,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `405`: Method must be GET
     - `500`: Internal server error
 
-- ** PLANNED ** `GET /documents/:documentID`: Returns the document with given documentID.
+- `GET /documents/:documentID`: Returns the document with given documentID.
   - Response body:
 	``` Javascript
     // A single full document object. Example:
@@ -138,24 +138,24 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `405`: Method must be GET
     - `500`: Internal server error
 
-- ** PLANNED ** `POST /bookmarks/:documentID`: Adds the specifed document to the current authenticated user's bookmarks.
+- `POST /bookmarks/:documentID`: Adds the specifed document to the current authenticated user's bookmarks.
   - Responses:
     - `200`: Success
     - `401`: User not authenticated
     - `405`: Method must be POST
     - `500`: Internal server error
 
-- ** PLANNED ** `DELETE /bookmarks/:documentID`: Deletes the specifed document from the current authenticated user's bookmarks.
+- `DELETE /bookmarks/:documentID`: Deletes the specifed document from the current authenticated user's bookmarks.
   - Responses:
     - `200`: Success
     - `401`: User not authenticated
     - `405`: Method must be POST
     - `500`: Internal server error
 
-- ** PLANNED ** `GET /bookmarks`: Responds with a list of all current authenticated user's bookmark.
+- `GET /bookmarks`: Responds with a list of all current authenticated user's bookmark.
   - Response body:
 	``` Javascript
-    // An array of document objects. Example:
+    // An array of document summary objects. Example:
     [
         {
             "DocumentID": 1,

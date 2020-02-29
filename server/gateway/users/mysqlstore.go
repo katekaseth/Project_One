@@ -91,7 +91,7 @@ func (ms *MySQLStore) Delete(id int64) error {
 //
 
 //GetAllDocuments returns an array of DocumentSummary of all available documents.
-func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) GetAllDocuments() ([]documents.DocumentSummary, error) {
 	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents"
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
@@ -103,7 +103,7 @@ func (ms *MySQLStore) GetAllDocuments() (*[]documents.DocumentSummary, error) {
 
 //GetSearchedDocuments returns and array of DocumentSummary that meet the criteria of
 //the passed in query.
-func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]documents.DocumentSummary, error) {
 	stmt := `SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where `
 	if len(query.SubjectArea) != 0 {
 		stmt += `(subject_area = ` + `"` + query.SubjectArea[0] + `"`
@@ -134,6 +134,17 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) (*[]d
 		}
 		stmt += ")"
 	}
+
+	if len(query.SupportGroup) != 0 {
+		if strings.HasSuffix(stmt, ")") {
+			stmt += " AND "
+		}
+		stmt += "(support_group = " + `"` + query.SupportGroup[0] + `"`
+		for i := 1; i < len(query.SupportGroup); i++ {
+			stmt += " OR support_group = " + `"` + query.SupportGroup[i] + `"`
+		}
+		stmt += ")"
+	}
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err
@@ -144,7 +155,7 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) (*[]d
 
 //Given a statment to query Documents, returns an array of Document Summary returned by the
 //database query.
-func (ms *MySQLStore) scanDocSummaryQuery(stmt string) (*[]documents.DocumentSummary, error) {
+func (ms *MySQLStore) scanDocSummaryQuery(stmt string) ([]documents.DocumentSummary, error) {
 	allDocuments := []documents.DocumentSummary{}
 	rows, err := ms.Db.Query(stmt)
 	if err != nil {
@@ -158,7 +169,7 @@ func (ms *MySQLStore) scanDocSummaryQuery(stmt string) (*[]documents.DocumentSum
 		}
 		allDocuments = append(allDocuments, doc)
 	}
-	return &allDocuments, nil
+	return allDocuments, nil
 }
 
 //GetFilters returns a DocumentQuery which lists available filters in the database.
@@ -183,6 +194,12 @@ func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
 	}
 	allFilters.Database = databaseNames
 
+	supportGroups, err := ms.scanSingleFilter(`SELECT DISTINCT support_group FROM documents`)
+	if err != nil {
+		return nil, err
+	}
+	allFilters.SupportGroup = supportGroups
+
 	return allFilters, nil
 }
 
@@ -204,4 +221,74 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 		types = append(types, entry)
 	}
 	return types, nil
+}
+
+//GetSpecificDocument returns a Document object that matches the given documentID.
+func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, error) {
+	document := documents.Document{}
+	row := ms.Db.QueryRow(`select * from documents where document_id = ?`, documentID)
+	err := row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
+		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
+		&document.SqlQuery, &document.Database)
+	if err != nil {
+		return nil, err
+	}
+	return &document, nil
+}
+
+//InsertNewBookmark will insert a new bookmark of the given documentID for the given
+//userID if the bookmark is not already in the database.
+func (ms *MySQLStore) InsertNewBookmark(documentID int, userID int) error {
+	// check that the bookmark isn't already there
+	var exists bool
+	row := ms.Db.QueryRow(`select exists(select 1 from bookmarks where document_id = ? and user_id = ?)`, documentID, userID)
+	if err := row.Scan(&exists); err != nil {
+		return err
+	}
+	// bookmark is not in database yet so we insert new bookmark
+	if !exists {
+		_, err := ms.Db.Exec(`insert into bookmarks(document_id, user_id) values (?, ?)`, documentID, userID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//DeleteBookmark deletes the bookmark of the documentID of the given userID.
+func (ms *MySQLStore) DeleteBookmark(documentID int, userID int) error {
+	_, err := ms.Db.Exec(`delete from bookmarks where document_id = ? and user_id = ?`, documentID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//GetBookmarks returns the document summaries of all the given user's bookmarked documents.
+func (ms *MySQLStore) GetBookmarks(userID int) ([]documents.DocumentSummary, error) {
+	stmt := fmt.Sprintf("SELECT b.document_id, d.title, d.tool_type, d.created, d.updated, d.description, d.subject_area, d.database_name FROM bookmarks AS b JOIN users AS u ON b.user_id = u.id JOIN documents AS d ON d.document_id = b.document_id WHERE b.user_id = (%d)", userID)
+	allDocuments, err := ms.scanDocSummaryQuery(stmt)
+	if err != nil {
+		return nil, err
+	}
+	return allDocuments, nil
+}
+
+//GetBookmarkedDocumentID returns an array of documentIDs that has been bookmarked by the given user.
+func (ms *MySQLStore) GetBookmarkedDocumentID(userID int) ([]int, error) {
+	stmt := fmt.Sprintf("SELECT b.document_id FROM bookmarks AS b JOIN users AS u ON b.user_id = u.id JOIN documents AS d ON d.document_id = b.document_id WHERE b.user_id = (%d)", userID)
+	var docIDs []int
+	rows, err := ms.Db.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var id int
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		docIDs = append(docIDs, id)
+	}
+	return docIDs, nil
 }

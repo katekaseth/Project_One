@@ -5,30 +5,31 @@ import (
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // SearchHandler handles GET requests to /search. It accepts a JSON body that details
 // search queries in this form:
 // {
-// 		toolType: ["example", "here"],
-// 		subjectArea: [],
-// 		supportGroup: [], not this one yet
-// 		database: []
+// 		Tool Type: ["example", "here"],
+// 		Subject Area: [],
+// 		Database: []
+// 		Support Group: [],
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+	if r.Method != "POST" {
+		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// check if current user is authenticated; return status unauthorized if not
-	sessionState := &SessionState{}
-	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
 	if err != nil {
-		http.Error(w, "User not authenticated", http.StatusUnauthorized)
 		return
 	}
+	userID := int(sessionState.User.ID)
 
 	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
 		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
@@ -43,14 +44,15 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	// check that request body can be decoded into DocumentQuery struct
 	query := &documents.DocumentQuery{}
 	dec := json.NewDecoder(r.Body)
-	if err := dec.Decode(query); err != nil {
+	err = dec.Decode(query)
+	if err != nil {
 		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
 	}
 
-	var documents *[]documents.DocumentSummary
+	var documents []documents.DocumentSummary
 	// if there are no filters, return all documents summaries
-	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 {
+	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SupportGroup) == 0 {
 		documents, err = ctx.UserStore.GetAllDocuments()
 		if err != nil {
 			http.Error(w, "Error getting documents", http.StatusInternalServerError)
@@ -59,9 +61,20 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	} else { // there are filters so we call the database
 		documents, err = ctx.UserStore.GetSearchedDocuments(query)
 	}
-	documentsBytes, err := json.Marshal(documents)
+	// add bookmarked field
+	docIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
 	if err != nil {
 		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	for i := 0; i < len(documents); i++ {
+		documents[i].Bookmarked = contains(docIDs, documents[i].DocumentID)
+	}
+
+	// marshal to json
+	documentsBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -69,19 +82,21 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(documentsBytes)
 }
 
+// TODO: make this logn at some point
+func contains(arr []int, n int) bool {
+	for _, elem := range arr {
+		if elem == n {
+			return true
+		}
+	}
+	return false
+}
+
 // FilterHandler handles GET requests to /filter and responds with a JSON of the
 // available filter options in the database.
 func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
-		return
-	}
-
-	// check if current user is authenticated; return status unauthorized if not
-	sessionState := &SessionState{}
-	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
-	if err != nil {
-		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -100,15 +115,136 @@ func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(filtersBytes)
 }
 
-// DocumentHandler handles GET requests to /document/:documentID and responds with all information
+// SpecificDocumentHandler handles GET requests to /document/:documentID and responds with all information
 // for that report.
-func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Request) {
+func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var documentID int
+	// get user id from the url path
+	vars := mux.Vars(r)
+	documentID, err := strconv.Atoi(vars["documentID"])
+
+	// url := r.URL.Path
+	if err != nil {
+		http.Error(w, "Bad URL", http.StatusBadRequest)
+		return
+	}
+
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
+
+	// id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	document, err := ctx.UserStore.GetSpecificDocument(documentID)
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+
+	// add bookmarked field
+	docIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
+	if err != nil {
+		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	document.Bookmarked = contains(docIDs, document.DocumentID)
+
+	documentBytes, err := json.Marshal(document)
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentBytes)
+}
+
+// SpecificBookmarkHandler handles POST and DELETE requests to /bookmark/:documentID to add or remove
+// a bookmark for the specified report.
+func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" && r.Method != "DELETE" {
+		http.Error(w, "Method must be GET, POST, or DELETE", http.StatusMethodNotAllowed)
+		return
+	}
+
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
+
+	// get document id from the url path
+	// NOTE: for some reason mux.Vars only works when it's deployed.
+	vars := mux.Vars(r)
+	documentID, err := strconv.Atoi(vars["documentID"])
+	if err != nil {
+		http.Error(w, "Bad URL", http.StatusBadRequest)
+		return
+	}
+
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	if r.Method == "POST" {
+		if err := ctx.UserStore.InsertNewBookmark(documentID, userID); err != nil {
+			http.Error(w, "Internal fail", http.StatusInternalServerError)
+			return
+		}
+	} else if r.Method == "DELETE" {
+		if err := ctx.UserStore.DeleteBookmark(documentID, userID); err != nil {
+			http.Error(w, "Internal fail", http.StatusInternalServerError)
+			return
+		}
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+// BookmarkHandler handles GET to /bookmarks and responds with a list of all authenticated
+// user's bookmark in document summary form.
+func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+		return
+	}
+	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
+	documents, err := ctx.UserStore.GetBookmarks(userID)
+	if err != nil {
+		http.Error(w, "Internal error", http.StatusInternalServerError)
+		return
+	}
+	documentBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentBytes)
 
 }
 
-// BookmarkHandler handles GET to /bookmark and responds with a list of all authenticated
-// user's bookmark. It also handles POST requests to /bookmark/:reportID to add or remove
-// a bookmark for the specified report.
-func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Request) {
-
+// check if current user is authenticated; return status unauthorized if not
+func checkUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) (*SessionState, error) {
+	sessionState := &SessionState{}
+	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return nil, err
+	}
+	return sessionState, nil
 }

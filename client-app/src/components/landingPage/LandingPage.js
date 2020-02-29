@@ -1,48 +1,53 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { SubjectAreaCards } from './SubjectAreaCards';
 import { SearchBar } from '../SearchBar';
 
 export default (props) => {
+    const classes = useStyles();
+
     return (
         <Grid
-            className='landing-page'
             container 
+            className={classes.content}
             justify='center'
             alignItems='center'
             direction='column'
-            spacing={10}
         >
-            <Grid item className='title-header'>
-                <h1>UW Analytics</h1>
+            <Grid item className={classes.titleContainer}>
+                <Typography className={classes.title} variant='h3'>UW Analytics</Typography>
             </Grid>
             <Grid 
                 item
-                className='search-bar-container'>
+                className={classes.searchBarContainer}
+            >
                 <SearchBar {...props}/>
             </Grid>
             <Grid 
                 item
                 container 
                 justify='center'
-                className='subject-card-container'>
-                <SubjectAreaCards/>
-            </Grid>
-            <Grid 
-                item
-                container 
-                justify='center'
-                className='subject-card-container'>
-                <SubjectAreaCards/>
-            </Grid>
-            <Grid 
-                item
-                container 
-                justify='center'
-                className='subject-card-container'>
-                <SubjectAreaCards/>
+            >
+                <SubjectAreaCards {...props}/>
             </Grid>
         </Grid>
     )
 }
+
+const useStyles = makeStyles({
+    content: {
+        paddingTop: '130px',
+    },
+    titleContainer: {
+        marginBottom: '40px',
+    },
+    searchBarContainer: {
+        width: '47rem',
+        marginBottom: '40px',
+    },
+    title: {
+        color: 'white'
+    }
+});
