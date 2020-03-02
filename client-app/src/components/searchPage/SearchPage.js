@@ -10,7 +10,7 @@ import { FilterChips } from '../Chips';
 
 export default (props) => {    
     const classes = useStyles();
-    if (props.filterState == null) return <div>Error fetching available filters, try refreshing.</div>
+    if (props.filterState == null) return <div></div>
     return (
         <Grid
             container

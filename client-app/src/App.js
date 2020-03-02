@@ -7,8 +7,10 @@ import LandingPage from "./components/landingPage/LandingPage";
 import SearchPage from "./components/searchPage/SearchPage";
 import ResultPage from "./components/resultPage/ResultPage";
 import LoginPage from "./components/loginPage/LoginPage";
+import BookmarkPage from "./components/bookmarkPage/BookmarkPage";
 import { getFiltersApi } from "./api/getFilters";
 import { searchEndpoint } from "./api/search";
+import { getBookmarksEndpoint } from './api/bookmarks';
 
 function App() {
   // Page route, / is root
@@ -38,6 +40,11 @@ function App() {
     setResults(response.data);
   };
 
+  const fetchBookmarks = async () => {
+    const response = await getBookmarksEndpoint();
+    setResults(response.data);
+  }
+
   const clearFilterState = () => {
     filterState !== null &&
       Object.keys(filterState).forEach(categoryKey => {
@@ -45,7 +52,7 @@ function App() {
           filterState[categoryKey][filterKey] = false;
         });
       });
-    setSearchedTerms("");
+    setSearchedTerms([]);
     setFilterState(filterState);
   };
 
@@ -73,6 +80,11 @@ function App() {
       setSelectedSubject("");
     }
     setFilterState(tempFilterState);
+    fetchResults();
+  };
+
+  const updateSearchTerms = searchTerms => {
+    setSearchedTerms(searchTerms.slice());
     fetchResults();
   };
 
@@ -112,14 +124,19 @@ function App() {
         setPage(PAGES.result);
         setResults(null);
         history.push(PAGES.result);
-      }
+      },
+      bookmarks: () => {
+        clearFilterState();
+        setSearchedTerms([]);
+        setPage(PAGES.bookmarks);
+        history.push(PAGES.bookmarks);
+        fetchBookmarks();
+        setResults(null);
+      },
     },
     clearFilterState,
     updateFilterState,
-    setSearchedTerms: searchTerms => {
-      setSearchedTerms(searchTerms);
-      fetchResults();
-    },
+    setSearchedTerms: updateSearchTerms,
     setSelectedSubject: subjectArea => {
       if (
         filterState !== null &&
@@ -163,6 +180,9 @@ function App() {
         </Route>
         <Route path={PAGES.login}>
           <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
+        </Route>
+        <Route path={PAGES.bookmarks}>
+          <BookmarkPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS}/>
         </Route>
       </Switch>
     </div>

@@ -12,7 +12,7 @@ export default ({setPage, transparent}) => {
                 <li onClick={() => setPage.login()}>Login</li>
                 <li>Help</li>
                 <li onClick={() => setPage.search()}>Search</li>
-                <li>Bookmarks</li>
+                <li onClick={() => setPage.bookmarks()}>Bookmarks</li>
                 <li onClick={() => setPage.home()}>Home</li>
             </ul>
         </div>

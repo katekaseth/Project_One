@@ -4,7 +4,6 @@ import { API, SESSION } from '../stringConstants';
 
 export const searchEndpoint = (filterState, searchedTerms) => {
     let body = {};
-    console.log('/search');
     Object.keys(filterState).forEach(categoryKey => {
         body[categoryKey] = [];
         Object.keys(filterState[categoryKey]).forEach(filterKey => {
@@ -13,7 +12,7 @@ export const searchEndpoint = (filterState, searchedTerms) => {
             }
         });
     });
-    body.searchedTerms = searchedTerms;
+    body.searchTerms = searchedTerms;
 
     return axios({
         method: 'post',

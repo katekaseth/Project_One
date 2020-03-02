@@ -19,6 +19,7 @@ export const PAGES = {
     search: '/search',
     result: '/result',
     login: '/login',
+    bookmarks: '/bookmarks',
 };
 
 export const SEARCH_TERMS = 'SEARCH_TERMS';
