@@ -227,6 +227,9 @@ func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Internal error", http.StatusInternalServerError)
 		return
 	}
+	for i := 0; i < len(documents); i++ {
+		documents[i].Bookmarked = true
+	}
 	documentBytes, err := json.Marshal(documents)
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)

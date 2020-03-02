@@ -172,8 +172,8 @@ func (ms *MySQLStore) scanDocSummaryQuery(stmt string) ([]documents.DocumentSumm
 }
 
 //GetFilters returns a DocumentQuery which lists available filters in the database.
-func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
-	allFilters := &documents.DocumentQuery{}
+func (ms *MySQLStore) GetFilters() (*documents.Filters, error) {
+	allFilters := &documents.Filters{}
 
 	toolTypes, err := ms.scanSingleFilter(`SELECT DISTINCT tool_type FROM documents`)
 	if err != nil {
