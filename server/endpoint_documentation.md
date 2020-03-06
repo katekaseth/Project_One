@@ -72,6 +72,7 @@ All endpoints require authenticated user in the form of an authorization bearer 
     "Subject Area": ["array", "of", "filters"],
 		"Tool Type": [],
     "Database": [],
+    "Support Group": [],
     "searchTerms": []
 	}
 	```

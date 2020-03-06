@@ -4,7 +4,6 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,8 +20,8 @@ import (
 // 		Support Group: [],
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
+	if r.Method != "GET" {
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -71,17 +70,16 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	for i := 0; i < len(documents); i++ {
 		documents[i].Bookmarked = contains(docIDs, documents[i].DocumentID)
 	}
-	log.Println(documents)
+
 	// marshal to json
-	documentsBytes, err := json.Marshal(documents)
+	documentBytes, err := json.Marshal(documents)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	log.Println(documentsBytes)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(documentsBytes)
+	w.Write(documentBytes)
 }
 
 // TODO: make this logn at some point

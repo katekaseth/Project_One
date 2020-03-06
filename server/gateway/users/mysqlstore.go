@@ -4,7 +4,6 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
-	"log"
 	"strings"
 
 	// need it for mysql
@@ -143,7 +142,6 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]do
 	stmt += addFilterQuery(query.Database, "database_name", stmt)
 	stmt += addFilterQuery(query.SupportGroup, "support_group", stmt)
 	stmt += addFilterQuery(query.SearchTerm, "search", stmt)
-	log.Println(stmt)
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err
