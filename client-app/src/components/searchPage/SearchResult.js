@@ -8,6 +8,7 @@ import ReportIcon from '../../icons/svg/reportIcon.svg';
 
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
+import formatDate from '../../helpers/formatDate';
 
 export const SearchResult = ({ setPage, result }) => {
     const classes = useStyles();
@@ -78,7 +79,9 @@ export const SearchResult = ({ setPage, result }) => {
                         <TagChip label={result.toolType} />
                     </Grid>
                     <Grid item>
-                        <Typography variant='body2'>{`Updated ${result.updated}`}</Typography>
+                        <Typography variant='body2'>
+                            {`Updated ${formatDate(result.updated)}`}
+                        </Typography>
                     </Grid>
                 </Grid>
             </Grid>

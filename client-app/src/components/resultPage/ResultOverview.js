@@ -4,6 +4,7 @@ import { Grid, Paper, Typography, Button, Box } from '@material-ui/core';
 
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
+import formatDate from '../../helpers/formatDate';
 
 export const ResultOverview = ({ result }) => {
     const classes = useStyles();
@@ -41,7 +42,9 @@ export const ResultOverview = ({ result }) => {
                         </Grid>
                     </Grid>
                     <Grid item container xs={2} justify='flex-end' alignItems='flex-end'>
-                        <Typography variant='body2'>{'Updated ' + result.updated}</Typography>
+                        <Typography variant='body2'>
+                            {'Updated ' + formatDate(result.updated)}
+                        </Typography>
                     </Grid>
                 </Grid>
             </Grid>

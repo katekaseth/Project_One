@@ -12,11 +12,11 @@ export default ({ setPage }) => {
     return (
         <Grid container direction='column' alignItems='center' className={classes.content}>
             <Grid item container justify='center'>
-                <Grid xs container alignItems='flex-end' direction='column'>
+                <Grid xs item container alignItems='flex-end' direction='column'>
                     <LoginComponent setPage={setPage} />
                 </Grid>
                 <Divider orientation='vertical' flexItem />
-                <Grid xs container direction='column' className={classes.learnLinks}>
+                <Grid xs item container direction='column' className={classes.learnLinks}>
                     <Typography className={classes.link} variant='body2'>
                         Learn about account recovery options
                     </Typography>
