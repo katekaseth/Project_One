@@ -7,12 +7,11 @@ import unbookmarkedIcon from '../icons/svg/unbookmarked.svg';
 
 import { bookmarkEndpoint, unbookmarkEndpoint } from '../api/bookmarks';
 
-
-export const Bookmark = ({style, documentId, isBookmarked}) => {
+export const Bookmark = ({ style, documentId, isBookmarked }) => {
     const [bookmarkState, setBookmarkState] = useState(isBookmarked);
     const classes = useStyles();
 
-    const handleClick = async (e) => {
+    const handleClick = async e => {
         e.stopPropagation();
         let response;
         if (bookmarkState) {
@@ -24,17 +23,17 @@ export const Bookmark = ({style, documentId, isBookmarked}) => {
             setBookmarkState(!bookmarkState);
         }
     };
-   
+
     return (
-        <CardMedia 
+        <CardMedia
             style={style}
-            className={classes.bookmark} 
-            src={bookmarkState ? bookmarkedIcon : unbookmarkedIcon} 
+            className={classes.bookmark}
+            src={bookmarkState ? bookmarkedIcon : unbookmarkedIcon}
             component='img'
             onClick={handleClick}
         />
     );
-}
+};
 
 const useStyles = makeStyles({
     bookmark: {
@@ -42,5 +41,5 @@ const useStyles = makeStyles({
         height: 'auto',
         zIndex: '2',
         cursor: 'pointer',
-    }
+    },
 });

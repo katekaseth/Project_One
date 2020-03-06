@@ -19,6 +19,7 @@ export const PAGES = {
     search: '/search',
     result: '/result',
     login: '/login',
+    bookmarks: '/bookmarks',
 };
 
 export const SEARCH_TERMS = 'SEARCH_TERMS';
@@ -26,10 +27,10 @@ export const SEARCH_TERMS = 'SEARCH_TERMS';
 export const SUBJECT_AREA_ICONS = {
     Academic: academicIcon,
     Research: researchIcon,
-    ['University Advancement']: universityAdvancementIcon,
-    ['Financial Resources']: financeIcon,
-    ['Human Resources']: humanResourcesIcon,
-    ['Master Data']: masterDataIcon,
+    'University Advancement': universityAdvancementIcon,
+    'Financial Resources': financeIcon,
+    'Human Resources': humanResourcesIcon,
+    'Master Data': masterDataIcon,
 };
 
 export const METADATA_TABS = {

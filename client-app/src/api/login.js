@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API, SESSION } from '../stringConstants';
 
 const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
-bc.onmessage = function (e) {
+bc.onmessage = function(e) {
     if (e.data.messageType === SESSION.NEW_SESSION) {
         sessionStorage.setItem(SESSION.SESSION_ID, e.data.sessionId);
         window.location.reload();
@@ -14,21 +14,21 @@ bc.onmessage = function (e) {
             window.location.reload();
         }
     }
-}
+};
 
-const newSessionId = (sessionId) => {
+const newSessionId = sessionId => {
     bc.postMessage({
         messageType: SESSION.NEW_SESSION,
-        sessionId: sessionId
+        sessionId: sessionId,
     });
-}
+};
 
-const expireSession = (sessionId) => {
+const expireSession = sessionId => {
     bc.postMessage({
         messageType: SESSION.EXPIRE_SESSION,
-        sessionId: sessionId
+        sessionId: sessionId,
     });
-}
+};
 
 export const loginApi = (username, password, setPage) => {
     axios({
@@ -36,18 +36,18 @@ export const loginApi = (username, password, setPage) => {
         url: API.URL + API.LOGIN,
         data: {
             userName: username,
-            password: password
+            password: password,
         },
-        headers: {'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
     })
-    .then(response => {
-        let sessionId = response.headers.authorization
-        sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
-        newSessionId(sessionId);
-        setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
-        setPage.home();
-    })
-    .catch(err => {
-        console.log(err);
-    });
-}
+        .then(response => {
+            let sessionId = response.headers.authorization;
+            sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+            newSessionId(sessionId);
+            setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
+            setPage.home();
+        })
+        .catch(err => {
+            console.log(err);
+        });
+};

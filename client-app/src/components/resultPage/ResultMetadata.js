@@ -1,94 +1,103 @@
 import React, { useState } from 'react';
-import { 
-    Grid, 
-    Paper, 
-    Typography,
-} from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { COLORS } from '../../theme';
 import { METADATA_TABS } from '../../stringConstants';
 import { TechnicalInfo, SecurityInfo, SqlQuery, Definitions } from './MetadataTabs';
 
-export const ResultMetadata = ({result}) => {
+export const ResultMetadata = ({ result }) => {
     const [metadataTab, setMetadataTab] = useState('technicalInfo');
 
     return (
         <Grid container>
             <Grid item>
-                <MetadataMenu metadataTab={metadataTab} setMetadataTab={setMetadataTab}/>
+                <MetadataMenu metadataTab={metadataTab} setMetadataTab={setMetadataTab} />
             </Grid>
             <Grid xs item>
-                <Metadata result={result} metadataTab={metadataTab}/>
+                <Metadata result={result} metadataTab={metadataTab} />
             </Grid>
         </Grid>
     );
-}
+};
 
-const Metadata = ({metadataTab, result}) => {
+const Metadata = ({ metadataTab, result }) => {
     const classes = useStyles();
-    let tabContent
-    switch(METADATA_TABS[metadataTab]) {
+    let tabContent;
+    switch (METADATA_TABS[metadataTab]) {
         case METADATA_TABS.technicalInfo:
-            tabContent = <TechnicalInfo {...result}/>
+            tabContent = <TechnicalInfo {...result} />;
             break;
         case METADATA_TABS.securityInfo:
-            tabContent = <SecurityInfo {...result}/>
+            tabContent = <SecurityInfo {...result} />;
             break;
         case METADATA_TABS.sqlQueries:
-            tabContent = <SqlQuery {...result}/>
+            tabContent = <SqlQuery {...result} />;
             break;
         case METADATA_TABS.definitions:
-            tabContent = <Definitions {...result}/>
+            tabContent = <Definitions {...result} />;
             break;
         default:
-            tabContent = <div></div>
+            tabContent = <div></div>;
     }
 
     return (
         <Paper square className={classes.metadata}>
             <Typography variant='h5'>{METADATA_TABS[metadataTab]}</Typography>
-            {
-                tabContent
-            }
+            {tabContent}
         </Paper>
     );
-}
+};
 
-const MetadataMenu = ({metadataTab, setMetadataTab}) => {
+const MetadataMenu = ({ metadataTab, setMetadataTab }) => {
     const classes = useStyles();
     return (
         <Grid className={classes.background}>
-            {
-                Object.keys(METADATA_TABS).map(tabKey => {
-                    let isSelected = metadataTab === tabKey;
-                    return (
-                        <Paper 
-                            square
-                            className={classes.metadataTab}  
-                            onClick={() => setMetadataTab(tabKey)}
-                        >
-                            <Grid container justify='flex-start'>
-                                <Grid xs item container className={classes.leftWrapper}>
-                                    <Grid item className={isSelected ? classes.selectedBlockLeft : classes.unselectedBlockLeft}></Grid>
-                                </Grid>
-                                <Grid xs={10} item container>
-                                    <Typography>
-                                        {METADATA_TABS[tabKey]}
-                                    </Typography>
-                                </Grid>
-                                <Grid xs item container justify='flex-end' className={classes.rightWrapper}>
-                                    <Grid item className={isSelected ? classes.selectedBlockRight : classes.unselectedBlockRight}></Grid>
-                                </Grid>
+            {Object.keys(METADATA_TABS).map(tabKey => {
+                let isSelected = metadataTab === tabKey;
+                return (
+                    <Paper
+                        square
+                        className={classes.metadataTab}
+                        onClick={() => setMetadataTab(tabKey)}
+                    >
+                        <Grid container justify='flex-start'>
+                            <Grid xs item container className={classes.leftWrapper}>
+                                <Grid
+                                    item
+                                    className={
+                                        isSelected
+                                            ? classes.selectedBlockLeft
+                                            : classes.unselectedBlockLeft
+                                    }
+                                ></Grid>
                             </Grid>
-                        </Paper>
-                    );
-                })
-            }
+                            <Grid xs={10} item container>
+                                <Typography>{METADATA_TABS[tabKey]}</Typography>
+                            </Grid>
+                            <Grid
+                                xs
+                                item
+                                container
+                                justify='flex-end'
+                                className={classes.rightWrapper}
+                            >
+                                <Grid
+                                    item
+                                    className={
+                                        isSelected
+                                            ? classes.selectedBlockRight
+                                            : classes.unselectedBlockRight
+                                    }
+                                ></Grid>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                );
+            })}
         </Grid>
-
     );
-}
+};
 
 const useStyles = makeStyles({
     metadata: {
@@ -103,7 +112,7 @@ const useStyles = makeStyles({
         width: '130px',
     },
     background: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     rightWrapper: {
         justify: 'flex-end',
@@ -138,5 +147,5 @@ const useStyles = makeStyles({
         marginTop: '-10px',
         marginBottom: '-10px',
         zIndex: '2',
-    }
+    },
 });

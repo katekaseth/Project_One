@@ -74,7 +74,7 @@ body {
   color: #61dafb;
 }
 
-.result-page-container, .search-page-container {
+.result-page-container, .search-page-container, .bookmark-page-container {
   background-color: #E5E5E5;
   height: calc(100vh - 70px);
   padding-top: 40px;

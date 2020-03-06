@@ -5,36 +5,31 @@ import { makeStyles } from '@material-ui/styles';
 import { SubjectAreaCards } from './SubjectAreaCards';
 import { SearchBar } from '../SearchBar';
 
-export default (props) => {
+export default props => {
     const classes = useStyles();
 
     return (
         <Grid
-            container 
+            container
             className={classes.content}
             justify='center'
             alignItems='center'
             direction='column'
         >
             <Grid item className={classes.titleContainer}>
-                <Typography className={classes.title} variant='h3'>UW Analytics</Typography>
+                <Typography className={classes.title} variant='h3'>
+                    UW Analytics
+                </Typography>
             </Grid>
-            <Grid 
-                item
-                className={classes.searchBarContainer}
-            >
-                <SearchBar {...props}/>
+            <Grid item className={classes.searchBarContainer}>
+                <SearchBar {...props} />
             </Grid>
-            <Grid 
-                item
-                container 
-                justify='center'
-            >
-                <SubjectAreaCards {...props}/>
+            <Grid item container justify='center'>
+                <SubjectAreaCards {...props} />
             </Grid>
         </Grid>
-    )
-}
+    );
+};
 
 const useStyles = makeStyles({
     content: {
@@ -48,6 +43,6 @@ const useStyles = makeStyles({
         marginBottom: '40px',
     },
     title: {
-        color: 'white'
-    }
+        color: 'white',
+    },
 });

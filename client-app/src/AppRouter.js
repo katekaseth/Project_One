@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-    BrowserRouter as Router,
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import { ThemeProvider } from '@material-ui/core';
 
@@ -12,7 +10,7 @@ function AppRouter() {
     return (
         <ThemeProvider theme={THEME}>
             <Router>
-                <App/>
+                <App />
             </Router>
         </ThemeProvider>
     );

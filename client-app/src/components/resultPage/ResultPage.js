@@ -1,40 +1,40 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
 import { getResultEndpoint } from '../../api/documents';
 
-export default ({filterState, setPage, selectedResult}) => {
+export default ({ filterState, setPage, selectedResult }) => {
     const [result, setResult] = useState(null);
 
-    const fetchResult = async (selectedResult) => {
+    const fetchResult = async selectedResult => {
         const response = await getResultEndpoint(selectedResult);
         setResult(response.data);
-    }
+    };
 
     useEffect(() => {
         fetchResult(selectedResult);
     }, []);
 
-    if (selectedResult === null || result === null) return (<div></div>);
+    if (selectedResult === null || result === null) return <div></div>;
     console.log(result);
     return (
         <Grid>
             <Grid>
-                <NavPath searchPath={getSearchPath(filterState)} setPage={setPage}/>
+                <NavPath searchPath={getSearchPath(filterState)} setPage={setPage} />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result}/>
+                <ResultOverview result={result} />
             </Grid>
             <Grid className='result-metadata-container'>
-                <ResultMetadata result={result}/>
+                <ResultMetadata result={result} />
             </Grid>
         </Grid>
     );
 };
 
-const getSearchPath = (filterState) => {
+const getSearchPath = filterState => {
     if (filterState === null) {
         return 'Search';
     }
@@ -48,11 +48,11 @@ const getSearchPath = (filterState) => {
     if (filters.length === 0) {
         return 'Search';
     } else {
-        return filters.join(',') + '...'
+        return filters.join(',') + '...';
     }
-}
+};
 
-const NavPath =  ({searchPath, setPage}) => {
+const NavPath = ({ searchPath, setPage }) => {
     return (
         <Grid container>
             <Grid item>
@@ -62,8 +62,8 @@ const NavPath =  ({searchPath, setPage}) => {
                 <Typography variant='body2'>{'>'}</Typography>
             </Grid>
             <Grid item>
-                <Typography 
-                    variant='body2' 
+                <Typography
+                    variant='body2'
                     onClick={() => setPage.search()}
                     style={{ cursor: 'pointer', color: 'blue' }}
                 >
@@ -78,4 +78,4 @@ const NavPath =  ({searchPath, setPage}) => {
             </Grid>
         </Grid>
     );
-}
+};

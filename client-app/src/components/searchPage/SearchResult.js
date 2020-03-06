@@ -9,17 +9,17 @@ import ReportIcon from '../../icons/svg/reportIcon.svg';
 import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 
-export const SearchResult = ({setPage, result}) => {
+export const SearchResult = ({ setPage, result }) => {
     const classes = useStyles();
 
     const toolTypes = {
         visualization: 'Visualization',
         cube: 'Cube',
         report: 'Report',
-    }
+    };
 
-    let toolTypeIcon
-    switch(result.toolType) {
+    let toolTypeIcon;
+    switch (result.toolType) {
         case toolTypes.visualization:
             toolTypeIcon = VisualizationIcon;
             break;
@@ -34,24 +34,25 @@ export const SearchResult = ({setPage, result}) => {
     }
 
     return (
-        <Paper 
+        <Paper
             onClick={() => setPage.result(result.documentID)}
-            square 
+            square
             className={classes.searchResult}
         >
-            <Grid 
-                container 
-                direction='column'
-            >
+            <Grid container direction='column'>
                 <Grid item container justify='space-between'>
                     <Grid xs item container alignItems='center'>
-                        <CardMedia 
-                            className={result.toolType === toolTypes.visualization ? classes.visualizationIcon : classes.icon}
+                        <CardMedia
+                            className={
+                                result.toolType === toolTypes.visualization
+                                    ? classes.visualizationIcon
+                                    : classes.icon
+                            }
                             src={toolTypeIcon}
                             component='img'
                         />
-                        <Typography 
-                            onClick={() => setPage.result(result.documentID)} 
+                        <Typography
+                            onClick={() => setPage.result(result.documentID)}
                             className={classes.resultTitle}
                             variant='h6'
                         >
@@ -59,21 +60,22 @@ export const SearchResult = ({setPage, result}) => {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Bookmark style={{marginTop: '-15px'}} isBookmarked={result.isBookmarked} documentId={result.documentID}/>
+                        <Bookmark
+                            style={{ marginTop: '-15px' }}
+                            isBookmarked={result.isBookmarked}
+                            documentId={result.documentID}
+                        />
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <Typography 
-                        className={classes.resultDescription}
-                        variant='body2'
-                    >
+                    <Typography className={classes.resultDescription} variant='body2'>
                         {result.description}
                     </Typography>
                 </Grid>
                 <Grid item container alignItems='center' justify='space-between'>
                     <Grid item>
-                        <TagChip label={result.subjectArea}/>
-                        <TagChip label={result.toolType}/>
+                        <TagChip label={result.subjectArea} />
+                        <TagChip label={result.toolType} />
                     </Grid>
                     <Grid item>
                         <Typography variant='body2'>{`Updated ${result.updated}`}</Typography>
@@ -95,8 +97,8 @@ const useStyles = makeStyles({
     resultTitle: {
         cursor: 'pointer',
         '&:hover': {
-            textDecoration: 'underline'
-        }
+            textDecoration: 'underline',
+        },
     },
     icon: {
         width: '30px',
