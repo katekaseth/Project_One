@@ -1,17 +1,25 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/styles';
 import { Typography, Grid } from '@material-ui/core';
 
-import SearchPage from '../searchPage/SearchPage';
+import { SearchResults } from '../searchPage/SearchResults';
 
-export default (props) => {    
+export default props => {
+    const classes = useStyles();
     return (
-        <Grid 
-            container 
-            className='search-page-container'
-            direction='column'
-        >
-            <Typography paragraph={true} color='primary' variant='h4'>Bookmarks</Typography>
-            <SearchPage {...props}/>
+        <Grid container direction='column'>
+            <Grid xs item className={classes.bookmarkTitle}>
+                <Typography paragraph={true} color='primary' variant='h4'>
+                    Bookmarks
+                </Typography>
+            </Grid>
+            <Grid item container>
+                <SearchResults setPage={props.setPage} results={props.bookmarks} />
+            </Grid>
         </Grid>
     );
 };
+
+const useStyles = makeStyles({
+    bookmarkTitle: {},
+});

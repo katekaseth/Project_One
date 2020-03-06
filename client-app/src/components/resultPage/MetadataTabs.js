@@ -1,33 +1,24 @@
 import React from 'react';
-import { 
-    Grid, 
-    Typography,
-} from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 
-export const TechnicalInfo = ({toolType, subjectArea, created, updated, custodian, author, database}) => {
+export const TechnicalInfo = ({
+    toolType,
+    subjectArea,
+    created,
+    updated,
+    custodian,
+    author,
+    database,
+}) => {
     return (
         <Grid container direction='column'>
-            <Typography variant='body1'>
-                Tool Type: {toolType}
-            </Typography>
-            <Typography variant='body1'>
-                Subject Area: {subjectArea}
-            </Typography>
-            <Typography variant='body1'>
-                Created On: {created}
-            </Typography>
-            <Typography variant='body1'>
-                Updated On: {updated}
-            </Typography>
-            <Typography variant='body1'>
-                Custodian: {custodian}
-            </Typography>
-            <Typography variant='body1'>
-                Author: {author}
-            </Typography>
-            <Typography variant='body1'>
-                Database: {database}
-            </Typography>
+            <Typography variant='body1'>Tool Type: {toolType}</Typography>
+            <Typography variant='body1'>Subject Area: {subjectArea}</Typography>
+            <Typography variant='body1'>Created On: {created}</Typography>
+            <Typography variant='body1'>Updated On: {updated}</Typography>
+            <Typography variant='body1'>Custodian: {custodian}</Typography>
+            <Typography variant='body1'>Author: {author}</Typography>
+            <Typography variant='body1'>Database: {database}</Typography>
         </Grid>
     );
 };
@@ -35,19 +26,15 @@ export const TechnicalInfo = ({toolType, subjectArea, created, updated, custodia
 export const SecurityInfo = () => {
     return (
         <Grid container direction='column'>
-            <Typography variant='body1'>
-                Security info coming soon...
-            </Typography>
+            <Typography variant='body1'>Security info coming soon...</Typography>
         </Grid>
     );
 };
 
-export const SqlQuery = ({sqlQuery}) => {
+export const SqlQuery = ({ sqlQuery }) => {
     return (
         <Grid container direction='column'>
-            <Typography variant='body1'>
-                {sqlQuery}
-            </Typography>
+            <Typography variant='body1'>{sqlQuery}</Typography>
         </Grid>
     );
 };
@@ -55,14 +42,12 @@ export const SqlQuery = ({sqlQuery}) => {
 export const Definitions = () => {
     return (
         <Grid container direction='column'>
-            <Typography variant='body1'>
-                Definitions coming soon...
-            </Typography>
+            <Typography variant='body1'>Definitions coming soon...</Typography>
         </Grid>
     );
 };
 
-    /*
+/*
     toolType: "Report"
     title: "How Many Students By College"
     created: "2012-10-15T00:00:00Z"

@@ -1,13 +1,18 @@
-import React from "react";
-import "../App.css";
+import React from 'react';
+import '../App.css';
 
-import era_logo from "../icons/era_logo.png";
+import era_logo from '../icons/era_logo.png';
 
-export default ({setPage, transparent}) => {
+export default ({ setPage, transparent }) => {
     let className = transparent ? 'transparent' : '';
     return (
         <div className={`navigation-bar ${className}`}>
-            <img onClick={() => setPage.home()} id="nav-logo" src={era_logo}></img>
+            <img
+                alt='UW ERA logo'
+                onClick={() => setPage.home()}
+                id='nav-logo'
+                src={era_logo}
+            ></img>
             <ul>
                 <li onClick={() => setPage.login()}>Login</li>
                 <li>Help</li>
@@ -17,4 +22,4 @@ export default ({setPage, transparent}) => {
             </ul>
         </div>
     );
-}
+};
