@@ -1,9 +1,10 @@
-import financeIcon  from './icons/svg/financeIcon.svg';
+import financeIcon from './icons/svg/financeIcon.svg';
 import researchIcon from './icons/svg/researchIcon.svg';
 import universityAdvancementIcon from './icons/svg/universityAdvancementIcon.svg';
 import academicIcon from './icons/svg/academicIcon.svg';
 import masterDataIcon from './icons/svg/masterDataIcon.svg';
 import humanResourcesIcon from './icons/svg/humanResourcesIcon.svg';
+import servicesIcon from './icons/svg/servicesIcon.svg';
 
 export const API = {
     URL: 'https://api.katekaseth.me/',
@@ -26,11 +27,11 @@ export const SEARCH_TERMS = 'SEARCH_TERMS';
 
 export const SUBJECT_AREA_ICONS = {
     Academic: academicIcon,
-    Research: researchIcon,
+    'Research Administration': researchIcon,
     'University Advancement': universityAdvancementIcon,
     'Financial Resources': financeIcon,
     'Human Resources': humanResourcesIcon,
-    'Master Data': masterDataIcon,
+    'Services & Resources': servicesIcon,
 };
 
 export const METADATA_TABS = {
@@ -38,11 +39,11 @@ export const METADATA_TABS = {
     securityInfo: 'Security Info',
     sqlQueries: 'SQL Queries',
     definitions: 'Defintitions',
-}
+};
 
 export const SESSION = {
     SESSION_ID: 'sessionId',
     NEW_SESSION: 'newSession',
     EXPIRE_SESSION: 'expireSession',
     CHANNEL_NAME: 'uw_analytics_bc',
-}
+};
