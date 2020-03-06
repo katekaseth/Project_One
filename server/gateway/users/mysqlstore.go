@@ -251,6 +251,7 @@ func (ms *MySQLStore) InsertNewBookmark(documentID int, userID int) error {
 			return err
 		}
 	}
+
 	return nil
 }
 

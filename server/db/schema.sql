@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS documents (
     updated date not null,
     custodian VARCHAR(100) not null,
     author VARCHAR(100) not null,
-    description VARCHAR(300) not null,
+    description VARCHAR(550) not null,
     subject_area VARCHAR(50) not null,
     support_group VARCHAR(100) not NULL,
     sql_query VARCHAR(5000) not null,

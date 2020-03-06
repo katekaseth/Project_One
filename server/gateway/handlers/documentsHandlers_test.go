@@ -130,7 +130,8 @@ func TestGetAllSearch(t *testing.T) {
 	ctx.SearchHandler(w, r)
 	recievedDocSummaries := []documents.DocumentSummary{}
 	dec := json.NewDecoder(w.Body)
-	if err := dec.Decode(&recievedDocSummaries); err != nil {
+	if err := dec.Decode(&recievedDocSummaries); err == nil {
+		t.Error(recievedDocSummaries)
 		t.Errorf("failed decoding")
 	}
 }
@@ -142,11 +143,11 @@ func TestGetQuerySearch(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	query := &documents.DocumentQuery{
-		SubjectArea:  []string{"Healthcare"},
-		ToolType:     []string{"Report", "Cube"},
-		Database:     []string{"EDWAdminMart"},
-		SupportGroup: []string{"ORIS"},
-		SearchTerm:   []string{"credit", "hours"},
+		// SubjectArea:  []string{"Healthcare"},
+		// ToolType:     []string{"Report", "Cube"},
+		Database: []string{"EDWAdminMart"},
+		// SupportGroup: []string{"ORIS"},
+		// SearchTerm:   []string{"credit", "hours"},
 	}
 	queryBody, _ := json.Marshal(query)
 	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
@@ -156,7 +157,8 @@ func TestGetQuerySearch(t *testing.T) {
 	ctx.SearchHandler(w, r)
 	recievedDocSummaries := []documents.DocumentSummary{}
 	dec := json.NewDecoder(w.Body)
-	if err := dec.Decode(&recievedDocSummaries); err != nil {
+	if err := dec.Decode(&recievedDocSummaries); err == nil {
+		t.Error(recievedDocSummaries)
 		t.Errorf("failed decoding")
 	}
 

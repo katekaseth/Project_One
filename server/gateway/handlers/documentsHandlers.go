@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -46,7 +47,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	dec := json.NewDecoder(r.Body)
 	err = dec.Decode(query)
 	if err != nil {
-		http.Error(w, "Decoding failed", http.StatusInternalServerError)
+		http.Error(w, "Bad request body", http.StatusInternalServerError)
 		return
 	}
 
@@ -70,13 +71,14 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	for i := 0; i < len(documents); i++ {
 		documents[i].Bookmarked = contains(docIDs, documents[i].DocumentID)
 	}
-
+	log.Println(documents)
 	// marshal to json
 	documentsBytes, err := json.Marshal(documents)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
+	log.Println(documentsBytes)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(documentsBytes)
@@ -128,7 +130,6 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	vars := mux.Vars(r)
 	documentID, err := strconv.Atoi(vars["documentID"])
 
-	// url := r.URL.Path
 	if err != nil {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
@@ -140,7 +141,6 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	}
 	userID := int(sessionState.User.ID)
 
-	// id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
