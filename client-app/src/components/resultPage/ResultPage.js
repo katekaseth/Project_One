@@ -18,7 +18,6 @@ export default ({ filterState, setPage, selectedResult }) => {
     }, []);
 
     if (selectedResult === null || result === null) return <div></div>;
-    console.log(result);
     return (
         <Grid>
             <Grid>

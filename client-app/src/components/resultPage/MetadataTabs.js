@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
+import formatDate from '../../helpers/formatDate';
 
 export const TechnicalInfo = ({
     toolType,
@@ -14,8 +15,8 @@ export const TechnicalInfo = ({
         <Grid container direction='column'>
             <Typography variant='body1'>Tool Type: {toolType}</Typography>
             <Typography variant='body1'>Subject Area: {subjectArea}</Typography>
-            <Typography variant='body1'>Created On: {created}</Typography>
-            <Typography variant='body1'>Updated On: {updated}</Typography>
+            <Typography variant='body1'>Created On: {formatDate(created)}</Typography>
+            <Typography variant='body1'>Updated On: {formatDate(updated)}</Typography>
             <Typography variant='body1'>Custodian: {custodian}</Typography>
             <Typography variant='body1'>Author: {author}</Typography>
             <Typography variant='body1'>Database: {database}</Typography>
