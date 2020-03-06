@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 
 	// need it for mysql
@@ -101,50 +102,48 @@ func (ms *MySQLStore) GetAllDocuments() ([]documents.DocumentSummary, error) {
 	return allDocuments, nil
 }
 
+// Returns a string that queries the given termList and filterType.
+func addFilterQuery(termList []string, filterType string, currentStmt string) string {
+	var stmt string
+	if filterType == "search" && len(termList) != 0 {
+		if strings.HasSuffix(currentStmt, ")") {
+			stmt += " AND "
+		}
+		// title
+		stmt += "(title like '%" + termList[0] + "%'"
+		for i := 1; i < len(termList); i++ {
+			stmt += " AND title like '%" + termList[i] + "%'"
+		}
+		stmt += ") OR "
+		// description
+		stmt += "(description like '%" + termList[0] + "%'"
+		for i := 1; i < len(termList); i++ {
+			stmt += " AND description like '%" + termList[i] + "%'"
+		}
+		stmt += ")"
+	} else if len(termList) != 0 {
+		if strings.HasSuffix(currentStmt, ")") {
+			stmt += " AND "
+		}
+		stmt += "(" + filterType + ` = "` + termList[0] + `"`
+		for i := 1; i < len(termList); i++ {
+			stmt += " OR " + filterType + ` = "` + termList[i] + `"`
+		}
+		stmt += ")"
+	}
+	return stmt
+}
+
 //GetSearchedDocuments returns and array of DocumentSummary that meet the criteria of
 //the passed in query.
 func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]documents.DocumentSummary, error) {
-	stmt := `SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where `
-	if len(query.SubjectArea) != 0 {
-		stmt += `(subject_area = ` + `"` + query.SubjectArea[0] + `"`
-		for i := 1; i < len(query.SubjectArea); i++ {
-			stmt += " OR subject_area = " + `"` + query.SubjectArea[i] + `"`
-		}
-		stmt += ")"
-	}
-
-	if len(query.ToolType) != 0 {
-		if strings.HasSuffix(stmt, ")") {
-			stmt += " AND "
-		}
-		stmt += "(tool_type = " + `"` + query.ToolType[0] + `"`
-		for i := 1; i < len(query.ToolType); i++ {
-			stmt += " OR tool_type = " + `"` + query.ToolType[i] + `"`
-		}
-		stmt += ")"
-	}
-
-	if len(query.Database) != 0 {
-		if strings.HasSuffix(stmt, ")") {
-			stmt += " AND "
-		}
-		stmt += "(database_name = " + `"` + query.Database[0] + `"`
-		for i := 1; i < len(query.Database); i++ {
-			stmt += " OR database_name = " + `"` + query.Database[i] + `"`
-		}
-		stmt += ")"
-	}
-
-	if len(query.SupportGroup) != 0 {
-		if strings.HasSuffix(stmt, ")") {
-			stmt += " AND "
-		}
-		stmt += "(support_group = " + `"` + query.SupportGroup[0] + `"`
-		for i := 1; i < len(query.SupportGroup); i++ {
-			stmt += " OR support_group = " + `"` + query.SupportGroup[i] + `"`
-		}
-		stmt += ")"
-	}
+	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where "
+	stmt += addFilterQuery(query.SubjectArea, "subject_area", stmt)
+	stmt += addFilterQuery(query.ToolType, "tool_type", stmt)
+	stmt += addFilterQuery(query.Database, "database_name", stmt)
+	stmt += addFilterQuery(query.SupportGroup, "support_group", stmt)
+	stmt += addFilterQuery(query.SearchTerm, "search", stmt)
+	log.Println(stmt)
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err
@@ -173,8 +172,8 @@ func (ms *MySQLStore) scanDocSummaryQuery(stmt string) ([]documents.DocumentSumm
 }
 
 //GetFilters returns a DocumentQuery which lists available filters in the database.
-func (ms *MySQLStore) GetFilters() (*documents.DocumentQuery, error) {
-	allFilters := &documents.DocumentQuery{}
+func (ms *MySQLStore) GetFilters() (*documents.Filters, error) {
+	allFilters := &documents.Filters{}
 
 	toolTypes, err := ms.scanSingleFilter(`SELECT DISTINCT tool_type FROM documents`)
 	if err != nil {

@@ -142,10 +142,11 @@ func TestGetQuerySearch(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	query := &documents.DocumentQuery{
-		SubjectArea: []string{"Healthcare", "Financial Resources"},
-		ToolType:    []string{"Report", "Cube"},
-		Database:    []string{"EDWAdminMart"},
-		// SupportGroup: []string{"ORIS"},
+		SubjectArea:  []string{"Healthcare"},
+		ToolType:     []string{"Report", "Cube"},
+		Database:     []string{"EDWAdminMart"},
+		SupportGroup: []string{"ORIS"},
+		SearchTerm:   []string{"credit", "hours"},
 	}
 	queryBody, _ := json.Marshal(query)
 	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
@@ -161,7 +162,7 @@ func TestGetQuerySearch(t *testing.T) {
 
 	if len(recievedDocSummaries) != 56 {
 		t.Error(recievedDocSummaries)
-		t.Errorf("did not get expected number of documents")
+		t.Errorf("did not get expected number of documents %d", len(recievedDocSummaries))
 	}
 }
 
