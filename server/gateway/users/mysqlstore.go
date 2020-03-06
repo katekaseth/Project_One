@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 
 	// need it for mysql
@@ -109,7 +110,7 @@ func addFilterQuery(termList []string, filterType string, currentStmt string) st
 			stmt += " AND "
 		}
 		// title
-		stmt += "(title like '%" + termList[0] + "%'"
+		stmt += "( (title like '%" + termList[0] + "%'"
 		for i := 1; i < len(termList); i++ {
 			stmt += " AND title like '%" + termList[i] + "%'"
 		}
@@ -119,7 +120,7 @@ func addFilterQuery(termList []string, filterType string, currentStmt string) st
 		for i := 1; i < len(termList); i++ {
 			stmt += " AND description like '%" + termList[i] + "%'"
 		}
-		stmt += ")"
+		stmt += ") )"
 	} else if len(termList) != 0 {
 		if strings.HasSuffix(currentStmt, ")") {
 			stmt += " AND "
@@ -142,6 +143,7 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]do
 	stmt += addFilterQuery(query.Database, "database_name", stmt)
 	stmt += addFilterQuery(query.SupportGroup, "support_group", stmt)
 	stmt += addFilterQuery(query.SearchTerm, "search", stmt)
+	log.Println(stmt)
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err

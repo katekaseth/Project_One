@@ -20,8 +20,8 @@ import (
 // 		Support Group: [],
 // }
 func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+	if r.Method != "POST" {
+		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
 		return
 	}
 

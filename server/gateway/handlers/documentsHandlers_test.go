@@ -143,11 +143,11 @@ func TestGetQuerySearch(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	query := &documents.DocumentQuery{
-		// SubjectArea:  []string{"Healthcare"},
+		SubjectArea: []string{"Services & Resources"},
 		// ToolType:     []string{"Report", "Cube"},
-		Database: []string{"EDWAdminMart"},
+		// Database: []string{"EDWAdminMart"},
 		// SupportGroup: []string{"ORIS"},
-		// SearchTerm:   []string{"credit", "hours"},
+		SearchTerm: []string{"application"},
 	}
 	queryBody, _ := json.Marshal(query)
 	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
