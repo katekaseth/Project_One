@@ -13,10 +13,10 @@ type DocumentQuery struct {
 
 // Filters represents the possible filters in our database.
 type Filters struct {
-	SubjectArea  []string `json:"Subject Area"`
 	ToolType     []string `json:"Tool Type"`
-	Database     []string `json:"Database"`
+	SubjectArea  []string `json:"Subject Area"`
 	SupportGroup []string `json:"Support Group"`
+	Database     []string `json:"Database"`
 }
 
 // Document represents all the information of a document.
