@@ -184,7 +184,9 @@ function App() {
                     </div>
                 </Route>
                 <Route path={PAGES.login}>
-                    <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
+                    <div className="login-page-container">
+                        <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
+                    </div>
                 </Route>
                 <Route path={PAGES.bookmarks}>
                     <div className='bookmark-page-container'>

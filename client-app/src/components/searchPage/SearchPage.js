@@ -30,6 +30,10 @@ export default props => {
 };
 
 const useStyles = makeStyles({
+    container: {
+        height: '100%',
+        backgroundColor: '#E5E5E5',
+    },
     searchArea: {
         marginLeft: '20px',
     },
