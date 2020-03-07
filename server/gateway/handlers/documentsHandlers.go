@@ -25,7 +25,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -133,7 +133,7 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -175,7 +175,7 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -215,7 +215,7 @@ func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -239,8 +239,8 @@ func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Reques
 
 }
 
-// check if current user is authenticated; return status unauthorized if not
-func checkUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) (*SessionState, error) {
+// CheckUserAuthenticated check if current user is authenticated; return status unauthorized if not
+func CheckUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) (*SessionState, error) {
 	sessionState := &SessionState{}
 	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
 	if err != nil {

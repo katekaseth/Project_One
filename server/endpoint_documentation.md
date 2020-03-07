@@ -60,6 +60,17 @@
     - `405`: Method must be DELETE
     - `409`: Error ending session
 
+- `GET /ping`: Pings the server.
+  - Responses:
+    - `200`: server is running
+
+- `GET /ping/`: Pings the server to check if bearer token is correct.
+  - Request headers:
+    - `Authorization`: bearer token for the session
+  - Responses:
+    - `200`: signed in, bearer token is valid
+    - `401`: User not authorized
+
 # Document Endpoints
 
 All endpoints require authenticated user in the form of an authorization bearer token. Add request header: `Authorization: Bearer <token>`
