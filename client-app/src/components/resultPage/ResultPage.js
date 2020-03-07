@@ -11,33 +11,32 @@ import homeIcon from '../../icons/svg/home.svg';
 export default ({filterState, setPage, selectedResult}) => {
     const [result, setResult] = useState(null);
 
-    const fetchResult = async (selectedResult) => {
+    const fetchResult = async selectedResult => {
         const response = await getResultEndpoint(selectedResult);
         setResult(response.data);
-    }
+    };
 
     useEffect(() => {
         fetchResult(selectedResult);
     }, []);
 
-    if (selectedResult === null || result === null) return (<div></div>);
-    console.log(result);
+    if (selectedResult === null || result === null) return <div></div>;
     return (
         <Grid>
             <Grid>
-                <NavPath searchPath={getSearchPath(filterState)} setPage={setPage}/>
+                <NavPath searchPath={getSearchPath(filterState)} setPage={setPage} />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result}/>
+                <ResultOverview result={result} />
             </Grid>
             <Grid className='result-metadata-container'>
-                <ResultMetadata result={result}/>
+                <ResultMetadata result={result} />
             </Grid>
         </Grid>
     );
 };
 
-const getSearchPath = (filterState) => {
+const getSearchPath = filterState => {
     if (filterState === null) {
         return 'Search';
     }
@@ -51,9 +50,9 @@ const getSearchPath = (filterState) => {
     if (filters.length === 0) {
         return 'Search';
     } else {
-        return filters.join(',') + '...'
+        return filters.join(',') + '...';
     }
-}
+};
 
 const NavPath =  ({searchPath, setPage}) => {
     const classes = useStyles();

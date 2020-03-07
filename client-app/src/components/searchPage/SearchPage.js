@@ -8,32 +8,21 @@ import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
 
-export default (props) => {    
+export default props => {
     const classes = useStyles();
-    if (props.filterState == null) return <div>Error fetching available filters, try refreshing.</div>
+    if (props.filterState === null) return <div></div>;
     return (
-        <Grid
-            container
-            className='search-page'
-        >
+        <Grid container>
             <Grid xs={3} item>
-                <SearchFilter {...props}/>
+                <SearchFilter {...props} />
             </Grid>
 
-            <Grid 
-                xs 
-                item 
-                container 
-                direction='column'
-                className={classes.searchArea}
-            >
-
-                <SearchBar {...props}/>
-
+            <Grid xs item container direction='column' className={classes.searchArea}>
+                <SearchBar {...props} />
 
                 <Grid item className={classes.filterChips}>
-                    <FilterChips  {...props}/>
-                    <SearchResults {...props}/>
+                    <FilterChips {...props} />
+                    <SearchResults {...props} />
                 </Grid>
             </Grid>
         </Grid>
@@ -50,5 +39,5 @@ const useStyles = makeStyles({
     },
     filterChips: {
         marginTop: '20px',
-    }
+    },
 });

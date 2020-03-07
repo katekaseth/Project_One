@@ -1,49 +1,22 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles'
-import { 
-    Grid, 
-    Typography, 
-    Divider, 
-    TextField,
-    Button,
-    CardMedia,
-    Box
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { Grid, Typography, Divider, TextField, Button, CardMedia, Box } from '@material-ui/core';
 
 import wLogo from '../../images/W-Logo.png';
-import wordmarkLogo from '../../images/Wordmark-Stacked.png'
+import wordmarkLogo from '../../images/Wordmark-Stacked.png';
 import { loginApi } from '../../api/login';
 
-export default ({setPage}) => {
+export default ({ setPage }) => {
     const classes = useStyles();
 
     return (
-        <Grid 
-            container 
-            direction='column'
-            alignItems='center'
-            className={classes.content}
-        >
-            <Grid 
-                item
-                container 
-                justify='center'
-            >
-                <Grid
-                    xs
-                    container 
-                    alignItems='flex-end'
-                    direction='column'
-                >
-                    <LoginComponent setPage={setPage}/>
+        <Grid container direction='column' alignItems='center' className={classes.content}>
+            <Grid item container justify='center'>
+                <Grid xs item container alignItems='flex-end' direction='column'>
+                    <LoginComponent setPage={setPage} />
                 </Grid>
-                <Divider orientation='vertical' flexItem/>
-                <Grid 
-                    xs 
-                    container
-                    direction='column'
-                    className={classes.learnLinks}
-                >
+                <Divider orientation='vertical' flexItem />
+                <Grid xs item container direction='column' className={classes.learnLinks}>
                     <Typography className={classes.link} variant='body2'>
                         Learn about account recovery options
                     </Typography>
@@ -56,15 +29,15 @@ export default ({setPage}) => {
                     <Typography className={classes.link} variant='body2'>
                         Obtain a UW NetID
                     </Typography>
-                    <br/>
+                    <br />
                     <Typography className={classes.link} variant='body2'>
                         Need help?
                     </Typography>
                 </Grid>
             </Grid>
-            <Grid 
+            <Grid
                 item
-                container 
+                container
                 direction='column'
                 alignItems='center'
                 className={classes.bottomContent}
@@ -72,54 +45,55 @@ export default ({setPage}) => {
                 <Typography variant='body2'>
                     Sign in reduces how often you have to reauthenticate to access UW resources.
                 </Typography>
-                <br/>
+                <br />
                 <Typography variant='body2'>
-                    Learn how to <Box className={classes.link} component='span'>sign out</Box> at the end of your browsing session.
+                    Learn how to{' '}
+                    <Box className={classes.link} component='span'>
+                        sign out
+                    </Box>{' '}
+                    at the end of your browsing session.
                 </Typography>
-                <br/>
+                <br />
                 <Typography variant='body2'>
-                    <Box className={classes.link} component='span'>PRIVACY</Box>
+                    <Box className={classes.link} component='span'>
+                        PRIVACY
+                    </Box>
                     <Box component='span'> | </Box>
-                    <Box className={classes.link} component='span'>TERMS</Box>
+                    <Box className={classes.link} component='span'>
+                        TERMS
+                    </Box>
                 </Typography>
             </Grid>
         </Grid>
     );
-}
+};
 
-const LoginComponent = ({setPage}) => {
+const LoginComponent = ({ setPage }) => {
     const classes = useStyles();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleKeyPress = (event) => {
-        if(event.key === 'Enter') {
+    const handleKeyPress = event => {
+        if (event.key === 'Enter') {
             loginApi(username, password, setPage);
         }
-    }
+    };
 
     return (
-        <Grid
-            item
-            container 
-            direction='column'
-            xs={4}
-        >
+        <Grid item container direction='column' xs={4}>
             <Grid item container className={classes.items}>
-                <CardMedia className={classes.logo} src={wLogo} component='img'/>
-                <CardMedia className={classes.logo} src={wordmarkLogo} component='img'/>
+                <CardMedia className={classes.logo} src={wLogo} component='img' />
+                <CardMedia className={classes.logo} src={wordmarkLogo} component='img' />
             </Grid>
 
             <Grid item className={classes.items}>
-                <Typography variant='body2'>
-                    Please sign in.
-                </Typography>
+                <Typography variant='body2'>Please sign in.</Typography>
             </Grid>
 
             <Grid item className={classes.items}>
-                <TextField 
+                <TextField
                     onKeyPress={handleKeyPress}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={e => setUsername(e.target.value)}
                     size='small'
                     label='UW NetID'
                     variant='outlined'
@@ -129,7 +103,7 @@ const LoginComponent = ({setPage}) => {
             <Grid item className={classes.items}>
                 <TextField
                     onKeyPress={handleKeyPress}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     size='small'
                     label='Password'
                     type='password'
@@ -144,11 +118,17 @@ const LoginComponent = ({setPage}) => {
             </Grid>
 
             <Grid item className={classes.items}>
-                <Button variant='contained' color='primary' onClick={() => loginApi(username, password, setPage)}>Sign in</Button>
+                <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={() => loginApi(username, password, setPage)}
+                >
+                    Sign in
+                </Button>
             </Grid>
         </Grid>
     );
-}
+};
 
 const useStyles = makeStyles({
     content: {
@@ -172,5 +152,5 @@ const useStyles = makeStyles({
         textDecoration: 'underline',
         color: 'blue',
         cursor: 'pointer',
-    }
+    },
 });

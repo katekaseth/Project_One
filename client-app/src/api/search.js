@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 
-import { API, SESSION } from '../stringConstants';
+import { API, SESSION } from "../stringConstants";
 
 export const searchEndpoint = (filterState, searchedTerms) => {
     let body = {};
-    console.log('/search');
     Object.keys(filterState).forEach(categoryKey => {
         body[categoryKey] = [];
         Object.keys(filterState[categoryKey]).forEach(filterKey => {
@@ -13,15 +12,15 @@ export const searchEndpoint = (filterState, searchedTerms) => {
             }
         });
     });
-    body.searchedTerms = searchedTerms;
+    body.searchTerms = searchedTerms;
 
     return axios({
-        method: 'post',
+        method: "post",
         url: API.URL + API.SEARCH,
         data: body,
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': sessionStorage.getItem(SESSION.SESSION_ID)
-        }
+            "Content-Type": "application/json",
+            Authorization: sessionStorage.getItem(SESSION.SESSION_ID),
+        },
     });
 };
