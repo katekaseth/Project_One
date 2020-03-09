@@ -13,10 +13,16 @@ type DocumentQuery struct {
 
 // Filters represents the possible filters in our database.
 type Filters struct {
-	SubjectArea  []string `json:"Subject Area"`
 	ToolType     []string `json:"Tool Type"`
-	Database     []string `json:"Database"`
+	SubjectArea  []string `json:"Subject Area"`
 	SupportGroup []string `json:"Support Group"`
+	Database     []string `json:"Database"`
+}
+
+// Term represents a term with its definition.
+type Term struct {
+	Term       string `json:"term"`
+	Definition string `json:"definition"`
 }
 
 // Document represents all the information of a document.
@@ -33,6 +39,9 @@ type Document struct {
 	SqlQuery     string    `json:"sqlQuery"`
 	SupportGroup string    `json:"supportGroup"`
 	Database     string    `json:"database"`
+	JoinedTerms  string    `json:"-"`
+	JoinedDefs   string    `json:"-"`
+	Terms        []Term    `json:"terms"`
 	Bookmarked   bool      `json:"isBookmarked"`
 }
 

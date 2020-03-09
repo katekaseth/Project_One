@@ -158,3 +158,32 @@ func (ctx *HandlerContext) SpecificSessionsHandler(w http.ResponseWriter, r *htt
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("signed out"))
 }
+
+// PingHandler accepts GET requests and sends 200 if the server is up.
+func (ctx *HandlerContext) PingHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/plain")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Server is up and running!"))
+}
+
+// SpecificPingHandler accepts GET requests to /ping/ and sends 200 if
+// user is logged in or 401 if they aren't.
+func (ctx *HandlerContext) SpecificPingHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
+		return
+	}
+
+	_, err := CheckUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	w.Header().Set("Content-Type", "text/plain")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("You are signed in!"))
+}

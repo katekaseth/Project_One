@@ -53,6 +53,9 @@ func main() {
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
+	router.HandleFunc("/ping", ctx.PingHandler)
+	router.HandleFunc("/ping/", ctx.SpecificPingHandler)
+
 	router.HandleFunc("/search", ctx.SearchHandler)
 	router.HandleFunc("/filter", ctx.FilterHandler)
 	router.HandleFunc("/documents/{documentID}", ctx.SpecificDocumentHandler)

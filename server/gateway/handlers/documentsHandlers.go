@@ -25,7 +25,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -46,7 +46,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	dec := json.NewDecoder(r.Body)
 	err = dec.Decode(query)
 	if err != nil {
-		http.Error(w, "Decoding failed", http.StatusInternalServerError)
+		http.Error(w, "Bad request body", http.StatusInternalServerError)
 		return
 	}
 
@@ -72,14 +72,14 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	// marshal to json
-	documentsBytes, err := json.Marshal(documents)
+	documentBytes, err := json.Marshal(documents)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(documentsBytes)
+	w.Write(documentBytes)
 }
 
 // TODO: make this logn at some point
@@ -124,23 +124,24 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	}
 
 	var documentID int
-	// get user id from the url path
+	// for local testing:
+	// url := r.URL.Path
+	// documentID, err := strconv.Atoi(strings.ReplaceAll(url, "/documents/", ""))
+	// log.Println(documentID)
+
+	// get id from url path
 	vars := mux.Vars(r)
 	documentID, err := strconv.Atoi(vars["documentID"])
-
-	// url := r.URL.Path
 	if err != nil {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
 	}
 
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
 	userID := int(sessionState.User.ID)
-
-	// id, err := strconv.Atoi(url[len("https://api.katekaseth.me/documents/"):])
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
@@ -177,7 +178,7 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -217,7 +218,7 @@ func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Method must be GET", http.StatusMethodNotAllowed)
 		return
 	}
-	sessionState, err := checkUserAuthenticated(ctx, w, r)
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
 	if err != nil {
 		return
 	}
@@ -241,8 +242,8 @@ func (ctx *HandlerContext) BookmarkHandler(w http.ResponseWriter, r *http.Reques
 
 }
 
-// check if current user is authenticated; return status unauthorized if not
-func checkUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) (*SessionState, error) {
+// CheckUserAuthenticated check if current user is authenticated; return status unauthorized if not
+func CheckUserAuthenticated(ctx *HandlerContext, w http.ResponseWriter, r *http.Request) (*SessionState, error) {
 	sessionState := &SessionState{}
 	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
 	if err != nil {
