@@ -19,6 +19,12 @@ type Filters struct {
 	Database     []string `json:"Database"`
 }
 
+// Term represents a term with its definition.
+type Term struct {
+	Term       string `json:"term"`
+	Definition string `json:"definition"`
+}
+
 // Document represents all the information of a document.
 type Document struct {
 	DocumentID   int       `json:"documentID"`
@@ -33,6 +39,9 @@ type Document struct {
 	SqlQuery     string    `json:"sqlQuery"`
 	SupportGroup string    `json:"supportGroup"`
 	Database     string    `json:"database"`
+	JoinedTerms  string    `json:"-"`
+	JoinedDefs   string    `json:"-"`
+	Terms        []Term    `json:"terms"`
 	Bookmarked   bool      `json:"isBookmarked"`
 }
 

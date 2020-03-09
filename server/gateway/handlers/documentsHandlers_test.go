@@ -111,6 +111,7 @@ func TestGetSpecificDocument(t *testing.T) {
 	receivedDoc := documents.Document{}
 	dec := json.NewDecoder(w.Body)
 	if err := dec.Decode(&receivedDoc); err != nil {
+		t.Error(receivedDoc)
 		t.Error(w.Code)
 	}
 }

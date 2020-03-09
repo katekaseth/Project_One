@@ -225,14 +225,33 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 //GetSpecificDocument returns a Document object that matches the given documentID.
 func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, error) {
 	document := documents.Document{}
-	row := ms.Db.QueryRow(`select * from documents where document_id = ?`, documentID)
+	row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name, t.term, t.definition
+						 FROM documents d JOIN terms t ON t.document_id = d.document_id WHERE d.document_id = ?`, documentID)
 	err := row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
 		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
-		&document.SqlQuery, &document.Database)
+		&document.SqlQuery, &document.Database, &document.JoinedTerms, &document.JoinedDefs)
 	if err != nil {
 		return nil, err
 	}
+
+	terms := strings.Split(document.JoinedTerms, "::")
+	defs := strings.Split(document.JoinedDefs, "::")
+
+	document.Terms = convertToTermArray(terms, defs)
+
 	return &document, nil
+}
+
+func convertToTermArray(terms []string, defs []string) []documents.Term {
+	var arr []documents.Term
+	for i, t := range terms {
+		newTerm := documents.Term{
+			Term:       t,
+			Definition: defs[i],
+		}
+		arr = append(arr, newTerm)
+	}
+	return arr
 }
 
 //InsertNewBookmark will insert a new bookmark of the given documentID for the given

@@ -141,8 +141,19 @@ All endpoints require authenticated user in the form of an authorization bearer 
         "author": "Jane Doe",
         "description": "Displays a graph...",
         "subjectArea": "Financial Resources",
+        "sqlQuery": "SELECT * FROM student",
+        "supportGroup": "Enrollment Information Services",
         "database": "EDWAdminMart",
-        "sqlQuery": "SELECT * FROM student"
+        "terms": [
+          {
+            "term": "Department",
+            "definition": "An organization unit at..."
+          },
+          {
+            "term": "Department",
+            "definition": "An organization unit at..."
+          }
+        ]
     }
 	```
   - Responses:

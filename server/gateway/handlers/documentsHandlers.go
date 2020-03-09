@@ -124,10 +124,14 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	}
 
 	var documentID int
-	// get user id from the url path
+	// for local testing:
+	// url := r.URL.Path
+	// documentID, err := strconv.Atoi(strings.ReplaceAll(url, "/documents/", ""))
+	// log.Println(documentID)
+
+	// get id from url path
 	vars := mux.Vars(r)
 	documentID, err := strconv.Atoi(vars["documentID"])
-
 	if err != nil {
 		http.Error(w, "Bad URL", http.StatusBadRequest)
 		return
@@ -138,7 +142,6 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 		return
 	}
 	userID := int(sessionState.User.ID)
-
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
 		return
