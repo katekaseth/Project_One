@@ -144,8 +144,12 @@ export const SqlQuery = ({ sqlQuery }) => {
     };
 
     return (
-        <Grid container direction="row" className={classes.infoBox}>
-            <Grid item xs={11}>
+        <Grid
+            container
+            direction="row"
+            className={(classes.infoBox, classes.inheritHeight)}
+        >
+            <Grid item xs={11} className={classes.scrollable}>
                 <pre className={classes.sqlFormat}>
                     {sqlFormatter.format(sqlQuery)}
                 </pre>
@@ -215,6 +219,13 @@ const useStyles = makeStyles({
         wordBreak: 'keep-all',
         color: '#005CB0',
         fontSize: '1rem'
+    },
+    inheritHeight: {
+        height: 'inherit'
+    },
+    scrollable: {
+        height: '90%',
+        overflow: 'auto'
     }
 });
 
