@@ -1,7 +1,15 @@
-import React from "react";
-import { Grid, Typography, makeStyles } from "@material-ui/core";
-import formatDate from "../../helpers/formatDate";
-import sqlFormatter from "sql-formatter";
+import React, { useState } from 'react';
+import {
+    Grid,
+    Typography,
+    Button,
+    Tooltip,
+    ClickAwayListener,
+    makeStyles
+} from '@material-ui/core';
+import formatDate from '../../helpers/formatDate';
+import sqlFormatter from 'sql-formatter';
+import copy from 'clipboard-copy';
 
 export const TechnicalInfo = ({
     toolType,
@@ -120,12 +128,51 @@ export const SecurityInfo = () => {
 
 export const SqlQuery = ({ sqlQuery }) => {
     let classes = useStyles();
+    const [showTooltip, setShowTooltip] = useState(false);
+
+    const handleTooltipClose = () => {
+        setShowTooltip(false);
+    };
+
+    const handleTooltipOpen = () => {
+        setShowTooltip(true);
+    };
+
+    const handleOnClick = () => {
+        handleTooltipOpen();
+        copy(sqlFormatter.format(sqlQuery));
+    };
+
     return (
-        <Grid container direction="column" className={classes.infoBox}>
-            {/* <Typography variant="body1">{sqlQuery}</Typography> */}
-            <Typography>
-                {console.log(sqlFormatter.format(sqlQuery))}
-            </Typography>
+        <Grid container direction="row" className={classes.infoBox}>
+            <Grid item xs={11}>
+                <pre className={classes.sqlFormat}>
+                    {sqlFormatter.format(sqlQuery)}
+                </pre>
+            </Grid>
+            <Grid item xs={1}>
+                <ClickAwayListener onClickAway={handleTooltipClose}>
+                    <div>
+                        <Tooltip
+                            onClose={handleTooltipClose}
+                            open={showTooltip}
+                            leaveDelay={1000}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            title="Copied to clipboard!"
+                        >
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleOnClick}
+                            >
+                                Copy
+                            </Button>
+                        </Tooltip>
+                    </div>
+                </ClickAwayListener>
+            </Grid>
         </Grid>
     );
 };
@@ -140,28 +187,34 @@ export const Definitions = () => {
 
 const useStyles = makeStyles({
     infoBox: {
-        backgroundColor: "#F8F8F8",
-        padding: "1rem"
+        backgroundColor: '#F8F8F8',
+        padding: '1rem'
     },
     techInfoTitle: {
-        fontFamily: "Encode-sans, sans-serif",
-        fontSize: "1rem",
-        color: "#5E5B5B"
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1rem',
+        color: '#5E5B5B'
     },
     techInfoDetail: {
-        fontFamily: "Encode-sans, sans-serif",
-        fontSize: "1rem",
-        fontWeight: "bold",
-        color: "#4B2E83"
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        color: '#4B2E83'
     },
     techInfoDescTitle: {
-        fontFamily: "Encode-sans, sans-serif",
-        fontSize: "1.25rem",
-        color: "#5E5B5B"
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1.25rem',
+        color: '#5E5B5B'
     },
     techInfoDesc: {
-        fontFamily: "Encode-sans, sans-serif",
-        fontSize: "1rem"
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1rem'
+    },
+    sqlFormat: {
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'keep-all',
+        color: '#005CB0',
+        fontSize: '1rem'
     }
 });
 
