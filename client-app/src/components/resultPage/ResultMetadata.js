@@ -43,7 +43,7 @@ const Metadata = ({ metadataTab, result }) => {
 
     return (
         <Paper square className={classes.metadata}>
-            <Typography variant='h5'>{METADATA_TABS[metadataTab]}</Typography>
+            <Typography variant='h5' className={classes.tabTitle}>{METADATA_TABS[metadataTab]}</Typography>
             {tabContent}
         </Paper>
     );
@@ -110,6 +110,13 @@ const useStyles = makeStyles({
         paddingTop: '10px',
         paddingBottom: '10px',
         width: '130px',
+    },
+    tabTitle: {
+        fontFamily: "Roboto, sans-serif",
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        color: '#5E5B5B',
+        textTransform: 'uppercase'
     },
     background: {
         backgroundColor: 'white',
