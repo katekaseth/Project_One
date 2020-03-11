@@ -181,11 +181,46 @@ export const SqlQuery = ({ sqlQuery }) => {
     );
 };
 
-export const Definitions = () => {
+export const Definitions = ({ terms }) => {
+    let classes = useStyles();
+    let term = terms[0];
+    console.log(term);
     return (
-        <Grid container direction="column">
-            <Typography variant="body1">Definitions coming soon...</Typography>
+        <Grid
+            container
+            direction="row"
+            className={(classes.inheritHeight, classes.scrollable)}
+        >
+            <Grid item xs={12}>
+                <Typography className={classes.termDetail}>
+                    Click the links below to view the full definitions in{' '}
+                    <a className={classes.blue} href="https://metadata.uw.edu/">
+                        Knowledge Navigator
+                    </a>
+                </Typography>
+                <br></br>
+            </Grid>
+            <Grid item>
+                {terms.map((term, i) => {
+                    return <Term term={term} key={i}></Term>;
+                })}
+            </Grid>
         </Grid>
+    );
+};
+
+const Term = ({ term }) => {
+    let classes = useStyles();
+    return (
+        <div>
+            <Typography className={classes.termTitle}>
+                <a className={classes.blue}>{term.term}</a>
+            </Typography>
+            <Typography className={classes.termDef}>
+                {term.definition}
+            </Typography>
+            <br></br>
+        </div>
     );
 };
 
@@ -226,6 +261,24 @@ const useStyles = makeStyles({
     scrollable: {
         height: '90%',
         overflow: 'auto'
+    },
+    termDetail: {
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1rem'
+    },
+    blue: {
+        color: 'blue',
+        '&:hover': {
+            textDecoration: 'underline'
+        }
+    },
+    termTitle: {
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1rem'
+    },
+    termDef: {
+        fontFamily: 'Roboto, sans-serif',
+        fontSize: '.85rem'
     }
 });
 
