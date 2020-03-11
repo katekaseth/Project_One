@@ -123,7 +123,9 @@ export const SqlQuery = ({ sqlQuery }) => {
     return (
         <Grid container direction="column" className={classes.infoBox}>
             {/* <Typography variant="body1">{sqlQuery}</Typography> */}
-            <Typography>{sqlFormatter.format(sqlQuery)}</Typography>
+            <Typography>
+                {console.log(sqlFormatter.format(sqlQuery))}
+            </Typography>
         </Grid>
     );
 };
