@@ -28,9 +28,8 @@ export const TechnicalInfo = ({
             direction="row"
             justify="flex-start"
             alignItems="flex-start"
-            spacing={2}
         >
-            <Grid item xs={6} className={classes.infoBox}>
+            <Grid item xs={5} className={classes.infoBox}>
                 <Typography className={classes.techInfoTitle}>
                     Author
                 </Typography>
@@ -61,6 +60,8 @@ export const TechnicalInfo = ({
                 <Typography className={classes.techInfoDetail}>N/A</Typography>
             </Grid>
 
+            <Grid item xs={1}></Grid>
+
             <Grid
                 item
                 container
@@ -68,7 +69,7 @@ export const TechnicalInfo = ({
                 justify="flex-start"
                 alignItems="flex-start"
                 spacing={3}
-                xs={6}
+                xs={5}
             >
                 <Grid
                     item
@@ -117,11 +118,33 @@ export const TechnicalInfo = ({
 };
 
 export const SecurityInfo = () => {
+    let classes = useStyles();
     return (
-        <Grid container direction="column">
-            <Typography variant="body1">
-                Security info coming soon...
-            </Typography>
+        <Grid container direction="row" justify="flex-start">
+            <Grid item xs={5} className={classes.infoBox}>
+                <Typography className={classes.securityTitle}>
+                    Role(s) with full access to this report:
+                </Typography>
+                <ul className={classes.securityListItem}>
+                    <li>Admin</li>
+                    <li>Manager</li>
+                    <li className={classes.purpleBold}>FiscalTech</li>
+                    <li>Analyst - Academic</li>
+                    <li>Analyst - Administrative</li>
+                </ul>
+            </Grid>
+
+            <Grid item xs={1}></Grid>
+
+            <Grid item xs={5} className={classes.infoBox}>
+                <Typography className={classes.securityTitle}>
+                    Your Role(s):
+                </Typography>
+                <ul className={classes.securityListItem}>
+                    <li>Adviser/Academic Staff</li>
+                    <li className={classes.purpleBold}>Fiscal Tech</li>
+                </ul>
+            </Grid>
         </Grid>
     );
 };
@@ -148,6 +171,7 @@ export const SqlQuery = ({ sqlQuery }) => {
             container
             direction="row"
             className={(classes.infoBox, classes.inheritHeight)}
+            spacing={3}
         >
             <Grid item xs={11} className={classes.scrollable}>
                 <pre className={classes.sqlFormat}>
@@ -191,7 +215,7 @@ export const Definitions = ({ terms }) => {
             direction="row"
             className={(classes.inheritHeight, classes.scrollable)}
         >
-            <Grid item xs={12}>
+            <Grid item>
                 <Typography className={classes.termDetail}>
                     Click the links below to view the full definitions in{' '}
                     <a className={classes.blue} href="https://metadata.uw.edu/">
@@ -249,6 +273,16 @@ const useStyles = makeStyles({
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1rem'
     },
+    securityTitle: {
+        fontFamily: 'Encode-sans, sans-serif',
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        color: '#5E5B5B'
+    },
+    securityListItem: {
+        fontFamily: 'IBM Plex Mono, monospace',
+        fontSize: '1rem'
+    },
     sqlFormat: {
         whiteSpace: 'pre-wrap',
         wordBreak: 'keep-all',
@@ -265,6 +299,10 @@ const useStyles = makeStyles({
     termDetail: {
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1rem'
+    },
+    purpleBold: {
+        color: '#4B2E83',
+        fontSize: 'bold'
     },
     blue: {
         color: 'blue',

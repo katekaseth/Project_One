@@ -1,102 +1,104 @@
 body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  z-index: -2;
-  background-color: #E5E5E5;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: -2;
+    background-color: #e5e5e5 !important;
 }
 
 html {
-  height: 100%;
+    height: 100%;
 }
 
 .landing-page-container {
-  z-index: -1;
-  text-align: center;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-      180deg,
-      rgba(75, 46, 131, 0.55) 0%,
-      rgba(75, 46, 131, 0.46) 22.92%,
-      rgba(255, 255, 255, 0) 59.9%,
-      rgba(80, 51, 134, 0.12) 99.99%
-    ),
-    url("images/bg.png");
-  background-size: cover;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  overflow: auto;
+    z-index: -1;
+    text-align: center;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            180deg,
+            rgba(75, 46, 131, 0.55) 0%,
+            rgba(75, 46, 131, 0.46) 22.92%,
+            rgba(255, 255, 255, 0) 59.9%,
+            rgba(80, 51, 134, 0.12) 99.99%
+        ),
+        url('images/bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    overflow: auto;
 }
 
 /* navbar */
 .navigation-bar {
-  height: 70px;
-  width: 100%;
-  text-align: center;
-  font-size: larger;
-  background-color: rgba(75, 46, 131, 1);
-  left: 0px;
-  top: 0px;
-  margin: 0px;
-  padding-top: auto;
-  padding-bottom: auto;
-  display: flex;
+    height: 70px;
+    width: 100%;
+    text-align: center;
+    font-size: larger;
+    background-color: rgba(75, 46, 131, 1);
+    left: 0px;
+    top: 0px;
+    margin: 0px;
+    padding-top: auto;
+    padding-bottom: auto;
+    display: flex;
 }
 .navigation-bar.transparent {
-  background: none;
-  background-color:  rgba(75, 46, 131, 0);
+    background: none;
+    background-color: rgba(75, 46, 131, 0);
 }
 .navigation-bar img {
-  float: left;
-  width: 280px;
-  padding: 14px 16px;
-  cursor: pointer;
+    float: left;
+    width: 280px;
+    padding: 14px 16px;
+    cursor: pointer;
 }
 .navigation-bar ul {
-  margin: 0px;
-  flex: 1;
-  align-self: center;
-  display: flex;
-  flex-direction: row-reverse;
-  list-style-type: none;
+    margin: 0px;
+    flex: 1;
+    align-self: center;
+    display: flex;
+    flex-direction: row-reverse;
+    list-style-type: none;
 }
 .navigation-bar li {
-  color: white;
-  padding: 14px 16px;
-  font-family: "Encode Sans", sans-serif;
-  text-decoration: none;
-  cursor: pointer;
+    color: white;
+    padding: 14px 16px;
+    font-family: 'Encode Sans', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
 }
 .navigation-bar li:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* header  */
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
-.result-page-container, .search-page-container, .bookmark-page-container {
-  padding-top: 40px;
-  padding-right: 8vw;
-  padding-left: 8vw;
+.result-page-container,
+.search-page-container,
+.bookmark-page-container {
+    padding-top: 40px;
+    padding-right: 8vw;
+    padding-left: 8vw;
 }
 
 .login-page-container {
-  background-color: white;
-  padding-top: 4vh;
-  height: 100vh;
+    background-color: white;
+    padding-top: 4vh;
+    height: 100vh;
 }
 
 /* font */
 .encode-sans {
-  font-family: "Encode Sans", sans-serif;
+    font-family: 'Encode Sans', sans-serif;
 }
 .roboto {
-  font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
