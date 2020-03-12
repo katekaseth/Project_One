@@ -11,6 +11,10 @@ import homeIcon from '../../icons/svg/home.svg';
 export default ({filterState, setPage, selectedResult}) => {
     const [result, setResult] = useState(null);
 
+    if (!selectedResult) {
+        selectedResult = localStorage.getItem('documentId')
+    }
+
     const fetchResult = async selectedResult => {
         const response = await getResultEndpoint(selectedResult);
         setResult(response.data);

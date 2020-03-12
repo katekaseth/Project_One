@@ -123,6 +123,7 @@ function App() {
             result: resultId => {
                 // don't clear filterState
                 // when going to result page
+                localStorage.setItem('documentId', resultId)
                 setSelectedResult(resultId);
                 setPage(PAGES.result);
                 history.push(PAGES.result);

@@ -18,7 +18,7 @@ export const API = {
 export const PAGES = {
     home: '/',
     search: '/search',
-    result: '/result',
+    result: '/result/',
     login: '/login',
     bookmarks: '/bookmarks',
 };
@@ -35,10 +35,10 @@ export const SUBJECT_AREA_ICONS = {
 };
 
 export const METADATA_TABS = {
-    technicalInfo: 'Technical Info',
-    securityInfo: 'Security Info',
+    technicalInfo: 'Technical Information',
+    securityInfo: 'Security Information',
     sqlQueries: 'SQL Queries',
-    definitions: 'Defintitions',
+    definitions: 'Definitions',
 };
 
 export const SESSION = {
