@@ -5,12 +5,13 @@ import era_logo from '../icons/era_logo.png';
 
 export default ({ setPage, transparent }) => {
     let className = transparent ? 'transparent' : '';
+
     return (
         <div className={`navigation-bar ${className}`}>
             <img
-                alt='UW ERA logo'
+                alt="UW ERA logo"
                 onClick={() => setPage.home()}
-                id='nav-logo'
+                id="nav-logo"
                 src={era_logo}
             ></img>
             <ul>
