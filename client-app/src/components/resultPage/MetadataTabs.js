@@ -26,7 +26,7 @@ export const TechnicalInfo = ({
         <Grid
             container
             direction="row"
-            justify="flex-start"
+            justify="space-evenly"
             alignItems="flex-start"
         >
             <Grid item xs={5} className={classes.infoBox}>
@@ -120,7 +120,7 @@ export const TechnicalInfo = ({
 export const SecurityInfo = () => {
     let classes = useStyles();
     return (
-        <Grid container direction="row" justify="flex-start">
+        <Grid container direction="row" justify="space-evenly">
             <Grid item xs={5} className={classes.infoBox}>
                 <Typography className={classes.securityTitle}>
                     Role(s) with full access to this report:
@@ -163,7 +163,7 @@ export const SqlQuery = ({ sqlQuery }) => {
 
     const handleOnClick = () => {
         handleTooltipOpen();
-        copy(sqlFormatter.format(sqlQuery));
+        copy(sqlFormatter.format(sqlQuery, { indent: '    ' }));
     };
 
     return (
@@ -171,16 +171,10 @@ export const SqlQuery = ({ sqlQuery }) => {
             container
             direction="row"
             className={(classes.infoBox, classes.inheritHeight)}
-            spacing={3}
         >
-            <Grid item xs={11} className={classes.scrollable}>
-                <pre className={classes.sqlFormat}>
-                    {sqlFormatter.format(sqlQuery)}
-                </pre>
-            </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={12} className={classes.scrollable}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
-                    <div>
+                    <div className={classes.floatRight}>
                         <Tooltip
                             onClose={handleTooltipClose}
                             open={showTooltip}
@@ -200,6 +194,10 @@ export const SqlQuery = ({ sqlQuery }) => {
                         </Tooltip>
                     </div>
                 </ClickAwayListener>
+
+                <pre className={classes.sqlFormat}>
+                    {sqlFormatter.format(sqlQuery, { indent: '    ' })}
+                </pre>
             </Grid>
         </Grid>
     );
@@ -287,6 +285,7 @@ const useStyles = makeStyles({
         whiteSpace: 'pre-wrap',
         wordBreak: 'keep-all',
         color: '#005CB0',
+        fontFamily: 'IBM Plex Mono, monospace',
         fontSize: '1rem'
     },
     inheritHeight: {
@@ -296,13 +295,17 @@ const useStyles = makeStyles({
         height: '90%',
         overflow: 'auto'
     },
+    floatRight: {
+        float: 'right',
+        marginRight: '1rem'
+    },
     termDetail: {
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1rem'
     },
     purpleBold: {
         color: '#4B2E83',
-        fontSize: 'bold'
+        fontWeight: 'bold'
     },
     blue: {
         color: 'blue',
@@ -316,7 +319,8 @@ const useStyles = makeStyles({
     },
     termDef: {
         fontFamily: 'Roboto, sans-serif',
-        fontSize: '.85rem'
+        fontSize: '.85rem',
+        paddingRight: '.5rem'
     }
 });
 
