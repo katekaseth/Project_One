@@ -5,7 +5,7 @@ import {
     Button,
     Tooltip,
     ClickAwayListener,
-    makeStyles
+    makeStyles,
 } from '@material-ui/core';
 import formatDate from '../../helpers/formatDate';
 import sqlFormatter from 'sql-formatter';
@@ -19,44 +19,25 @@ export const TechnicalInfo = ({
     author,
     supportGroup,
     description,
-    database
+    database,
 }) => {
     let classes = useStyles();
     return (
-        <Grid
-            container
-            direction="row"
-            justify="space-evenly"
-            alignItems="flex-start"
-        >
+        <Grid container direction='row' justify='space-evenly' alignItems='flex-start'>
             <Grid item xs={5} className={classes.infoBox}>
-                <Typography className={classes.techInfoTitle}>
-                    Author
-                </Typography>
-                <Typography className={classes.techInfoDetail}>
-                    {author}
-                </Typography>
+                <Typography className={classes.techInfoTitle}>Author</Typography>
+                <Typography className={classes.techInfoDetail}>{author}</Typography>
                 <br></br>
 
-                <Typography className={classes.techInfoTitle}>
-                    Support Group
-                </Typography>
-                <Typography className={classes.techInfoDetail}>
-                    {supportGroup}
-                </Typography>
+                <Typography className={classes.techInfoTitle}>Support Group</Typography>
+                <Typography className={classes.techInfoDetail}>{supportGroup}</Typography>
                 <br></br>
 
-                <Typography className={classes.techInfoTitle}>
-                    Data Custodian
-                </Typography>
-                <Typography className={classes.techInfoDetail}>
-                    {custodian}
-                </Typography>
+                <Typography className={classes.techInfoTitle}>Data Custodian</Typography>
+                <Typography className={classes.techInfoDetail}>{custodian}</Typography>
                 <br></br>
 
-                <Typography className={classes.techInfoTitle}>
-                    Known Issues
-                </Typography>
+                <Typography className={classes.techInfoTitle}>Known Issues</Typography>
                 <Typography className={classes.techInfoDetail}>N/A</Typography>
             </Grid>
 
@@ -65,39 +46,23 @@ export const TechnicalInfo = ({
             <Grid
                 item
                 container
-                direction="column"
-                justify="flex-start"
-                alignItems="flex-start"
+                direction='column'
+                justify='flex-start'
+                alignItems='flex-start'
                 spacing={3}
                 xs={5}
             >
-                <Grid
-                    item
-                    container
-                    direction="row"
-                    justify="space-evenly"
-                    alignItems="flex-start"
-                >
+                <Grid item container direction='row' justify='space-evenly' alignItems='flex-start'>
                     <Grid item xs={4}>
-                        <Typography className={classes.techInfoTitle}>
-                            Subject Area
-                        </Typography>
-                        <Typography className={classes.techInfoDetail}>
-                            {subjectArea}
-                        </Typography>
+                        <Typography className={classes.techInfoTitle}>Subject Area</Typography>
+                        <Typography className={classes.techInfoDetail}>{subjectArea}</Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography className={classes.techInfoTitle}>
-                            Tool Type
-                        </Typography>
-                        <Typography className={classes.techInfoDetail}>
-                            {toolType}
-                        </Typography>
+                        <Typography className={classes.techInfoTitle}>Tool Type</Typography>
+                        <Typography className={classes.techInfoDetail}>{toolType}</Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography className={classes.techInfoTitle}>
-                            Last updated
-                        </Typography>
+                        <Typography className={classes.techInfoTitle}>Last updated</Typography>
                         <Typography className={classes.techInfoDetail}>
                             {formatDate(updated)}
                         </Typography>
@@ -105,12 +70,8 @@ export const TechnicalInfo = ({
                 </Grid>
 
                 <Grid item>
-                    <Typography className={classes.techInfoDescTitle}>
-                        Data description
-                    </Typography>
-                    <Typography className={classes.techInfoDesc}>
-                        {description}
-                    </Typography>
+                    <Typography className={classes.techInfoDescTitle}>Data description</Typography>
+                    <Typography className={classes.techInfoDesc}>{description}</Typography>
                 </Grid>
             </Grid>
         </Grid>
@@ -120,7 +81,7 @@ export const TechnicalInfo = ({
 export const SecurityInfo = () => {
     let classes = useStyles();
     return (
-        <Grid container direction="row" justify="space-evenly">
+        <Grid container direction='row' justify='space-evenly'>
             <Grid item xs={5} className={classes.infoBox}>
                 <Typography className={classes.securityTitle}>
                     Role(s) with full access to this report:
@@ -137,9 +98,7 @@ export const SecurityInfo = () => {
             <Grid item xs={1}></Grid>
 
             <Grid item xs={5} className={classes.infoBox}>
-                <Typography className={classes.securityTitle}>
-                    Your Role(s):
-                </Typography>
+                <Typography className={classes.securityTitle}>Your Role(s):</Typography>
                 <ul className={classes.securityListItem}>
                     <li>Adviser/Academic Staff</li>
                     <li className={classes.purpleBold}>Fiscal Tech</li>
@@ -167,11 +126,7 @@ export const SqlQuery = ({ sqlQuery }) => {
     };
 
     return (
-        <Grid
-            container
-            direction="row"
-            className={(classes.infoBox, classes.inheritHeight)}
-        >
+        <Grid container direction='row' className={(classes.infoBox, classes.inheritHeight)}>
             <Grid item xs={12} className={classes.scrollable}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
                     <div className={classes.floatRight}>
@@ -182,13 +137,9 @@ export const SqlQuery = ({ sqlQuery }) => {
                             disableFocusListener
                             disableHoverListener
                             disableTouchListener
-                            title="Copied to clipboard!"
+                            title='Copied to clipboard!'
                         >
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleOnClick}
-                            >
+                            <Button variant='contained' color='primary' onClick={handleOnClick}>
                                 Copy
                             </Button>
                         </Tooltip>
@@ -205,18 +156,13 @@ export const SqlQuery = ({ sqlQuery }) => {
 
 export const Definitions = ({ terms }) => {
     let classes = useStyles();
-    let term = terms[0];
-    console.log(term);
+
     return (
-        <Grid
-            container
-            direction="row"
-            className={(classes.inheritHeight, classes.scrollable)}
-        >
+        <Grid container direction='row' className={(classes.inheritHeight, classes.scrollable)}>
             <Grid item>
                 <Typography className={classes.termDetail}>
                     Click the links below to view the full definitions in{' '}
-                    <a className={classes.blue} href="https://metadata.uw.edu/">
+                    <a className={classes.blue} href='https://metadata.uw.edu/'>
                         Knowledge Navigator
                     </a>
                 </Typography>
@@ -238,9 +184,7 @@ const Term = ({ term }) => {
             <Typography className={classes.termTitle}>
                 <a className={classes.blue}>{term.term}</a>
             </Typography>
-            <Typography className={classes.termDef}>
-                {term.definition}
-            </Typography>
+            <Typography className={classes.termDef}>{term.definition}</Typography>
             <br></br>
         </div>
     );
@@ -249,79 +193,79 @@ const Term = ({ term }) => {
 const useStyles = makeStyles({
     infoBox: {
         backgroundColor: '#F8F8F8',
-        padding: '1rem'
+        padding: '1rem',
     },
     techInfoTitle: {
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1rem',
-        color: '#5E5B5B'
+        color: '#5E5B5B',
     },
     techInfoDetail: {
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1rem',
         fontWeight: 'bold',
-        color: '#4B2E83'
+        color: '#4B2E83',
     },
     techInfoDescTitle: {
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1.25rem',
-        color: '#5E5B5B'
+        color: '#5E5B5B',
     },
     techInfoDesc: {
         fontFamily: 'Encode-sans, sans-serif',
-        fontSize: '1rem'
+        fontSize: '1rem',
     },
     securityTitle: {
         fontFamily: 'Encode-sans, sans-serif',
         fontSize: '1rem',
         fontWeight: 'bold',
-        color: '#5E5B5B'
+        color: '#5E5B5B',
     },
     securityListItem: {
         fontFamily: 'IBM Plex Mono, monospace',
-        fontSize: '1rem'
+        fontSize: '1rem',
     },
     sqlFormat: {
         whiteSpace: 'pre-wrap',
         wordBreak: 'keep-all',
         color: '#005CB0',
         fontFamily: 'IBM Plex Mono, monospace',
-        fontSize: '1rem'
+        fontSize: '1rem',
     },
     inheritHeight: {
-        height: 'inherit'
+        height: 'inherit',
     },
     scrollable: {
         height: '90%',
-        overflow: 'auto'
+        overflow: 'auto',
     },
     floatRight: {
         float: 'right',
-        marginRight: '1rem'
+        marginRight: '1rem',
     },
     termDetail: {
         fontFamily: 'Encode-sans, sans-serif',
-        fontSize: '1rem'
+        fontSize: '1rem',
     },
     purpleBold: {
         color: '#4B2E83',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     blue: {
         color: 'blue',
         '&:hover': {
-            textDecoration: 'underline'
-        }
+            textDecoration: 'underline',
+        },
     },
     termTitle: {
         fontFamily: 'Encode-sans, sans-serif',
-        fontSize: '1rem'
+        fontSize: '1rem',
     },
     termDef: {
         fontFamily: 'Roboto, sans-serif',
         fontSize: '.85rem',
-        paddingRight: '.5rem'
-    }
+        paddingRight: '.5rem',
+    },
 });
 
 /*

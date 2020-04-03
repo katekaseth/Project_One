@@ -13,8 +13,7 @@ export const SearchResults = ({ setPage, results }) => {
 
     if (results === null) return <div></div>;
     let numOfPages = parseInt(results.length / NUM_PER_PAGE);
-    console.log(results.length);
-    console.log(numOfPages);
+
     return (
         <Grid container direction='column' className='search-result-container' alignItems='center'>
             {results
