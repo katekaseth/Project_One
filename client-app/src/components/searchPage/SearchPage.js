@@ -8,7 +8,7 @@ import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
 
-export default props => {
+export default (props) => {
     const classes = useStyles();
     if (props.filterState === null) return <div></div>;
     return (
@@ -20,7 +20,7 @@ export default props => {
             <Grid xs item container direction='column' className={classes.searchArea}>
                 <SearchBar {...props} />
 
-                <Grid item className={classes.filterChips}>
+                <Grid item container className={classes.filterChips}>
                     <FilterChips {...props} />
                     <SearchResults {...props} />
                 </Grid>

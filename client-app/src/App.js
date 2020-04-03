@@ -65,6 +65,7 @@ function App() {
             availableFilters[categoryKey].forEach(filterKey => {
                 if (selectedSubject === filterKey) {
                     tempFilterState[categoryKey][filterKey] = true;
+                    availableFilters[categoryKey].forEach(filterKey => {});
                 } else {
                     tempFilterState[categoryKey][filterKey] = false;
                 }
@@ -75,9 +76,7 @@ function App() {
 
     const updateFilterState = (subjectKey, filterKey) => {
         let tempFilterState = { ...filterState };
-        tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][
-            filterKey
-        ];
+        tempFilterState[subjectKey][filterKey] = !tempFilterState[subjectKey][filterKey];
         if (filterKey === selectedSubject) {
             setSelectedSubject('');
         }
@@ -99,7 +98,7 @@ function App() {
         searchedTerms,
         results,
         selectedResult,
-        bookmarks
+        bookmarks,
     };
 
     const GLOBAL_ACTIONS = {
@@ -134,21 +133,18 @@ function App() {
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
                 fetchBookmarks();
-            }
+            },
         },
         clearFilterState,
         updateFilterState,
         updateSearchTerms: updateSearchTerms,
         setSelectedSubject: subjectArea => {
-            if (
-                filterState !== null &&
-                filterState['Subject Area'][subjectArea] !== undefined
-            ) {
+            if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea);
             } else if (filterState === null) {
                 setSelectedSubject(subjectArea);
             }
-        }
+        },
     };
 
     useEffect(() => {
@@ -161,11 +157,7 @@ function App() {
         // When searchedTerms or filterState is changed
         // kick of new search if they both aren't null
         // and we are also on the search page
-        if (
-            searchedTerms !== null &&
-            filterState !== null &&
-            page === PAGES.search
-        ) {
+        if (searchedTerms !== null && filterState !== null && page === PAGES.search) {
             fetchResults();
         }
     }, [searchedTerms, filterState]);
@@ -174,31 +166,31 @@ function App() {
         return <LoginPage setPage={GLOBAL_ACTIONS.setPage} />;
     }
     return (
-        <div className="app">
+        <div className='app'>
             <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
             <Switch>
                 <Route exact path={PAGES.home}>
-                    <div className="landing-page-container">
+                    <div className='landing-page-container'>
                         <LandingPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
                 <Route path={PAGES.search}>
-                    <div className="search-page-container">
+                    <div className='search-page-container'>
                         <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
                 <Route path={PAGES.result}>
-                    <div className="result-page-container">
+                    <div className='result-page-container'>
                         <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
                 <Route path={PAGES.login}>
-                    <div className="login-page-container">
+                    <div className='login-page-container'>
                         <LoginPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
                 <Route path={PAGES.bookmarks}>
-                    <div className="bookmark-page-container">
+                    <div className='bookmark-page-container'>
                         <BookmarkPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>

@@ -96,6 +96,8 @@ const useStyles = makeStyles({
         paddingBottom: '15px',
         paddingRight: '40px',
         paddingLeft: '20px',
+        boxSizing: 'border-box',
+        width: '100%',
     },
     resultTitle: {
         cursor: 'pointer',

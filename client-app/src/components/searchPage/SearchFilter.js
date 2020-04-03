@@ -35,7 +35,9 @@ const FilterGroup = ({ filterState, updateFilterState, subjectKey }) => {
         <Grid>
             <ExpansionPanel
                 className={classes.panel}
-                defaultExpanded={expanded}
+                defaultExpanded={
+                    expanded || subjectKey === 'Subject Area' || subjectKey === 'Tool Type'
+                }
                 onChange={(e, expanded) => {
                     setExpanded(expanded);
                 }}

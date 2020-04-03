@@ -1,6 +1,6 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography, CardMedia } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/styles';
 
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
@@ -8,11 +8,11 @@ import { getResultEndpoint } from '../../api/documents';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({filterState, setPage, selectedResult}) => {
+export default ({ filterState, setPage, selectedResult }) => {
     const [result, setResult] = useState(null);
 
     if (!selectedResult) {
-        selectedResult = localStorage.getItem('documentId')
+        selectedResult = localStorage.getItem('documentId');
     }
 
     const fetchResult = async selectedResult => {
@@ -28,7 +28,11 @@ export default ({filterState, setPage, selectedResult}) => {
     return (
         <Grid>
             <Grid>
-                <NavPath searchPath={getSearchPath(filterState)} setPage={setPage} />
+                <NavPath
+                    searchPath={getSearchPath(filterState)}
+                    setPage={setPage}
+                    resultTitle={result.title}
+                />
             </Grid>
             <Grid className='result-overview-container'>
                 <ResultOverview result={result} />
@@ -52,25 +56,25 @@ const getSearchPath = filterState => {
         });
     });
     if (filters.length === 0) {
-        return 'Search';
+        return 'Search Page';
     } else {
-        return filters.join(',') + '...';
+        return filters.join(', ') + '...';
     }
 };
 
-const NavPath =  ({searchPath, setPage}) => {
+const NavPath = ({ searchPath, setPage, resultTitle }) => {
     const classes = useStyles();
     return (
         <Grid container>
             <Grid item className={classes.item}>
-                <CardMedia className={classes.icon} src={homeIcon} component='img'/>
+                <CardMedia className={classes.icon} src={homeIcon} component='img' />
             </Grid>
-            <Grid item className={classes.item}> 
+            <Grid item className={classes.item}>
                 <Typography variant='body2'>{'>'}</Typography>
             </Grid>
             <Grid item className={classes.item}>
-                <Typography 
-                    variant='body2' 
+                <Typography
+                    variant='body2'
                     onClick={() => setPage.search()}
                     style={{ cursor: 'pointer', color: 'blue' }}
                 >
@@ -81,11 +85,11 @@ const NavPath =  ({searchPath, setPage}) => {
                 <Typography variant='body2'>{'>'}</Typography>
             </Grid>
             <Grid item className={classes.item}>
-                <Typography variant='body2'>RESULT</Typography>
+                <Typography variant='body2'>{resultTitle}</Typography>
             </Grid>
         </Grid>
     );
-}
+};
 
 const useStyles = makeStyles({
     item: {
@@ -96,5 +100,5 @@ const useStyles = makeStyles({
     icon: {
         width: '20px',
         height: '20px',
-    }
+    },
 });

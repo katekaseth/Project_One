@@ -156,8 +156,7 @@ export const SqlQuery = ({ sqlQuery }) => {
 
 export const Definitions = ({ terms }) => {
     let classes = useStyles();
-    let term = terms[0];
-    console.log(term);
+
     return (
         <Grid container direction='column' className={(classes.inheritHeight, classes.scrollable)}>
             <Grid item>
