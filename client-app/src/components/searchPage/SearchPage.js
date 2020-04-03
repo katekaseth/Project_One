@@ -8,7 +8,7 @@ import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
 
-export default props => {
+export default (props) => {
     const classes = useStyles();
     if (props.filterState === null) return <div></div>;
     return (
