@@ -158,7 +158,7 @@ export const Definitions = ({ terms }) => {
     let classes = useStyles();
 
     return (
-        <Grid container direction='row' className={(classes.inheritHeight, classes.scrollable)}>
+        <Grid container direction='column' className={(classes.inheritHeight, classes.scrollable)}>
             <Grid item>
                 <Typography className={classes.termDetail}>
                     Click the links below to view the full definitions in{' '}
