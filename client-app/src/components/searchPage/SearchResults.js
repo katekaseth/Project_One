@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import { makeStyles } from '@material-ui/styles';
 
 import { SearchResult } from './SearchResult';
 
@@ -8,19 +9,32 @@ const NUM_PER_PAGE = 5;
 
 export const SearchResults = ({ setPage, results }) => {
     const [pagination, setPagination] = useState(0);
+    const classes = useStyles();
 
     if (results === null) return <div></div>;
-    let pageNum =
-        parseInt(results.length / NUM_PER_PAGE) +
-        (results.length % NUM_PER_PAGE === 0 && results.length > NUM_PER_PAGE ? 0 : 1);
+    let numOfPages = parseInt(results.length / NUM_PER_PAGE);
+    console.log(results.length);
+    console.log(numOfPages);
     return (
-        <Grid container direction='column' className='search-result-container'>
+        <Grid container direction='column' className='search-result-container' alignItems='center'>
             {results
                 .slice(pagination * NUM_PER_PAGE, (pagination + 1) * NUM_PER_PAGE)
                 .map(result => {
                     return <SearchResult setPage={setPage} result={result} />;
                 })}
-            <Pagination onChange={(e, value) => setPagination(value)} count={pageNum} />
+            {numOfPages > 1 && (
+                <Pagination
+                    className={classes.pagination}
+                    onChange={(e, value) => setPagination(value)}
+                    count={numOfPages}
+                />
+            )}
         </Grid>
     );
 };
+
+const useStyles = makeStyles({
+    pagination: {
+        margin: '20px',
+    },
+});

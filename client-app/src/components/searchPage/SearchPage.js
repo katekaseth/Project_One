@@ -20,7 +20,7 @@ export default props => {
             <Grid xs item container direction='column' className={classes.searchArea}>
                 <SearchBar {...props} />
 
-                <Grid item className={classes.filterChips}>
+                <Grid item container className={classes.filterChips}>
                     <FilterChips {...props} />
                     <SearchResults {...props} />
                 </Grid>
