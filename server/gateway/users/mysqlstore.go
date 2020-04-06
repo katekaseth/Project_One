@@ -226,12 +226,19 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, error) {
 	document := documents.Document{}
 	row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name, t.term, t.definition
-						 FROM documents d JOIN terms t ON t.document_id = d.document_id WHERE d.document_id = ?`, documentID)
+						 	FROM documents d JOIN terms t ON t.document_id = d.document_id WHERE d.document_id = ?`, documentID)
 	err := row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
 		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
 		&document.SqlQuery, &document.Database, &document.JoinedTerms, &document.JoinedDefs)
-	if err != nil {
-		return nil, err
+	if err == sql.ErrNoRows {
+		row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name 
+								FROM documents d WHERE d.document_id = ?`, documentID)
+		err = row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
+			&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
+			&document.SqlQuery, &document.Database)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	terms := strings.Split(document.JoinedTerms, "::")

@@ -39,10 +39,10 @@ type Document struct {
 	SqlQuery     string    `json:"sqlQuery"`
 	SupportGroup string    `json:"supportGroup"`
 	Database     string    `json:"database"`
-	JoinedTerms  string    `json:"-"`
-	JoinedDefs   string    `json:"-"`
 	Terms        []Term    `json:"terms"`
 	Bookmarked   bool      `json:"isBookmarked"`
+	JoinedTerms  string    `json:"-"`
+	JoinedDefs   string    `json:"-"`
 }
 
 // DocumentSummary represents a summary of a document.
