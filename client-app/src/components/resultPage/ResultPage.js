@@ -15,7 +15,7 @@ export default ({ filterState, setPage, selectedResult }) => {
         selectedResult = localStorage.getItem('documentId');
     }
 
-    const fetchResult = async selectedResult => {
+    const fetchResult = async (selectedResult) => {
         const response = await getResultEndpoint(selectedResult);
         setResult(response.data);
     };
@@ -44,14 +44,14 @@ export default ({ filterState, setPage, selectedResult }) => {
     );
 };
 
-const getSearchPath = filterState => {
+const getSearchPath = (filterState) => {
     if (filterState === null) {
         return 'Search';
     }
 
     let filters = [];
-    Object.keys(filterState).forEach(subjectKey => {
-        Object.keys(filterState[subjectKey]).forEach(filterKey => {
+    Object.keys(filterState).forEach((subjectKey) => {
+        Object.keys(filterState[subjectKey]).forEach((filterKey) => {
             filterState[subjectKey][filterKey] && filters.push(filterKey);
         });
     });
@@ -76,7 +76,7 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
                 <Typography
                     variant='body2'
                     onClick={() => setPage.search()}
-                    style={{ cursor: 'pointer', color: 'blue' }}
+                    className={classes.link}
                 >
                     {searchPath}
                 </Typography>
@@ -92,6 +92,13 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
 };
 
 const useStyles = makeStyles({
+    link: {
+        cursor: 'pointer',
+        color: 'blue',
+        '&:hover': {
+            textDecoration: 'underline',
+        },
+    },
     item: {
         display: 'flex',
         alignItems: 'center',
