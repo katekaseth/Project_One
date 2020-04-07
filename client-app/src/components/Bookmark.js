@@ -7,11 +7,11 @@ import unbookmarkedIcon from '../icons/svg/unbookmarked.svg';
 
 import { bookmarkEndpoint, unbookmarkEndpoint } from '../api/bookmarks';
 
-export const Bookmark = ({ style, documentId, isBookmarked }) => {
+export const Bookmark = ({ style, documentId, isBookmarked, setError }) => {
     const [bookmarkState, setBookmarkState] = useState(isBookmarked);
     const classes = useStyles();
 
-    const handleClick = async e => {
+    const handleClick = async (e) => {
         e.stopPropagation();
         let response;
         if (bookmarkState) {
@@ -21,6 +21,8 @@ export const Bookmark = ({ style, documentId, isBookmarked }) => {
         }
         if (response.status === 200) {
             setBookmarkState(!bookmarkState);
+        } else {
+            setError("Internal server error: can't bookmark document");
         }
     };
 

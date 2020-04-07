@@ -8,16 +8,20 @@ import { getResultEndpoint } from '../../api/documents';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, selectedResult }) => {
+export default ({ filterState, setPage, selectedResult, setError }) => {
     const [result, setResult] = useState(null);
 
     if (!selectedResult) {
         selectedResult = localStorage.getItem('documentId');
     }
 
-    const fetchResult = async selectedResult => {
+    const fetchResult = async (selectedResult) => {
         const response = await getResultEndpoint(selectedResult);
-        setResult(response.data);
+        if (response === 200) {
+            setResult(response.data);
+        } else {
+            setError("Internal server error: couldn't fetch result");
+        }
     };
 
     useEffect(() => {
@@ -35,7 +39,7 @@ export default ({ filterState, setPage, selectedResult }) => {
                 />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result} />
+                <ResultOverview result={result} setError={setError} />
             </Grid>
             <Grid className='result-metadata-container'>
                 <ResultMetadata result={result} />
@@ -44,14 +48,14 @@ export default ({ filterState, setPage, selectedResult }) => {
     );
 };
 
-const getSearchPath = filterState => {
+const getSearchPath = (filterState) => {
     if (filterState === null) {
         return 'Search';
     }
 
     let filters = [];
-    Object.keys(filterState).forEach(subjectKey => {
-        Object.keys(filterState[subjectKey]).forEach(filterKey => {
+    Object.keys(filterState).forEach((subjectKey) => {
+        Object.keys(filterState[subjectKey]).forEach((filterKey) => {
             filterState[subjectKey][filterKey] && filters.push(filterKey);
         });
     });

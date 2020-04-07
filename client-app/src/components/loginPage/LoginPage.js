@@ -6,14 +6,14 @@ import wLogo from '../../images/W-Logo.png';
 import wordmarkLogo from '../../images/Wordmark-Stacked.png';
 import { loginApi } from '../../api/login';
 
-export default ({ setPage }) => {
+export default ({ setPage, setError }) => {
     const classes = useStyles();
 
     return (
         <Grid container direction='column' alignItems='center' className={classes.content}>
             <Grid item container justify='center'>
                 <Grid xs item container alignItems='flex-end' direction='column'>
-                    <LoginComponent setPage={setPage} />
+                    <LoginComponent setPage={setPage} setError={setError} />
                 </Grid>
                 <Divider orientation='vertical' flexItem />
                 <Grid xs item container direction='column' className={classes.learnLinks}>
@@ -68,12 +68,12 @@ export default ({ setPage }) => {
     );
 };
 
-const LoginComponent = ({ setPage }) => {
+const LoginComponent = ({ setPage, setError }) => {
     const classes = useStyles();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleKeyPress = event => {
+    const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             loginApi(username, password, setPage);
         }
@@ -93,7 +93,7 @@ const LoginComponent = ({ setPage }) => {
             <Grid item className={classes.items}>
                 <TextField
                     onKeyPress={handleKeyPress}
-                    onChange={e => setUsername(e.target.value)}
+                    onChange={(e) => setUsername(e.target.value)}
                     size='small'
                     label='UW NetID'
                     variant='outlined'
@@ -103,7 +103,7 @@ const LoginComponent = ({ setPage }) => {
             <Grid item className={classes.items}>
                 <TextField
                     onKeyPress={handleKeyPress}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     size='small'
                     label='Password'
                     type='password'
@@ -121,7 +121,7 @@ const LoginComponent = ({ setPage }) => {
                 <Button
                     variant='contained'
                     color='primary'
-                    onClick={() => loginApi(username, password, setPage)}
+                    onClick={() => loginApi(username, password, setPage, setError)}
                 >
                     Sign in
                 </Button>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API, SESSION } from '../stringConstants';
 
 const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
-bc.onmessage = function(e) {
+bc.onmessage = function (e) {
     if (e.data.messageType === SESSION.NEW_SESSION) {
         sessionStorage.setItem(SESSION.SESSION_ID, e.data.sessionId);
         window.location.reload();
@@ -16,21 +16,21 @@ bc.onmessage = function(e) {
     }
 };
 
-const newSessionId = sessionId => {
+const newSessionId = (sessionId) => {
     bc.postMessage({
         messageType: SESSION.NEW_SESSION,
         sessionId: sessionId,
     });
 };
 
-const expireSession = sessionId => {
+const expireSession = (sessionId) => {
     bc.postMessage({
         messageType: SESSION.EXPIRE_SESSION,
         sessionId: sessionId,
     });
 };
 
-export const loginApi = (username, password, setPage) => {
+export const loginApi = (username, password, setPage, setError) => {
     axios({
         method: 'post',
         url: API.URL + API.LOGIN,
@@ -40,14 +40,14 @@ export const loginApi = (username, password, setPage) => {
         },
         headers: { 'Content-Type': 'application/json' },
     })
-        .then(response => {
+        .then((response) => {
             let sessionId = response.headers.authorization;
             sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
             newSessionId(sessionId);
             setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
             setPage.home();
         })
-        .catch(err => {
-            console.log(err);
+        .catch((err) => {
+            setError('There was an error loggin you in. Try again or contact site owners.');
         });
 };

@@ -11,10 +11,13 @@ import BookmarkPage from './components/bookmarkPage/BookmarkPage';
 import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
+import { ErrorDialog } from './components/Dialogs';
 
 function App() {
     // Page route, / is root
     const [page, setPage] = useState('/');
+    // Error set to null, set message if error
+    const [error, setError] = useState(null);
     // What is currently being filtered on
     const [filterState, setFilterState] = useState(null);
     // Selected subject from landing page
@@ -33,24 +36,36 @@ function App() {
     // results relating to that filter
     const fetchFilters = async () => {
         const response = await getFiltersApi();
-        buildFilterState(response.data);
+        if (response.status === 200) {
+            buildFilterState(response.data);
+        } else {
+            setError("Internal server error: couldn't fetching filters");
+        }
     };
 
     const fetchResults = async () => {
         const response = await searchEndpoint(filterState, searchedTerms);
-        // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
-        setResults(response.data);
+        if (response.status === 200) {
+            // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
+            setResults(response.data);
+        } else {
+            setError("Internal server error: couldn't fetch search results");
+        }
     };
 
     const fetchBookmarks = async () => {
         const response = await getBookmarksEndpoint();
-        setBookmarks(response.data);
+        if (response.status === 200) {
+            setBookmarks(response.data);
+        } else {
+            setError("Internal server error: couldn't fetch bookmarks");
+        }
     };
 
     const clearFilterState = () => {
         filterState !== null &&
-            Object.keys(filterState).forEach(categoryKey => {
-                Object.keys(filterState[categoryKey]).forEach(filterKey => {
+            Object.keys(filterState).forEach((categoryKey) => {
+                Object.keys(filterState[categoryKey]).forEach((filterKey) => {
                     filterState[categoryKey][filterKey] = false;
                 });
             });
@@ -58,14 +73,14 @@ function App() {
         setFilterState(filterState);
     };
 
-    const buildFilterState = availableFilters => {
+    const buildFilterState = (availableFilters) => {
         let tempFilterState = {};
-        Object.keys(availableFilters).forEach(categoryKey => {
+        Object.keys(availableFilters).forEach((categoryKey) => {
             tempFilterState[categoryKey] = {};
-            availableFilters[categoryKey].forEach(filterKey => {
+            availableFilters[categoryKey].forEach((filterKey) => {
                 if (selectedSubject === filterKey) {
                     tempFilterState[categoryKey][filterKey] = true;
-                    availableFilters[categoryKey].forEach(filterKey => {});
+                    availableFilters[categoryKey].forEach((filterKey) => {});
                 } else {
                     tempFilterState[categoryKey][filterKey] = false;
                 }
@@ -83,7 +98,7 @@ function App() {
         setFilterState(tempFilterState);
     };
 
-    const updateSearchTerms = searchTerms => {
+    const updateSearchTerms = (searchTerms) => {
         setSearchedTerms(searchTerms.slice());
     };
 
@@ -121,7 +136,7 @@ function App() {
                 setPage(PAGES.search);
                 history.push(PAGES.search);
             },
-            result: resultId => {
+            result: (resultId) => {
                 // don't clear filterState
                 // when going to result page
                 localStorage.setItem('documentId', resultId);
@@ -138,13 +153,14 @@ function App() {
         clearFilterState,
         updateFilterState,
         updateSearchTerms: updateSearchTerms,
-        setSelectedSubject: subjectArea => {
+        setSelectedSubject: (subjectArea) => {
             if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea);
             } else if (filterState === null) {
                 setSelectedSubject(subjectArea);
             }
         },
+        setError,
     };
 
     useEffect(() => {
@@ -163,11 +179,18 @@ function App() {
     }, [searchedTerms, filterState]);
 
     if (sessionStorage.getItem(SESSION.SESSION_ID) === null) {
-        return <LoginPage setPage={GLOBAL_ACTIONS.setPage} />;
+        return (
+            <div>
+                <ErrorDialog message={error} setError={setError} />
+                <LoginPage setPage={GLOBAL_ACTIONS.setPage} setError={setError} />
+            </div>
+        );
     }
+
     return (
         <div className='app'>
             <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
+            <ErrorDialog message={error} setError={setError} />
             <Switch>
                 <Route exact path={PAGES.home}>
                     <div className='landing-page-container'>
