@@ -11,10 +11,14 @@ import BookmarkPage from './components/bookmarkPage/BookmarkPage';
 import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
+import { ErrorDialog } from './components/Dialogs';
+import { loginApi } from './api/login';
 
 function App() {
     // Page route, / is root
     const [page, setPage] = useState('/');
+    // Error set to null, set message if error
+    const [error, setError] = useState(null);
     // What is currently being filtered on
     const [filterState, setFilterState] = useState(null);
     // Selected subject from landing page
@@ -33,24 +37,30 @@ function App() {
     // results relating to that filter
     const fetchFilters = async () => {
         const response = await getFiltersApi();
-        buildFilterState(response.data);
+        if (!isError(response.status, "Can't contact server")) {
+            buildFilterState(response.data);
+        }
     };
 
     const fetchResults = async () => {
         const response = await searchEndpoint(filterState, searchedTerms);
-        // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
-        setResults(response.data);
+        if (!isError(response.status, "Couldn't fetch search results")) {
+            // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
+            setResults(response.data);
+        }
     };
 
     const fetchBookmarks = async () => {
         const response = await getBookmarksEndpoint();
-        setBookmarks(response.data);
+        if (!isError(response.status, "Couldn't fetch bookmarks")) {
+            setBookmarks(response.data);
+        }
     };
 
     const clearFilterState = () => {
         filterState !== null &&
-            Object.keys(filterState).forEach(categoryKey => {
-                Object.keys(filterState[categoryKey]).forEach(filterKey => {
+            Object.keys(filterState).forEach((categoryKey) => {
+                Object.keys(filterState[categoryKey]).forEach((filterKey) => {
                     filterState[categoryKey][filterKey] = false;
                 });
             });
@@ -58,14 +68,14 @@ function App() {
         setFilterState(filterState);
     };
 
-    const buildFilterState = availableFilters => {
+    const buildFilterState = (availableFilters) => {
         let tempFilterState = {};
-        Object.keys(availableFilters).forEach(categoryKey => {
+        Object.keys(availableFilters).forEach((categoryKey) => {
             tempFilterState[categoryKey] = {};
-            availableFilters[categoryKey].forEach(filterKey => {
+            availableFilters[categoryKey].forEach((filterKey) => {
                 if (selectedSubject === filterKey) {
                     tempFilterState[categoryKey][filterKey] = true;
-                    availableFilters[categoryKey].forEach(filterKey => {});
+                    availableFilters[categoryKey].forEach((filterKey) => {});
                 } else {
                     tempFilterState[categoryKey][filterKey] = false;
                 }
@@ -83,13 +93,37 @@ function App() {
         setFilterState(tempFilterState);
     };
 
-    const updateSearchTerms = searchTerms => {
+    const updateSearchTerms = (searchTerms) => {
         setSearchedTerms(searchTerms.slice());
     };
 
     const clearFilterStateAndSearchTerms = () => {
         clearFilterState();
         setSearchedTerms([]);
+    };
+
+    const login = async (username, password) => {
+        const response = await loginApi(username, password);
+        if (
+            !isError(
+                response.status,
+                'There was an error loggin you in. Try again or contact site owners.',
+            )
+        ) {
+            let sessionId = response.headers.authorization;
+            sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+            newSessionId(sessionId);
+            setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
+            GLOBAL_ACTIONS.setPage.home();
+        }
+    };
+
+    const isError = (status, errorMessage) => {
+        if (!(status >= 200 && status < 300)) {
+            setError(`Error: ${errorMessage}`);
+            return true; // error
+        }
+        return false; // no error
     };
 
     const GLOBAL_STATE = {
@@ -121,7 +155,7 @@ function App() {
                 setPage(PAGES.search);
                 history.push(PAGES.search);
             },
-            result: resultId => {
+            result: (resultId) => {
                 // don't clear filterState
                 // when going to result page
                 localStorage.setItem('documentId', resultId);
@@ -138,13 +172,15 @@ function App() {
         clearFilterState,
         updateFilterState,
         updateSearchTerms: updateSearchTerms,
-        setSelectedSubject: subjectArea => {
+        setSelectedSubject: (subjectArea) => {
             if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea);
             } else if (filterState === null) {
                 setSelectedSubject(subjectArea);
             }
         },
+        login,
+        isError,
     };
 
     useEffect(() => {
@@ -163,11 +199,18 @@ function App() {
     }, [searchedTerms, filterState]);
 
     if (sessionStorage.getItem(SESSION.SESSION_ID) === null) {
-        return <LoginPage setPage={GLOBAL_ACTIONS.setPage} />;
+        return (
+            <div>
+                <ErrorDialog message={error} setError={setError} />
+                <LoginPage login={login} />
+            </div>
+        );
     }
+
     return (
         <div className='app'>
             <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
+            <ErrorDialog message={error} setError={setError} />
             <Switch>
                 <Route exact path={PAGES.home}>
                     <div className='landing-page-container'>
@@ -198,5 +241,33 @@ function App() {
         </div>
     );
 }
+
+const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
+bc.onmessage = function (e) {
+    if (e.data.messageType === SESSION.NEW_SESSION) {
+        sessionStorage.setItem(SESSION.SESSION_ID, e.data.sessionId);
+        window.location.reload();
+    } else if (e.data.messageType === SESSION.EXPIRE_SESSION) {
+        let sessionId = sessionStorage.getItem(SESSION.SESSION_ID);
+        if (sessionId === e.data.sessionId) {
+            sessionStorage.removeItem(SESSION.SESSION_ID);
+            window.location.reload();
+        }
+    }
+};
+
+const newSessionId = (sessionId) => {
+    bc.postMessage({
+        messageType: SESSION.NEW_SESSION,
+        sessionId: sessionId,
+    });
+};
+
+const expireSession = (sessionId) => {
+    bc.postMessage({
+        messageType: SESSION.EXPIRE_SESSION,
+        sessionId: sessionId,
+    });
+};
 
 export default App;

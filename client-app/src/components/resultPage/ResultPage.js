@@ -8,7 +8,7 @@ import { getResultEndpoint } from '../../api/documents';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, selectedResult }) => {
+export default ({ filterState, setPage, selectedResult, isError }) => {
     const [result, setResult] = useState(null);
 
     if (!selectedResult) {
@@ -17,7 +17,9 @@ export default ({ filterState, setPage, selectedResult }) => {
 
     const fetchResult = async (selectedResult) => {
         const response = await getResultEndpoint(selectedResult);
-        setResult(response.data);
+        if (!isError(response.status, "Couldn't fetch result")) {
+            setResult(response.data);
+        }
     };
 
     useEffect(() => {
@@ -35,7 +37,7 @@ export default ({ filterState, setPage, selectedResult }) => {
                 />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result} />
+                <ResultOverview result={result} isError={isError} />
             </Grid>
             <Grid className='result-metadata-container'>
                 <ResultMetadata result={result} />
