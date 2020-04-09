@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Chip, Typography } from '@material-ui/core';
+import { Chip, Typography, Grid } from '@material-ui/core';
 
 export const TagChip = ({ label }) => {
     const classes = useStyles();
@@ -45,7 +45,7 @@ export const FilterChips = ({ filterState, updateFilterState, clearFilterState }
             </Typography>,
         );
 
-    return chipArray;
+    return <Grid>{chipArray}</Grid>;
 };
 
 const useStyles = makeStyles({
