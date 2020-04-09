@@ -78,7 +78,7 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
                 <Typography
                     variant='body2'
                     onClick={() => setPage.search()}
-                    style={{ cursor: 'pointer', color: 'blue' }}
+                    className={classes.link}
                 >
                     {searchPath}
                 </Typography>
@@ -94,6 +94,13 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
 };
 
 const useStyles = makeStyles({
+    link: {
+        cursor: 'pointer',
+        color: 'blue',
+        '&:hover': {
+            textDecoration: 'underline',
+        },
+    },
     item: {
         display: 'flex',
         alignItems: 'center',
