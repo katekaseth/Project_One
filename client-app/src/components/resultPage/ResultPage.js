@@ -8,7 +8,7 @@ import { getResultEndpoint } from '../../api/documents';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, selectedResult, setError }) => {
+export default ({ filterState, setPage, selectedResult, isError }) => {
     const [result, setResult] = useState(null);
 
     if (!selectedResult) {
@@ -17,10 +17,8 @@ export default ({ filterState, setPage, selectedResult, setError }) => {
 
     const fetchResult = async (selectedResult) => {
         const response = await getResultEndpoint(selectedResult);
-        if (response === 200) {
+        if (!isError(response.status, "Couldn't fetch result")) {
             setResult(response.data);
-        } else {
-            setError("Internal server error: couldn't fetch result");
         }
     };
 
@@ -39,7 +37,7 @@ export default ({ filterState, setPage, selectedResult, setError }) => {
                 />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result} setError={setError} />
+                <ResultOverview result={result} isError={isError} />
             </Grid>
             <Grid className='result-metadata-container'>
                 <ResultMetadata result={result} />

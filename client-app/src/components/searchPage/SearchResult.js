@@ -10,7 +10,7 @@ import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
-export const SearchResult = ({ setPage, result, setError }) => {
+export const SearchResult = ({ setPage, result, isError }) => {
     const classes = useStyles();
 
     const toolTypes = {
@@ -65,7 +65,7 @@ export const SearchResult = ({ setPage, result, setError }) => {
                             style={{ marginTop: '-15px' }}
                             isBookmarked={result.isBookmarked}
                             documentId={result.documentID}
-                            setError={setError}
+                            isError={isError}
                         />
                     </Grid>
                 </Grid>

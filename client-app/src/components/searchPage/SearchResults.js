@@ -7,7 +7,7 @@ import { SearchResult } from './SearchResult';
 
 const NUM_PER_PAGE = 5;
 
-export const SearchResults = ({ setPage, results, setError }) => {
+export const SearchResults = ({ setPage, results, isError }) => {
     const [pagination, setPagination] = useState(0);
     const classes = useStyles();
 
@@ -19,7 +19,7 @@ export const SearchResults = ({ setPage, results, setError }) => {
             {results
                 .slice(pagination * NUM_PER_PAGE, (pagination + 1) * NUM_PER_PAGE)
                 .map((result) => {
-                    return <SearchResult setPage={setPage} result={result} setError={setError} />;
+                    return <SearchResult setPage={setPage} result={result} isError={isError} />;
                 })}
             {numOfPages > 1 && (
                 <Pagination

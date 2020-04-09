@@ -6,7 +6,7 @@ import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
-export const ResultOverview = ({ result, setError }) => {
+export const ResultOverview = ({ result, isError }) => {
     const classes = useStyles();
 
     return (
@@ -20,7 +20,7 @@ export const ResultOverview = ({ result, setError }) => {
                         <Bookmark
                             isBookmarked={result.isBookmarked}
                             documentId={result.documentID}
-                            setError={setError}
+                            isError={isError}
                         />
                         <Button className={classes.runButton} variant='contained' color='primary'>
                             Run Report

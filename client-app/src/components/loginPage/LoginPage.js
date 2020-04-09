@@ -4,16 +4,15 @@ import { Grid, Typography, Divider, TextField, Button, CardMedia, Box } from '@m
 
 import wLogo from '../../images/W-Logo.png';
 import wordmarkLogo from '../../images/Wordmark-Stacked.png';
-import { loginApi } from '../../api/login';
 
-export default ({ setPage, setError }) => {
+export default ({ login }) => {
     const classes = useStyles();
 
     return (
         <Grid container direction='column' alignItems='center' className={classes.content}>
             <Grid item container justify='center'>
                 <Grid xs item container alignItems='flex-end' direction='column'>
-                    <LoginComponent setPage={setPage} setError={setError} />
+                    <LoginComponent login={login} />
                 </Grid>
                 <Divider orientation='vertical' flexItem />
                 <Grid xs item container direction='column' className={classes.learnLinks}>
@@ -68,14 +67,14 @@ export default ({ setPage, setError }) => {
     );
 };
 
-const LoginComponent = ({ setPage, setError }) => {
+const LoginComponent = ({ login }) => {
     const classes = useStyles();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
-            loginApi(username, password, setPage);
+            login(username, password);
         }
     };
 
@@ -121,7 +120,7 @@ const LoginComponent = ({ setPage, setError }) => {
                 <Button
                     variant='contained'
                     color='primary'
-                    onClick={() => loginApi(username, password, setPage, setError)}
+                    onClick={() => login(username, password)}
                 >
                     Sign in
                 </Button>

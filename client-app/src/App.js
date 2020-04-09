@@ -12,6 +12,7 @@ import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
+import { loginApi } from './api/login';
 
 function App() {
     // Page route, / is root
@@ -36,29 +37,23 @@ function App() {
     // results relating to that filter
     const fetchFilters = async () => {
         const response = await getFiltersApi();
-        if (response.status === 200) {
+        if (!isError(response.status, "Can't contact server")) {
             buildFilterState(response.data);
-        } else {
-            setError("Internal server error: couldn't fetching filters");
         }
     };
 
     const fetchResults = async () => {
         const response = await searchEndpoint(filterState, searchedTerms);
-        if (response.status === 200) {
+        if (!isError(response.status, "Couldn't fetch search results")) {
             // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
             setResults(response.data);
-        } else {
-            setError("Internal server error: couldn't fetch search results");
         }
     };
 
     const fetchBookmarks = async () => {
         const response = await getBookmarksEndpoint();
-        if (response.status === 200) {
+        if (!isError(response.status, "Couldn't fetch bookmarks")) {
             setBookmarks(response.data);
-        } else {
-            setError("Internal server error: couldn't fetch bookmarks");
         }
     };
 
@@ -105,6 +100,30 @@ function App() {
     const clearFilterStateAndSearchTerms = () => {
         clearFilterState();
         setSearchedTerms([]);
+    };
+
+    const login = async (username, password) => {
+        const response = await loginApi(username, password);
+        if (
+            !isError(
+                response.status,
+                'There was an error loggin you in. Try again or contact site owners.',
+            )
+        ) {
+            let sessionId = response.headers.authorization;
+            sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+            newSessionId(sessionId);
+            setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
+            GLOBAL_ACTIONS.setPage.home();
+        }
+    };
+
+    const isError = (status, errorMessage) => {
+        if (!(status >= 200 && status < 300)) {
+            setError(`Error: ${errorMessage}`);
+            return true; // error
+        }
+        return false; // no error
     };
 
     const GLOBAL_STATE = {
@@ -160,7 +179,8 @@ function App() {
                 setSelectedSubject(subjectArea);
             }
         },
-        setError,
+        login,
+        isError,
     };
 
     useEffect(() => {
@@ -182,7 +202,7 @@ function App() {
         return (
             <div>
                 <ErrorDialog message={error} setError={setError} />
-                <LoginPage setPage={GLOBAL_ACTIONS.setPage} setError={setError} />
+                <LoginPage login={login} />
             </div>
         );
     }
@@ -221,5 +241,33 @@ function App() {
         </div>
     );
 }
+
+const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
+bc.onmessage = function (e) {
+    if (e.data.messageType === SESSION.NEW_SESSION) {
+        sessionStorage.setItem(SESSION.SESSION_ID, e.data.sessionId);
+        window.location.reload();
+    } else if (e.data.messageType === SESSION.EXPIRE_SESSION) {
+        let sessionId = sessionStorage.getItem(SESSION.SESSION_ID);
+        if (sessionId === e.data.sessionId) {
+            sessionStorage.removeItem(SESSION.SESSION_ID);
+            window.location.reload();
+        }
+    }
+};
+
+const newSessionId = (sessionId) => {
+    bc.postMessage({
+        messageType: SESSION.NEW_SESSION,
+        sessionId: sessionId,
+    });
+};
+
+const expireSession = (sessionId) => {
+    bc.postMessage({
+        messageType: SESSION.EXPIRE_SESSION,
+        sessionId: sessionId,
+    });
+};
 
 export default App;
