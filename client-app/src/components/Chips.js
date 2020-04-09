@@ -25,8 +25,8 @@ export const FilterChips = ({ filterState, updateFilterState, clearFilterState }
     let chipArray = [];
     const classes = useStyles();
 
-    Object.keys(filterState).forEach(subjectKey => {
-        Object.keys(filterState[subjectKey]).forEach(filterKey => {
+    Object.keys(filterState).forEach((subjectKey) => {
+        Object.keys(filterState[subjectKey]).forEach((filterKey) => {
             filterState[subjectKey][filterKey] &&
                 chipArray.push(
                     <DeletableTagChip
