@@ -36,25 +36,34 @@ function App() {
     // Fetches filters and calls /search for
     // results relating to that filter
     const fetchFilters = async () => {
-        const response = await getFiltersApi();
-        if (!isError(response.status, "Can't contact server")) {
-            buildFilterState(response.data);
-        }
+        getFiltersApi()
+            .then((response) => {
+                buildFilterState(response.data);
+            })
+            .catch((err) => {
+                alertError("Can't contact server");
+            });
     };
 
     const fetchResults = async () => {
-        const response = await searchEndpoint(filterState, searchedTerms);
-        if (!isError(response.status, "Couldn't fetch search results")) {
-            // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
-            setResults(response.data);
-        }
+        searchEndpoint(filterState, searchedTerms)
+            .then((response) => {
+                // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
+                setResults(response.data);
+            })
+            .catch((err) => {
+                alertError("Couldn't fetch search results");
+            });
     };
 
     const fetchBookmarks = async () => {
-        const response = await getBookmarksEndpoint();
-        if (!isError(response.status, "Couldn't fetch bookmarks")) {
-            setBookmarks(response.data);
-        }
+        getBookmarksEndpoint()
+            .then((response) => {
+                setBookmarks(response.data);
+            })
+            .catch((err) => {
+                alertError("Couldn't fetch bookmarks");
+            });
     };
 
     const clearFilterState = () => {
@@ -103,27 +112,21 @@ function App() {
     };
 
     const login = async (username, password) => {
-        const response = await loginApi(username, password);
-        if (
-            !isError(
-                response.status,
-                'There was an error loggin you in. Try again or contact site owners.',
-            )
-        ) {
-            let sessionId = response.headers.authorization;
-            sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
-            newSessionId(sessionId);
-            setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
-            GLOBAL_ACTIONS.setPage.home();
-        }
+        loginApi(username, password)
+            .then((response) => {
+                let sessionId = response.headers.authorization;
+                sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+                newSessionId(sessionId);
+                setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
+                GLOBAL_ACTIONS.setPage.home();
+            })
+            .catch((err) => {
+                alertError('There was an error loggin you in. Try again or contact site owners.');
+            });
     };
 
-    const isError = (status, errorMessage) => {
-        if (!(status >= 200 && status < 300)) {
-            setError(`Error: ${errorMessage}`);
-            return true; // error
-        }
-        return false; // no error
+    const alertError = (errorMessage) => {
+        setError(`Error: ${errorMessage}`);
     };
 
     const GLOBAL_STATE = {
@@ -180,7 +183,7 @@ function App() {
             }
         },
         login,
-        isError,
+        alertError,
     };
 
     useEffect(() => {
