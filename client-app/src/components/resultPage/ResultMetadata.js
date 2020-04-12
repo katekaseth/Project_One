@@ -116,7 +116,7 @@ const MetadataMenu = ({ metadataTab, setMetadataTab }) => {
 
 const useStyles = makeStyles({
     metadata: {
-        padding: '20px',
+        padding: '40px',
         minHeight: '400px',
         height: '100%',
         maxHeight: '800px !important',
