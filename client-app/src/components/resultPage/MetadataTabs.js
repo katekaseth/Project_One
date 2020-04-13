@@ -126,17 +126,18 @@ export const SqlQuery = ({ sqlQuery }) => {
     };
 
     return (
-        <Grid container direction='row' className={(classes.infoBox, classes.inheritHeight)}>
-            <Grid item xs={12} className={classes.scrollable}>
+        <Grid
+            container
+            direction='row'
+            className={(classes.infoBox, classes.inheritHeight, classes.scrollable)}
+        >
+            <Grid item xs={12} className={classes.grayBg}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
                     <div className={classes.floatRight}>
                         <Tooltip
                             onClose={handleTooltipClose}
                             open={showTooltip}
                             leaveDelay={1000}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
                             title='Copied to clipboard!'
                         >
                             <Button variant='contained' color='primary' onClick={handleOnClick}>
@@ -158,7 +159,7 @@ export const Definitions = ({ terms }) => {
     let classes = useStyles();
 
     return (
-        <Grid container direction='column' className={(classes.inheritHeight, classes.scrollable)}>
+        <Grid container direction='row' className={(classes.inheritHeight, classes.scrollable)}>
             <Grid item>
                 <Typography className={classes.termDetail}>
                     Click the links below to view the full definitions in{' '}
@@ -225,6 +226,10 @@ const useStyles = makeStyles({
         fontFamily: 'IBM Plex Mono, monospace',
         fontSize: '1rem',
     },
+    grayBg: {
+        backgroundColor: '#d9d9d9',
+        minHeight: 'inherit',
+    },
     sqlFormat: {
         whiteSpace: 'pre-wrap',
         wordBreak: 'keep-all',
@@ -237,7 +242,7 @@ const useStyles = makeStyles({
     },
     scrollable: {
         height: '90%',
-        overflow: 'auto',
+        overflowY: 'auto',
     },
     floatRight: {
         float: 'right',
