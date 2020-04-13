@@ -8,7 +8,7 @@ import { getResultEndpoint } from '../../api/documents';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, selectedResult, isError }) => {
+export default ({ filterState, setPage, selectedResult, alertError }) => {
     const [result, setResult] = useState(null);
 
     if (!selectedResult) {
@@ -16,10 +16,13 @@ export default ({ filterState, setPage, selectedResult, isError }) => {
     }
 
     const fetchResult = async (selectedResult) => {
-        const response = await getResultEndpoint(selectedResult);
-        if (!isError(response.status, "Couldn't fetch result")) {
-            setResult(response.data);
-        }
+        getResultEndpoint(selectedResult)
+            .then((response) => {
+                setResult(response.data);
+            })
+            .catch((err) => {
+                alertError(err.status, "Couldn't fetch result");
+            });
     };
 
     useEffect(() => {
@@ -37,7 +40,7 @@ export default ({ filterState, setPage, selectedResult, isError }) => {
                 />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result} isError={isError} />
+                <ResultOverview result={result} alertError={alertError} />
             </Grid>
             <Grid className='result-metadata-container'>
                 <ResultMetadata result={result} />
