@@ -12,6 +12,7 @@ export const API = {
     SEARCH: 'search',
     DOCUMENTS: 'documents',
     BOOKMARK: 'bookmarks',
+    PING: 'ping',
 };
 
 export const PAGES = {
@@ -45,4 +46,5 @@ export const SESSION = {
     NEW_SESSION: 'newSession',
     EXPIRE_SESSION: 'expireSession',
     CHANNEL_NAME: 'uw_analytics_bc',
+    SESSION_EXPIRED_MESSAGE: 'Error: Sesion expired, you need to log in again.',
 };

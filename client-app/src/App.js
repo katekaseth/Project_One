@@ -12,7 +12,7 @@ import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
-import { loginApi } from './api/login';
+import { loginApi, ping } from './api/login';
 
 function App() {
     // Page route, / is root
@@ -121,12 +121,24 @@ function App() {
                 GLOBAL_ACTIONS.setPage.home();
             })
             .catch((err) => {
-                alertError('There was an error loggin you in. Try again or contact site owners.');
+                // Uses setError directly so it doesn't ping
+                if (err.response.status === 401) {
+                    setError('Username or password is incorrect, please try again.');
+                } else {
+                    setError('There was an error loggin you in. Please contact site owners.');
+                }
             });
     };
 
     const alertError = (errorMessage) => {
-        setError(`Error: ${errorMessage}`);
+        ping()
+            .then((response) => {
+                setError(errorMessage);
+            })
+            .catch((err) => {
+                sessionStorage.removeItem(SESSION.SESSION_ID);
+                setError(SESSION.SESSION_EXPIRED_MESSAGE);
+            });
     };
 
     const GLOBAL_STATE = {
@@ -204,7 +216,7 @@ function App() {
     if (sessionStorage.getItem(SESSION.SESSION_ID) === null) {
         return (
             <div>
-                <ErrorDialog message={error} setError={setError} />
+                <ErrorDialog {...GLOBAL_ACTIONS} message={error} setError={setError} />
                 <LoginPage login={login} />
             </div>
         );
@@ -213,7 +225,7 @@ function App() {
     return (
         <div className='app'>
             <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
-            <ErrorDialog message={error} setError={setError} />
+            <ErrorDialog {...GLOBAL_ACTIONS} message={error} setError={setError} />
             <Switch>
                 <Route exact path={PAGES.home}>
                     <div className='landing-page-container'>

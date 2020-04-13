@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { API } from '../stringConstants';
+import { API, SESSION } from '../stringConstants';
 
 export const loginApi = (username, password) => {
     return axios({
@@ -11,5 +11,16 @@ export const loginApi = (username, password) => {
             password: password,
         },
         headers: { 'Content-Type': 'application/json' },
+    });
+};
+
+export const ping = () => {
+    return axios({
+        method: 'get',
+        url: API.URL + API.PING + '/',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: sessionStorage.getItem(SESSION.SESSION_ID),
+        },
     });
 };
