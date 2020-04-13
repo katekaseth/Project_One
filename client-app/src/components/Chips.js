@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Chip, Typography } from '@material-ui/core';
+import { Chip, Typography, Grid } from '@material-ui/core';
 
 export const TagChip = ({ label }) => {
     const classes = useStyles();
@@ -25,8 +25,8 @@ export const FilterChips = ({ filterState, updateFilterState, clearFilterState }
     let chipArray = [];
     const classes = useStyles();
 
-    Object.keys(filterState).forEach(subjectKey => {
-        Object.keys(filterState[subjectKey]).forEach(filterKey => {
+    Object.keys(filterState).forEach((subjectKey) => {
+        Object.keys(filterState[subjectKey]).forEach((filterKey) => {
             filterState[subjectKey][filterKey] &&
                 chipArray.push(
                     <DeletableTagChip
@@ -45,7 +45,11 @@ export const FilterChips = ({ filterState, updateFilterState, clearFilterState }
             </Typography>,
         );
 
-    return chipArray;
+    return (
+        <Grid xs item container direction='row' alignItems='center' compontent='span'>
+            {chipArray}
+        </Grid>
+    );
 };
 
 const useStyles = makeStyles({
@@ -58,5 +62,7 @@ const useStyles = makeStyles({
         },
         fontSize: '8pt',
         cursor: 'pointer',
+        color: 'gray',
+        paddingTop: '4px',
     },
 });
