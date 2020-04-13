@@ -137,13 +137,15 @@ func addFilterQuery(termList []string, filterType string, currentStmt string) st
 //GetSearchedDocuments returns and array of DocumentSummary that meet the criteria of
 //the passed in query.
 func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]documents.DocumentSummary, error) {
+	log.Println(query)
 	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where "
 	stmt += addFilterQuery(query.SubjectArea, "subject_area", stmt)
 	stmt += addFilterQuery(query.ToolType, "tool_type", stmt)
 	stmt += addFilterQuery(query.Database, "database_name", stmt)
 	stmt += addFilterQuery(query.SupportGroup, "support_group", stmt)
+	stmt += addFilterQuery(query.UWProfile, "uw_profile", stmt)
 	stmt += addFilterQuery(query.SearchTerm, "search", stmt)
-	log.Println(stmt)
+
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
 	if err != nil {
 		return nil, err
@@ -155,6 +157,7 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]do
 //Given a statment to query Documents, returns an array of Document Summary returned by the
 //database query.
 func (ms *MySQLStore) scanDocSummaryQuery(stmt string) ([]documents.DocumentSummary, error) {
+	log.Println(stmt)
 	allDocuments := []documents.DocumentSummary{}
 	rows, err := ms.Db.Query(stmt)
 	if err != nil {
@@ -199,6 +202,12 @@ func (ms *MySQLStore) GetFilters() (*documents.Filters, error) {
 	}
 	allFilters.SupportGroup = supportGroups
 
+	uwProfile, err := ms.scanSingleFilter(`SELECT DISTINCT uw_profile FROM documents`)
+	if err != nil {
+		return nil, err
+	}
+	allFilters.UWProfile = uwProfile
+
 	return allFilters, nil
 }
 
@@ -231,7 +240,7 @@ func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, 
 		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
 		&document.SqlQuery, &document.Database, &document.JoinedTerms, &document.JoinedDefs)
 	if err == sql.ErrNoRows {
-		row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name 
+		row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name
 								FROM documents d WHERE d.document_id = ?`, documentID)
 		err = row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
 			&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,

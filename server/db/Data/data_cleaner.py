@@ -1,7 +1,7 @@
 import pandas as pd
+import re
 
-data = pd.read_csv("BIPMetadata.csv")
-
+data = pd.read_csv("BIPMetadata_current.csv")
 
 def format_date(date_column):
     # formatting the date data to display as yyyy-mm-dd
@@ -16,7 +16,11 @@ def format_date(date_column):
             month = "0" + month
         if (len(day) == 1):
             day = "0" + day
+        if (len(year) == 2):
+            year = "20" + year
         newDate = year + "-" + month + "-" + day
+        
+        print(newDate)
         new_dates.append(newDate)
     return new_dates
 
@@ -31,17 +35,14 @@ def truncate(column, length):
     return new_d
 
 
-def remove_tags(column):
-    # Remove html tags from given column and returns new column
-    new_description = []
+# source: https://stackoverflow.com/questions/9662346/python-code-to-remove-html-tags-from-a-string
+def cleanhtml(column):
+    new_desc = []
     for d in column:
-        d = d.replace("&nbsp;", " ")
-        to_remove = ["<p>", "<br>", "<br />", "</p>",
-                     "</u>", "<u>", "</span>", "<span>", "&ldquo;", "&rdquo;"]
-        for tag in to_remove:
-            d = d.replace(tag, '')
-        new_description.append(' '.join(d.split()))
-    return new_description
+        cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+        cleantext = re.sub(cleanr, '', d)
+        new_desc.append(' '.join(cleantext.split()))
+    return new_desc
 
 
 def remove_spaces(column):
@@ -52,15 +53,18 @@ def remove_spaces(column):
 
 
 new_created = format_date(data["created"])
+print("UPDATAED")
 new_updated = format_date(data["updated"])
 new_query = remove_spaces(data["sql_query"])
 new_query = truncate(new_query, 5000)
 new_description = truncate(data["description"], 500)
-new_description = remove_tags(new_description)
+new_description = cleanhtml(new_description)
+
 
 data["created"] = new_created
 data["updated"] = new_updated
 data["sql_query"] = new_query
 data["description"] = new_description
+
 
 data.to_csv("BIPMetadata_cleaned.csv", index=False)

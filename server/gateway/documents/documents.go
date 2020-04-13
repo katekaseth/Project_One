@@ -8,15 +8,17 @@ type DocumentQuery struct {
 	ToolType     []string `json:"Tool Type"`
 	Database     []string `json:"Database"`
 	SupportGroup []string `json:"Support Group"`
+	UWProfile    []string `json:"UW Profile"`
 	SearchTerm   []string `json:"searchTerms"`
 }
 
 // Filters represents the possible filters in our database.
 type Filters struct {
-	ToolType     []string `json:"Tool Type"`
 	SubjectArea  []string `json:"Subject Area"`
-	SupportGroup []string `json:"Support Group"`
+	ToolType     []string `json:"Tool Type"`
 	Database     []string `json:"Database"`
+	SupportGroup []string `json:"Support Group"`
+	UWProfile    []string `json:"UW Profile"`
 }
 
 // Term represents a term with its definition.
