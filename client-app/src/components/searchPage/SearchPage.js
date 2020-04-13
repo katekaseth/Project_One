@@ -52,7 +52,7 @@ const FilterChipDisplay = (props) => {
                 )}
                 <FilterChips {...props} />
             </Grid>
-            <Grid item>
+            <Grid item className={classes.allResults}>
                 {displayingAll.length !== 0 && (
                     <Typography variant='body2'>
                         Displaying all results for {displayingAll.join(', ')}
@@ -76,5 +76,9 @@ const useStyles = makeStyles({
     },
     filterLabel: {
         marginRight: '7px',
+    },
+    allResults: {
+        marginTop: '7px',
+        color: 'gray',
     },
 });

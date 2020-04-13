@@ -45,7 +45,11 @@ export const FilterChips = ({ filterState, updateFilterState, clearFilterState }
             </Typography>,
         );
 
-    return <Grid>{chipArray}</Grid>;
+    return (
+        <Grid xs item container direction='row' alignItems='center' compontent='span'>
+            {chipArray}
+        </Grid>
+    );
 };
 
 const useStyles = makeStyles({
@@ -58,5 +62,7 @@ const useStyles = makeStyles({
         },
         fontSize: '8pt',
         cursor: 'pointer',
+        color: 'gray',
+        paddingTop: '4px',
     },
 });
