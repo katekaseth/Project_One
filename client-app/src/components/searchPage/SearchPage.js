@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 
 import { SearchBar } from '../SearchBar';
 import { SearchFilter } from './SearchFilter';
@@ -21,9 +21,43 @@ export default (props) => {
                 <SearchBar {...props} />
 
                 <Grid item container className={classes.filterChips}>
-                    <FilterChips {...props} />
+                    <FilterChipDisplay {...props} />
                     <SearchResults {...props} />
                 </Grid>
+            </Grid>
+        </Grid>
+    );
+};
+
+const FilterChipDisplay = (props) => {
+    const { filterState } = props;
+    const classes = useStyles();
+
+    let displayingAll = [];
+    let total = 0;
+    Object.keys(filterState).forEach((subjectKey) => {
+        if (!Object.values(filterState[subjectKey]).includes(true)) {
+            displayingAll.push(subjectKey);
+        }
+        total++;
+    });
+
+    return (
+        <Grid container direction='column'>
+            <Grid item container direction='row' alignItems='center'>
+                {total !== displayingAll.length && (
+                    <Typography variant='body2' component='span' className={classes.filterLabel}>
+                        Filtering on
+                    </Typography>
+                )}
+                <FilterChips {...props} />
+            </Grid>
+            <Grid item className={classes.allResults}>
+                {displayingAll.length !== 0 && (
+                    <Typography variant='body2'>
+                        Displaying all results for {displayingAll.join(', ')}
+                    </Typography>
+                )}
             </Grid>
         </Grid>
     );
@@ -39,5 +73,12 @@ const useStyles = makeStyles({
     },
     filterChips: {
         marginTop: '20px',
+    },
+    filterLabel: {
+        marginRight: '7px',
+    },
+    allResults: {
+        marginTop: '7px',
+        color: 'gray',
     },
 });
