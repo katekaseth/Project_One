@@ -38,7 +38,7 @@ export const createAccountApi = (username, password, passwordConf) => {
     });
 };
 
-export const ping = () => {
+export const pingApi = () => {
     return axios({
         method: 'get',
         url: API.URL + API.PING + '/',

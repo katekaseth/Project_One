@@ -12,7 +12,7 @@ import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
-import { loginApi, ping, createAccountApi, signOutApi } from './api/login';
+import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
 import AccountPage from './components/accountPage/AccountPage';
 
 function App() {
@@ -167,21 +167,8 @@ function App() {
             });
     };
 
-    const ping = async () => {
-        ping()
-            .then((response) => {
-                return true;
-            })
-            .catch((err) => {
-                sessionStorage.removeItem(SESSION.SESSION_ID);
-                sessionStorage.removeItem(SESSION.USERNAME);
-                setError(SESSION.SESSION_EXPIRED_MESSAGE);
-                return false;
-            });
-    };
-
     const alertError = (errorMessage) => {
-        ping()
+        pingApi()
             .then((response) => {
                 setError(errorMessage);
             })
