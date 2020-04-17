@@ -112,7 +112,7 @@ export const SecurityInfo = () => {
     );
 };
 
-export const SqlQuery = ({ sqlQuery }) => {
+export const SqlQuery = ({ sqlQuery, title }) => {
     let classes = useStyles();
     const [showTooltip, setShowTooltip] = useState(false);
 
@@ -129,6 +129,20 @@ export const SqlQuery = ({ sqlQuery }) => {
         copy(sqlFormatter.format(sqlQuery, { indent: '    ' }));
     };
 
+    // refer to: https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
+    const handleFileDownload = () => {
+        const element = document.createElement('a');
+        const file = new Blob([document.getElementById('sqlCode').innerHTML], {
+            type: 'text/plain',
+        });
+        element.href = URL.createObjectURL(file);
+        // replace title spaces with underscore
+        element.download = title.replace(/ /g, '_') + 'code.sql';
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+        document.body.removeChild(element);
+    };
+
     return (
         <Grid
             container
@@ -140,7 +154,7 @@ export const SqlQuery = ({ sqlQuery }) => {
             <Grid item xs={12} className={classes.grayBg}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
                     <div className={classes.floatRight}>
-                        <IconButton>
+                        <IconButton onClick={handleFileDownload}>
                             <GetAppIcon></GetAppIcon>
                         </IconButton>
                         <Tooltip
@@ -156,7 +170,7 @@ export const SqlQuery = ({ sqlQuery }) => {
                     </div>
                 </ClickAwayListener>
 
-                <pre className={classes.sqlFormat}>
+                <pre id='sqlCode' className={classes.sqlFormat}>
                     {sqlFormatter.format(sqlQuery, { indent: '    ' })}
                 </pre>
             </Grid>
