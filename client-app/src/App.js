@@ -169,6 +169,9 @@ function App() {
                 // when going to search page
                 setPage(PAGES.search);
                 history.push(PAGES.search);
+                if (results === null) {
+                    fetchResults();
+                }
             },
             result: (resultId) => {
                 // don't clear filterState
@@ -179,6 +182,7 @@ function App() {
                 history.push(PAGES.result);
             },
             bookmarks: () => {
+                clearFilterStateAndSearchTerms();
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
                 fetchBookmarks();
