@@ -19,7 +19,7 @@ export const Bookmark = ({ style, documentId, isBookmarked, alertError }) => {
                     setBookmarkState(!bookmarkState);
                 })
                 .catch((err) => {
-                    alertError("Internal server error: can't bookmark document");
+                    alertError("Internal server error: can't bookmark document", true);
                 });
         } else {
             bookmarkEndpoint(documentId)
@@ -27,7 +27,7 @@ export const Bookmark = ({ style, documentId, isBookmarked, alertError }) => {
                     setBookmarkState(!bookmarkState);
                 })
                 .catch((err) => {
-                    alertError("Internal server error: can't bookmark document");
+                    alertError("Internal server error: can't bookmark document", true);
                 });
         }
     };

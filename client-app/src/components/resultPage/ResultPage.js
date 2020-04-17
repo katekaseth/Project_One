@@ -21,7 +21,7 @@ export default ({ filterState, setPage, alertError }) => {
                 setResult(response.data);
             })
             .catch((err) => {
-                alertError(err.status, "Couldn't fetch result");
+                alertError('Error fetching result.', true);
             });
     };
 

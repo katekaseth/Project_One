@@ -40,7 +40,7 @@ function App() {
                 buildFilterState(response.data);
             })
             .catch((err) => {
-                alertError("Can't contact server");
+                alertError("Can't contact server", true);
             });
     };
 
@@ -51,7 +51,7 @@ function App() {
                 setResults(response.data);
             })
             .catch((err) => {
-                alertError("Couldn't fetch search results");
+                alertError("Couldn't fetch search results", true);
             });
     };
 
@@ -61,7 +61,7 @@ function App() {
                 setBookmarks(response.data);
             })
             .catch((err) => {
-                alertError("Couldn't fetch bookmarks");
+                alertError("Couldn't fetch bookmarks", true);
             });
     };
 
@@ -141,11 +141,13 @@ function App() {
                 GLOBAL_ACTIONS.setPage.home();
             })
             .catch((err) => {
-                // Uses setError directly so it doesn't ping
                 if (err.response.status === 400) {
-                    setError('Invalid new user. Make sure passwords match.');
+                    alertError('Invalid new user. Make sure passwords match.', false);
                 } else {
-                    setError('There was an error creating an account. Please contact site owners.');
+                    alertError(
+                        'There was an error creating an account. Please contact site owners.',
+                        false,
+                    );
                 }
             });
     };
@@ -158,25 +160,27 @@ function App() {
                 GLOBAL_ACTIONS.setPage.login();
             })
             .catch((err) => {
-                // Uses setError directly so it doesn't ping
-                setError(
+                alertError(
                     'There was an error signing you out. Try again or close window to sign out.',
+                    false,
                 );
             });
     };
 
-    const alertError = (errorMessage) => {
-        pingApi()
-            .then((response) => {
-                setError(errorMessage);
-                return null;
-            })
-            .catch((err) => {
-                sessionStorage.removeItem(SESSION.SESSION_ID);
-                sessionStorage.removeItem(SESSION.USERNAME);
-                setError(SESSION.SESSION_EXPIRED_MESSAGE);
-                return null;
-            });
+    const alertError = (errorMessage, ping) => {
+        if (ping) {
+            pingApi()
+                .then((response) => {
+                    setError(errorMessage);
+                })
+                .catch((err) => {
+                    sessionStorage.removeItem(SESSION.SESSION_ID);
+                    sessionStorage.removeItem(SESSION.USERNAME);
+                    setError(SESSION.SESSION_EXPIRED_MESSAGE);
+                });
+        } else {
+            setError(errorMessage);
+        }
     };
 
     const GLOBAL_STATE = {
@@ -215,8 +219,6 @@ function App() {
             result: (resultId) => {
                 // don't clear filterState
                 // when going to result page
-                // localStorage.setItem('documentId', resultId);
-                // setSelectedResult(resultId);
                 setPage(PAGES.result + '/' + resultId);
                 history.push(PAGES.result + '/' + resultId);
             },
@@ -249,13 +251,13 @@ function App() {
         alertError,
     };
 
-    useEffect(async () => {
+    useEffect(() => {
         if (page !== window.location.pathname) {
             setPage(window.location.pathname);
         }
 
         if (filterState === null) {
-            await fetchFilters();
+            fetchFilters();
         }
     }, []);
 
