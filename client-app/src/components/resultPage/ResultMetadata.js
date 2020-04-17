@@ -118,7 +118,7 @@ const useStyles = makeStyles({
     metadata: {
         padding: '40px',
         minHeight: '400px',
-        height: '100%',
+       // height: '100%',
         maxHeight: '800px !important',
         zIndex: '1'
     },
