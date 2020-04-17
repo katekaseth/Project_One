@@ -4,9 +4,13 @@ import {
     Typography,
     Button,
     Tooltip,
+    Icon,
     ClickAwayListener,
     makeStyles,
+    IconButton,
 } from '@material-ui/core';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import formatDate from '../../helpers/formatDate';
 import sqlFormatter from 'sql-formatter';
 import copy from 'clipboard-copy';
@@ -129,20 +133,25 @@ export const SqlQuery = ({ sqlQuery }) => {
         <Grid
             container
             direction='row'
-            className={(classes.infoBox, classes.inheritHeight, classes.scrollable)}
+            className={
+                (classes.infoBox, classes.inheritHeight, classes.scrollable, classes.leftPadding)
+            }
         >
             <Grid item xs={12} className={classes.grayBg}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
                     <div className={classes.floatRight}>
+                        <IconButton>
+                            <GetAppIcon></GetAppIcon>
+                        </IconButton>
                         <Tooltip
                             onClose={handleTooltipClose}
                             open={showTooltip}
                             leaveDelay={1000}
                             title='Copied to clipboard!'
                         >
-                            <Button variant='contained' color='primary' onClick={handleOnClick}>
-                                Copy
-                            </Button>
+                            <IconButton onClick={handleOnClick}>
+                                <FileCopyIcon />
+                            </IconButton>
                         </Tooltip>
                     </div>
                 </ClickAwayListener>
@@ -159,7 +168,11 @@ export const Definitions = ({ terms }) => {
     let classes = useStyles();
 
     return (
-        <Grid container direction='row' className={(classes.inheritHeight, classes.scrollable)}>
+        <Grid
+            container
+            direction='row'
+            className={(classes.inheritHeight, classes.scrollable, classes.leftPadding)}
+        >
             <Grid item>
                 <Typography className={classes.termDetail}>
                     Click the links below to view the full definitions in{' '}
@@ -229,6 +242,8 @@ const useStyles = makeStyles({
     grayBg: {
         backgroundColor: '#d9d9d9',
         minHeight: 'inherit',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
     },
     sqlFormat: {
         whiteSpace: 'pre-wrap',
@@ -247,6 +262,9 @@ const useStyles = makeStyles({
     floatRight: {
         float: 'right',
         marginRight: '1rem',
+    },
+    leftPadding: {
+        paddingLeft: '1rem',
     },
     termDetail: {
         fontFamily: 'Encode-sans, sans-serif',
