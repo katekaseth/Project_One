@@ -4,9 +4,13 @@ import {
     Typography,
     Button,
     Tooltip,
+    Icon,
     ClickAwayListener,
     makeStyles,
+    IconButton,
 } from '@material-ui/core';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import formatDate from '../../helpers/formatDate';
 import sqlFormatter from 'sql-formatter';
 import copy from 'clipboard-copy';
@@ -108,7 +112,7 @@ export const SecurityInfo = () => {
     );
 };
 
-export const SqlQuery = ({ sqlQuery }) => {
+export const SqlQuery = ({ sqlQuery, title }) => {
     let classes = useStyles();
     const [showTooltip, setShowTooltip] = useState(false);
 
@@ -125,28 +129,48 @@ export const SqlQuery = ({ sqlQuery }) => {
         copy(sqlFormatter.format(sqlQuery, { indent: '    ' }));
     };
 
+    // refer to: https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
+    const handleFileDownload = () => {
+        const element = document.createElement('a');
+        const file = new Blob([document.getElementById('sqlCode').innerHTML], {
+            type: 'text/plain',
+        });
+        element.href = URL.createObjectURL(file);
+        // replace title spaces with underscore
+        element.download = title.replace(/ /g, '_') + 'code.sql';
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+        document.body.removeChild(element);
+    };
+
     return (
-        <Grid container direction='row' className={(classes.infoBox, classes.inheritHeight)}>
-            <Grid item xs={12} className={classes.scrollable}>
+        <Grid
+            container
+            direction='row'
+            className={
+                (classes.infoBox, classes.inheritHeight, classes.leftPadding, classes.scrollable)
+            }
+        >
+            <Grid item xs={12} className={classes.grayBg}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
                     <div className={classes.floatRight}>
+                        <IconButton onClick={handleFileDownload}>
+                            <GetAppIcon></GetAppIcon>
+                        </IconButton>
                         <Tooltip
                             onClose={handleTooltipClose}
                             open={showTooltip}
                             leaveDelay={1000}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
                             title='Copied to clipboard!'
                         >
-                            <Button variant='contained' color='primary' onClick={handleOnClick}>
-                                Copy
-                            </Button>
+                            <IconButton onClick={handleOnClick}>
+                                <FileCopyIcon />
+                            </IconButton>
                         </Tooltip>
                     </div>
                 </ClickAwayListener>
 
-                <pre className={classes.sqlFormat}>
+                <pre id='sqlCode' className={classes.sqlFormat}>
                     {sqlFormatter.format(sqlQuery, { indent: '    ' })}
                 </pre>
             </Grid>
@@ -158,7 +182,11 @@ export const Definitions = ({ terms }) => {
     let classes = useStyles();
 
     return (
-        <Grid container direction='column' className={(classes.inheritHeight, classes.scrollable)}>
+        <Grid
+            container
+            direction='row'
+            className={(classes.inheritHeight, classes.leftPadding, classes.scrollable)}
+        >
             <Grid item>
                 <Typography className={classes.termDetail}>
                     Click the links below to view the full definitions in{' '}
@@ -225,6 +253,12 @@ const useStyles = makeStyles({
         fontFamily: 'IBM Plex Mono, monospace',
         fontSize: '1rem',
     },
+    grayBg: {
+        backgroundColor: '#d9d9d9',
+        minHeight: 'inherit',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+    },
     sqlFormat: {
         whiteSpace: 'pre-wrap',
         wordBreak: 'keep-all',
@@ -237,11 +271,14 @@ const useStyles = makeStyles({
     },
     scrollable: {
         height: '90%',
-        overflow: 'auto',
+        overflowY: 'auto',
     },
     floatRight: {
         float: 'right',
         marginRight: '1rem',
+    },
+    leftPadding: {
+        paddingLeft: '1rem',
     },
     termDetail: {
         fontFamily: 'Encode-sans, sans-serif',
@@ -263,7 +300,7 @@ const useStyles = makeStyles({
     },
     termDef: {
         fontFamily: 'Roboto, sans-serif',
-        fontSize: '.85rem',
+        fontSize: '.9rem',
         paddingRight: '.5rem',
     },
 });

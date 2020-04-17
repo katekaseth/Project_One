@@ -9,16 +9,26 @@ import {
     Button,
 } from '@material-ui/core';
 
+import { SESSION } from '../stringConstants';
+
 const ERROR = 'Something went wrong';
 
-export const ErrorDialog = ({ message, setError }) => {
+export const ErrorDialog = ({ setPage, message, setError }) => {
     const classes = useStyles();
+    const handleClose =
+        message !== SESSION.SESSION_EXPIRED_MESSAGE
+            ? () => setError(null)
+            : () => {
+                  setPage.login();
+                  setError(null);
+              };
+
     return (
         message && (
             <CustomDialog
                 title={ERROR}
                 message={message}
-                handleClose={() => setError(null)}
+                handleClose={handleClose}
                 className={classes.error}
             />
         )

@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -52,7 +53,7 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 
 	var documents []documents.DocumentSummary
 	// if there are no filters, return all documents summaries
-	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SupportGroup) == 0 && len(query.SearchTerm) == 0 {
+	if len(query.Database) == 0 && len(query.SubjectArea) == 0 && len(query.ToolType) == 0 && len(query.SupportGroup) == 0 && len(query.SearchTerm) == 0 && len(query.UWProfile) == 0 {
 		documents, err = ctx.UserStore.GetAllDocuments()
 		if err != nil {
 			http.Error(w, "Error getting documents", http.StatusInternalServerError)
@@ -148,7 +149,8 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	}
 	document, err := ctx.UserStore.GetSpecificDocument(documentID)
 	if err != nil {
-		http.Error(w, "Internal fail", http.StatusInternalServerError)
+		log.Print(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -160,6 +162,10 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	}
 	document.Bookmarked = contains(docIDs, document.DocumentID)
 
+	// if terms is empty, set terms to empty Terms array
+	if document.Terms == nil {
+		document.Terms = []documents.Term{}
+	}
 	documentBytes, err := json.Marshal(document)
 	if err != nil {
 		http.Error(w, "Internal fail", http.StatusInternalServerError)
