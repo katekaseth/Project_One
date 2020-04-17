@@ -8,11 +8,13 @@ import servicesIcon from './icons/svg/servicesIcon.svg';
 export const API = {
     URL: 'https://api.katekaseth.me/',
     LOGIN: 'sessions',
+    SIGN_OUT: 'sessions/',
     FILTER: 'filter',
     SEARCH: 'search',
     DOCUMENTS: 'documents',
     BOOKMARK: 'bookmarks',
     PING: 'ping',
+    CREATE_ACCOUNT: 'users',
 };
 
 export const PAGES = {
@@ -21,6 +23,7 @@ export const PAGES = {
     result: '/result/',
     login: '/login',
     bookmarks: '/bookmarks',
+    account: '/account',
 };
 
 export const SEARCH_TERMS = 'SEARCH_TERMS';
@@ -43,6 +46,7 @@ export const METADATA_TABS = {
 
 export const SESSION = {
     SESSION_ID: 'sessionId',
+    USERNAME: 'username',
     NEW_SESSION: 'newSession',
     EXPIRE_SESSION: 'expireSession',
     CHANNEL_NAME: 'uw_analytics_bc',

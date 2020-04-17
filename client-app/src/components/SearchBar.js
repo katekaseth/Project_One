@@ -6,10 +6,10 @@ import { Grid, InputBase, Paper } from '@material-ui/core';
 export function SearchBar({ setPage, updateSearchTerms, searchedTerms }) {
     const classes = useStyles();
 
-    const handleKeyPress = event => {
+    const handleKeyPress = (event) => {
         let textInput = event.target.value;
-        if (event.key === 'Enter' && textInput.length > 0) {
-            let inputArray = textInput.split(',').map(searchTerm => {
+        if (event.key === 'Enter') {
+            let inputArray = textInput.split(',').map((searchTerm) => {
                 return searchTerm.trim();
             });
             updateSearchTerms(inputArray);

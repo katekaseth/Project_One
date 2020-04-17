@@ -12,7 +12,8 @@ import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
-import { loginApi, ping } from './api/login';
+import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
+import AccountPage from './components/accountPage/AccountPage';
 
 function App() {
     // Page route, / is root
@@ -117,7 +118,8 @@ function App() {
                 let sessionId = response.headers.authorization;
                 sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
                 newSessionId(sessionId);
-                setTimeout(() => expireSession(sessionId), 28800000); // Expire client session after 8 hours
+                let username = response.data.userName;
+                sessionStorage.setItem(SESSION.USERNAME, username);
                 GLOBAL_ACTIONS.setPage.home();
             })
             .catch((err) => {
@@ -130,13 +132,49 @@ function App() {
             });
     };
 
+    const createAccount = async (username, password, passwordConf) => {
+        createAccountApi(username, password, passwordConf)
+            .then((response) => {
+                let sessionId = response.headers.authorization;
+                sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+                newSessionId(sessionId);
+                let username = response.data.userName;
+                sessionStorage.setItem(SESSION.USERNAME, username);
+                GLOBAL_ACTIONS.setPage.home();
+            })
+            .catch((err) => {
+                // Uses setError directly so it doesn't ping
+                if (err.response.status === 400) {
+                    setError('Invalid new user. Make sure passwords match.');
+                } else {
+                    setError('There was an error creating an account. Please contact site owners.');
+                }
+            });
+    };
+
+    const signOut = async () => {
+        signOutApi()
+            .then((response) => {
+                sessionStorage.removeItem(SESSION.SESSION_ID);
+                sessionStorage.removeItem(SESSION.USERNAME);
+                GLOBAL_ACTIONS.setPage.login();
+            })
+            .catch((err) => {
+                // Uses setError directly so it doesn't ping
+                setError(
+                    'There was an error signing you out. Try again or close window to sign out.',
+                );
+            });
+    };
+
     const alertError = (errorMessage) => {
-        ping()
+        pingApi()
             .then((response) => {
                 setError(errorMessage);
             })
             .catch((err) => {
                 sessionStorage.removeItem(SESSION.SESSION_ID);
+                sessionStorage.removeItem(SESSION.USERNAME);
                 setError(SESSION.SESSION_EXPIRED_MESSAGE);
             });
     };
@@ -153,12 +191,14 @@ function App() {
     const GLOBAL_ACTIONS = {
         setPage: {
             home: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.home);
                 setResults(null);
                 history.push(PAGES.home);
             },
             login: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.login);
                 setResults(null);
@@ -169,6 +209,9 @@ function App() {
                 // when going to search page
                 setPage(PAGES.search);
                 history.push(PAGES.search);
+                if (results === null) {
+                    fetchResults();
+                }
             },
             result: (resultId) => {
                 // don't clear filterState
@@ -179,9 +222,17 @@ function App() {
                 history.push(PAGES.result);
             },
             bookmarks: () => {
+                // clear filterState
+                clearFilterStateAndSearchTerms();
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
                 fetchBookmarks();
+            },
+            account: () => {
+                // clear filterState
+                clearFilterStateAndSearchTerms();
+                setPage(PAGES.account);
+                history.push(PAGES.account);
             },
         },
         clearFilterState,
@@ -195,6 +246,7 @@ function App() {
             }
         },
         login,
+        createAccount,
         alertError,
     };
 
@@ -217,7 +269,7 @@ function App() {
         return (
             <div>
                 <ErrorDialog {...GLOBAL_ACTIONS} message={error} setError={setError} />
-                <LoginPage login={login} />
+                <LoginPage login={login} createAccount={createAccount} />
             </div>
         );
     }
@@ -250,6 +302,11 @@ function App() {
                 <Route path={PAGES.bookmarks}>
                     <div className='bookmark-page-container'>
                         <BookmarkPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
+                    </div>
+                </Route>
+                <Route path={PAGES.account}>
+                    <div className='account-page-container'>
+                        <AccountPage signOut={signOut} />
                     </div>
                 </Route>
             </Switch>
