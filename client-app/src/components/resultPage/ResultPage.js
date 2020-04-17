@@ -8,16 +8,21 @@ import { getResultEndpoint } from '../../api/documents';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, selectedResult }) => {
+export default ({ filterState, setPage, selectedResult, alertError }) => {
     const [result, setResult] = useState(null);
 
     if (!selectedResult) {
         selectedResult = localStorage.getItem('documentId');
     }
 
-    const fetchResult = async selectedResult => {
-        const response = await getResultEndpoint(selectedResult);
-        setResult(response.data);
+    const fetchResult = async (selectedResult) => {
+        getResultEndpoint(selectedResult)
+            .then((response) => {
+                setResult(response.data);
+            })
+            .catch((err) => {
+                alertError(err.status, "Couldn't fetch result");
+            });
     };
 
     useEffect(() => {
@@ -35,7 +40,7 @@ export default ({ filterState, setPage, selectedResult }) => {
                 />
             </Grid>
             <Grid className='result-overview-container'>
-                <ResultOverview result={result} />
+                <ResultOverview result={result} alertError={alertError} />
             </Grid>
             <Grid className='result-metadata-container'>
                 <ResultMetadata result={result} />
@@ -44,14 +49,14 @@ export default ({ filterState, setPage, selectedResult }) => {
     );
 };
 
-const getSearchPath = filterState => {
+const getSearchPath = (filterState) => {
     if (filterState === null) {
         return 'Search';
     }
 
     let filters = [];
-    Object.keys(filterState).forEach(subjectKey => {
-        Object.keys(filterState[subjectKey]).forEach(filterKey => {
+    Object.keys(filterState).forEach((subjectKey) => {
+        Object.keys(filterState[subjectKey]).forEach((filterKey) => {
             filterState[subjectKey][filterKey] && filters.push(filterKey);
         });
     });
@@ -76,7 +81,7 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
                 <Typography
                     variant='body2'
                     onClick={() => setPage.search()}
-                    style={{ cursor: 'pointer', color: 'blue' }}
+                    className={classes.link}
                 >
                     {searchPath}
                 </Typography>
@@ -92,6 +97,13 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
 };
 
 const useStyles = makeStyles({
+    link: {
+        cursor: 'pointer',
+        color: 'blue',
+        '&:hover': {
+            textDecoration: 'underline',
+        },
+    },
     item: {
         display: 'flex',
         alignItems: 'center',

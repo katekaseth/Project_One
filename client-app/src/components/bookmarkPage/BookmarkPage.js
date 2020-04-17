@@ -4,7 +4,7 @@ import { Typography, Grid } from '@material-ui/core';
 
 import { SearchResults } from '../searchPage/SearchResults';
 
-export default props => {
+export default ({ setPage, bookmarks, alertError }) => {
     const classes = useStyles();
     return (
         <Grid container direction='column'>
@@ -14,7 +14,7 @@ export default props => {
                 </Typography>
             </Grid>
             <Grid item container>
-                <SearchResults setPage={props.setPage} results={props.bookmarks} />
+                <SearchResults setPage={setPage} results={bookmarks} alertError={alertError} />
             </Grid>
         </Grid>
     );

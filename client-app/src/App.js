@@ -11,10 +11,15 @@ import BookmarkPage from './components/bookmarkPage/BookmarkPage';
 import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
+import { ErrorDialog } from './components/Dialogs';
+import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
+import AccountPage from './components/accountPage/AccountPage';
 
 function App() {
     // Page route, / is root
     const [page, setPage] = useState('/');
+    // Error set to null, set message if error
+    const [error, setError] = useState(null);
     // What is currently being filtered on
     const [filterState, setFilterState] = useState(null);
     // Selected subject from landing page
@@ -32,25 +37,40 @@ function App() {
     // Fetches filters and calls /search for
     // results relating to that filter
     const fetchFilters = async () => {
-        const response = await getFiltersApi();
-        buildFilterState(response.data);
+        getFiltersApi()
+            .then((response) => {
+                buildFilterState(response.data);
+            })
+            .catch((err) => {
+                alertError("Can't contact server");
+            });
     };
 
     const fetchResults = async () => {
-        const response = await searchEndpoint(filterState, searchedTerms);
-        // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
-        setResults(response.data);
+        searchEndpoint(filterState, searchedTerms)
+            .then((response) => {
+                // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
+                setResults(response.data);
+            })
+            .catch((err) => {
+                alertError("Couldn't fetch search results");
+            });
     };
 
     const fetchBookmarks = async () => {
-        const response = await getBookmarksEndpoint();
-        setBookmarks(response.data);
+        getBookmarksEndpoint()
+            .then((response) => {
+                setBookmarks(response.data);
+            })
+            .catch((err) => {
+                alertError("Couldn't fetch bookmarks");
+            });
     };
 
     const clearFilterState = () => {
         filterState !== null &&
-            Object.keys(filterState).forEach(categoryKey => {
-                Object.keys(filterState[categoryKey]).forEach(filterKey => {
+            Object.keys(filterState).forEach((categoryKey) => {
+                Object.keys(filterState[categoryKey]).forEach((filterKey) => {
                     filterState[categoryKey][filterKey] = false;
                 });
             });
@@ -58,14 +78,14 @@ function App() {
         setFilterState(filterState);
     };
 
-    const buildFilterState = availableFilters => {
+    const buildFilterState = (availableFilters) => {
         let tempFilterState = {};
-        Object.keys(availableFilters).forEach(categoryKey => {
+        Object.keys(availableFilters).forEach((categoryKey) => {
             tempFilterState[categoryKey] = {};
-            availableFilters[categoryKey].forEach(filterKey => {
+            availableFilters[categoryKey].forEach((filterKey) => {
                 if (selectedSubject === filterKey) {
                     tempFilterState[categoryKey][filterKey] = true;
-                    availableFilters[categoryKey].forEach(filterKey => {});
+                    availableFilters[categoryKey].forEach((filterKey) => {});
                 } else {
                     tempFilterState[categoryKey][filterKey] = false;
                 }
@@ -83,13 +103,80 @@ function App() {
         setFilterState(tempFilterState);
     };
 
-    const updateSearchTerms = searchTerms => {
+    const updateSearchTerms = (searchTerms) => {
         setSearchedTerms(searchTerms.slice());
     };
 
     const clearFilterStateAndSearchTerms = () => {
         clearFilterState();
         setSearchedTerms([]);
+    };
+
+    const login = async (username, password) => {
+        loginApi(username, password)
+            .then((response) => {
+                let sessionId = response.headers.authorization;
+                sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+                newSessionId(sessionId);
+                let username = response.data.userName;
+                sessionStorage.setItem(SESSION.USERNAME, username);
+                GLOBAL_ACTIONS.setPage.home();
+            })
+            .catch((err) => {
+                // Uses setError directly so it doesn't ping
+                if (err.response.status === 401) {
+                    setError('Username or password is incorrect, please try again.');
+                } else {
+                    setError('There was an error loggin you in. Please contact site owners.');
+                }
+            });
+    };
+
+    const createAccount = async (username, password, passwordConf) => {
+        createAccountApi(username, password, passwordConf)
+            .then((response) => {
+                let sessionId = response.headers.authorization;
+                sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
+                newSessionId(sessionId);
+                let username = response.data.userName;
+                sessionStorage.setItem(SESSION.USERNAME, username);
+                GLOBAL_ACTIONS.setPage.home();
+            })
+            .catch((err) => {
+                // Uses setError directly so it doesn't ping
+                if (err.response.status === 400) {
+                    setError('Invalid new user. Make sure passwords match.');
+                } else {
+                    setError('There was an error creating an account. Please contact site owners.');
+                }
+            });
+    };
+
+    const signOut = async () => {
+        signOutApi()
+            .then((response) => {
+                sessionStorage.removeItem(SESSION.SESSION_ID);
+                sessionStorage.removeItem(SESSION.USERNAME);
+                GLOBAL_ACTIONS.setPage.login();
+            })
+            .catch((err) => {
+                // Uses setError directly so it doesn't ping
+                setError(
+                    'There was an error signing you out. Try again or close window to sign out.',
+                );
+            });
+    };
+
+    const alertError = (errorMessage) => {
+        pingApi()
+            .then((response) => {
+                setError(errorMessage);
+            })
+            .catch((err) => {
+                sessionStorage.removeItem(SESSION.SESSION_ID);
+                sessionStorage.removeItem(SESSION.USERNAME);
+                setError(SESSION.SESSION_EXPIRED_MESSAGE);
+            });
     };
 
     const GLOBAL_STATE = {
@@ -104,12 +191,14 @@ function App() {
     const GLOBAL_ACTIONS = {
         setPage: {
             home: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.home);
                 setResults(null);
                 history.push(PAGES.home);
             },
             login: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.login);
                 setResults(null);
@@ -120,8 +209,11 @@ function App() {
                 // when going to search page
                 setPage(PAGES.search);
                 history.push(PAGES.search);
+                if (results === null) {
+                    fetchResults();
+                }
             },
-            result: resultId => {
+            result: (resultId) => {
                 // don't clear filterState
                 // when going to result page
                 localStorage.setItem('documentId', resultId);
@@ -130,21 +222,32 @@ function App() {
                 history.push(PAGES.result);
             },
             bookmarks: () => {
+                // clear filterState
+                clearFilterStateAndSearchTerms();
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
                 fetchBookmarks();
+            },
+            account: () => {
+                // clear filterState
+                clearFilterStateAndSearchTerms();
+                setPage(PAGES.account);
+                history.push(PAGES.account);
             },
         },
         clearFilterState,
         updateFilterState,
         updateSearchTerms: updateSearchTerms,
-        setSelectedSubject: subjectArea => {
+        setSelectedSubject: (subjectArea) => {
             if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea);
             } else if (filterState === null) {
                 setSelectedSubject(subjectArea);
             }
         },
+        login,
+        createAccount,
+        alertError,
     };
 
     useEffect(() => {
@@ -163,11 +266,18 @@ function App() {
     }, [searchedTerms, filterState]);
 
     if (sessionStorage.getItem(SESSION.SESSION_ID) === null) {
-        return <LoginPage setPage={GLOBAL_ACTIONS.setPage} />;
+        return (
+            <div>
+                <ErrorDialog {...GLOBAL_ACTIONS} message={error} setError={setError} />
+                <LoginPage login={login} createAccount={createAccount} />
+            </div>
+        );
     }
+
     return (
         <div className='app'>
             <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
+            <ErrorDialog {...GLOBAL_ACTIONS} message={error} setError={setError} />
             <Switch>
                 <Route exact path={PAGES.home}>
                     <div className='landing-page-container'>
@@ -194,9 +304,42 @@ function App() {
                         <BookmarkPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
+                <Route path={PAGES.account}>
+                    <div className='account-page-container'>
+                        <AccountPage signOut={signOut} />
+                    </div>
+                </Route>
             </Switch>
         </div>
     );
 }
+
+const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
+bc.onmessage = function (e) {
+    if (e.data.messageType === SESSION.NEW_SESSION) {
+        sessionStorage.setItem(SESSION.SESSION_ID, e.data.sessionId);
+        window.location.reload();
+    } else if (e.data.messageType === SESSION.EXPIRE_SESSION) {
+        let sessionId = sessionStorage.getItem(SESSION.SESSION_ID);
+        if (sessionId === e.data.sessionId) {
+            sessionStorage.removeItem(SESSION.SESSION_ID);
+            window.location.reload();
+        }
+    }
+};
+
+const newSessionId = (sessionId) => {
+    bc.postMessage({
+        messageType: SESSION.NEW_SESSION,
+        sessionId: sessionId,
+    });
+};
+
+const expireSession = (sessionId) => {
+    bc.postMessage({
+        messageType: SESSION.EXPIRE_SESSION,
+        sessionId: sessionId,
+    });
+};
 
 export default App;
