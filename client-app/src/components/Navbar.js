@@ -16,7 +16,6 @@ export default ({ setPage, transparent }) => {
             ></img>
             <ul>
                 <li onClick={() => setPage.login()}>Login</li>
-                <li>Help</li>
                 <li onClick={() => setPage.search()}>Search</li>
                 <li onClick={() => setPage.bookmarks()}>Bookmarks</li>
                 <li onClick={() => setPage.home()}>Home</li>

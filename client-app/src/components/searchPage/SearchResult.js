@@ -78,7 +78,7 @@ export const SearchResult = ({ setPage, result, alertError }) => {
                 <Grid item container alignItems='center' justify='space-between' style={{paddingTop: 10}}>
                     <Grid item>
                         <Typography variant='body2'>
-                            <b>Filters:</b>     {result.subjectArea}, {result.toolType} 
+                            <b>Tags:</b>     {result.subjectArea}, {result.toolType} 
                         </Typography>
                     </Grid>
                     <Grid item> 
