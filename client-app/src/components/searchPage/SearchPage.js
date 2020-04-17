@@ -11,16 +11,7 @@ import { FilterChips } from '../Chips';
 export default (props) => {
     const classes = useStyles();
 
-    let expandedObject = {};
-    if (props.filterState !== null) {
-        Object.keys(props.filterState).forEach((subjectKey) => {
-            expandedObject[subjectKey] =
-                Object.values(props.filterState[subjectKey]).includes(true) ||
-                subjectKey === 'Subject Area' ||
-                subjectKey === 'Tool Type';
-        });
-    }
-
+    let expandedObject = null;
     const [expandedFilterGroups, setExpandedFilterGroups] = useState(expandedObject);
 
     const changeFilterExpansion = (subjectKey) => {
@@ -29,16 +20,31 @@ export default (props) => {
         setExpandedFilterGroups(temp);
     };
 
-    if (props.filterState === null) return <div></div>;
+    useEffect(() => {
+        if (props.filterState !== null && expandedFilterGroups === null) {
+            expandedObject = {};
+            Object.keys(props.filterState).forEach((subjectKey) => {
+                expandedObject[subjectKey] =
+                    Object.values(props.filterState[subjectKey]).includes(true) ||
+                    subjectKey === 'Subject Area' ||
+                    subjectKey === 'Tool Type';
+            });
+            setExpandedFilterGroups(expandedObject);
+        }
+    });
+
+    if (props.filterState === null || expandedFilterGroups === null) return <div></div>;
 
     return (
         <Grid container>
             <Grid xs={3} item>
-                <SearchFilter
-                    expandedFilterGroups={expandedFilterGroups}
-                    changeFilterExpansion={changeFilterExpansion}
-                    {...props}
-                />
+                {expandedFilterGroups && (
+                    <SearchFilter
+                        expandedFilterGroups={expandedFilterGroups}
+                        changeFilterExpansion={changeFilterExpansion}
+                        {...props}
+                    />
+                )}
             </Grid>
 
             <Grid xs item container direction='column' className={classes.searchArea}>
