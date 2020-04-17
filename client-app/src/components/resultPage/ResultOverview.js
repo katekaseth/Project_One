@@ -74,12 +74,12 @@ const NoAccess = () => {
 const useStyles = makeStyles({
     result: {
         marginBottom: '20px',
-        padding: '20px',
+        padding: '30px',
     },
     description: {
         width: '60%',
-        marginTop: '8px',
-        marginBottom: '12px',
+        marginTop: '15px',
+        marginBottom: '20px',
     },
     red: {
         color: 'red',
