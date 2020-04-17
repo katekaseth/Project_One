@@ -148,7 +148,7 @@ export const SqlQuery = ({ sqlQuery, title }) => {
             container
             direction='row'
             className={
-                (classes.infoBox, classes.inheritHeight, classes.scrollable, classes.leftPadding)
+                (classes.infoBox, classes.inheritHeight, classes.leftPadding, classes.scrollable)
             }
         >
             <Grid item xs={12} className={classes.grayBg}>
@@ -185,7 +185,7 @@ export const Definitions = ({ terms }) => {
         <Grid
             container
             direction='row'
-            className={(classes.inheritHeight, classes.scrollable, classes.leftPadding)}
+            className={(classes.inheritHeight, classes.leftPadding, classes.scrollable)}
         >
             <Grid item>
                 <Typography className={classes.termDetail}>
@@ -300,7 +300,7 @@ const useStyles = makeStyles({
     },
     termDef: {
         fontFamily: 'Roboto, sans-serif',
-        fontSize: '.85rem',
+        fontSize: '.9rem',
         paddingRight: '.5rem',
     },
 });
