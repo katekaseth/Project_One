@@ -5,15 +5,15 @@ import { makeStyles } from '@material-ui/styles';
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
 import { getResultEndpoint } from '../../api/documents';
+import { PAGES } from '../../stringConstants';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, selectedResult, alertError }) => {
+export default ({ filterState, setPage, alertError }) => {
     const [result, setResult] = useState(null);
+    const classes = useStyles();
 
-    if (!selectedResult) {
-        selectedResult = localStorage.getItem('documentId');
-    }
+    const selectedResult = window.location.pathname.replace(PAGES.result, '').replace('/', '');
 
     const fetchResult = async (selectedResult) => {
         getResultEndpoint(selectedResult)
@@ -26,10 +26,21 @@ export default ({ filterState, setPage, selectedResult, alertError }) => {
     };
 
     useEffect(() => {
-        fetchResult(selectedResult);
+        if (selectedResult !== '') {
+            fetchResult(selectedResult);
+        }
     }, []);
 
-    if (selectedResult === null || result === null) return <div></div>;
+    if (selectedResult === '' || result === null)
+        return (
+            <Typography variant='body1'>
+                Nothing selected, go back to{' '}
+                <Grid className={classes.link} component='span' onClick={() => setPage.search()}>
+                    search page
+                </Grid>{' '}
+                to find more results!
+            </Typography>
+        );
     return (
         <Grid>
             <Grid>

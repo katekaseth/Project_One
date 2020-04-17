@@ -30,8 +30,6 @@ function App() {
     const [results, setResults] = useState(null);
     // Bookmark results
     const [bookmarks, setBookmarks] = useState(null);
-    // Selected result that a user views on result page
-    const [selectedResult, setSelectedResult] = useState(null);
     const history = useHistory();
 
     // Fetches filters and calls /search for
@@ -171,11 +169,13 @@ function App() {
         pingApi()
             .then((response) => {
                 setError(errorMessage);
+                return null;
             })
             .catch((err) => {
                 sessionStorage.removeItem(SESSION.SESSION_ID);
                 sessionStorage.removeItem(SESSION.USERNAME);
                 setError(SESSION.SESSION_EXPIRED_MESSAGE);
+                return null;
             });
     };
 
@@ -184,7 +184,6 @@ function App() {
         filterState,
         searchedTerms,
         results,
-        selectedResult,
         bookmarks,
     };
 
@@ -216,10 +215,10 @@ function App() {
             result: (resultId) => {
                 // don't clear filterState
                 // when going to result page
-                localStorage.setItem('documentId', resultId);
-                setSelectedResult(resultId);
-                setPage(PAGES.result);
-                history.push(PAGES.result);
+                // localStorage.setItem('documentId', resultId);
+                // setSelectedResult(resultId);
+                setPage(PAGES.result + '/' + resultId);
+                history.push(PAGES.result + '/' + resultId);
             },
             bookmarks: () => {
                 // clear filterState
@@ -250,9 +249,13 @@ function App() {
         alertError,
     };
 
-    useEffect(() => {
+    useEffect(async () => {
+        if (page !== window.location.pathname) {
+            setPage(window.location.pathname);
+        }
+
         if (filterState === null) {
-            fetchFilters();
+            await fetchFilters();
         }
     }, []);
 
@@ -289,7 +292,7 @@ function App() {
                         <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
-                <Route path={PAGES.result}>
+                <Route path={new RegExp(PAGES.result)}>
                     <div className='result-page-container'>
                         <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
