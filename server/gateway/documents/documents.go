@@ -8,7 +8,7 @@ type DocumentQuery struct {
 	ToolType     []string `json:"Tool Type"`
 	Database     []string `json:"Database"`
 	SupportGroup []string `json:"Support Group"`
-	UWProfile    []string `json:"UW Profile"`
+	UWProfile    []string `json:"Is UW Profile"`
 	SearchTerm   []string `json:"searchTerms"`
 }
 
@@ -18,7 +18,7 @@ type Filters struct {
 	ToolType     []string `json:"Tool Type"`
 	Database     []string `json:"Database"`
 	SupportGroup []string `json:"Support Group"`
-	UWProfile    []string `json:"UW Profile"`
+	UWProfile    []string `json:"Is UW Profile"`
 }
 
 // Term represents a term with its definition.
