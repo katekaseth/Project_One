@@ -187,14 +187,14 @@ export const Definitions = ({ terms }) => {
     let classes = useStyles();
 
     return (
-        <Grid
+        <Grid alignItems='flex-start'
             container
             direction='row'
             className={(classes.inheritHeight, classes.leftPadding, classes.scrollable)}
         >
             <Grid item>
                 <Typography className={classes.termDetail}>
-                    Click the links below to view the full definitions in{' '}
+                    View the full definitions in{' '}
                     <a className={classes.blue} href='https://metadata.uw.edu/'>
                         Knowledge Navigator
                     </a>
@@ -262,7 +262,7 @@ const useStyles = makeStyles({
         height: 'inherit',
     },
     scrollable: {
-        height: '90%',
+        maxHeight: '700px',
         overflowY: 'auto',
     },
     leftPadding: {
