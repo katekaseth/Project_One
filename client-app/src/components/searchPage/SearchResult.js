@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, CardMedia } from '@material-ui/core';
+import { Grid, Paper, Typography, CardMedia, Divider } from '@material-ui/core';
 
 import VisualizationIcon from '../../icons/svg/visualizationIcon.svg';
 import CubeIcon from '../../icons/svg/cubeIcon.svg';
@@ -74,12 +74,14 @@ export const SearchResult = ({ setPage, result, alertError }) => {
                         {result.description}
                     </Typography>
                 </Grid>
-                <Grid item container alignItems='center' justify='space-between'>
+                <Divider />
+                <Grid item container alignItems='center' justify='space-between' style={{paddingTop: 10}}>
                     <Grid item>
-                        <TagChip label={result.subjectArea} />
-                        <TagChip label={result.toolType} />
+                        <Typography variant='body2'>
+                            <b>Tags:</b>     {result.subjectArea}, {result.toolType} 
+                        </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item> 
                         <Typography variant='body2'>
                             {`Updated ${formatDate(result.updated)}`}
                         </Typography>
