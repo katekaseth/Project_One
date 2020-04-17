@@ -204,12 +204,14 @@ function App() {
     const GLOBAL_ACTIONS = {
         setPage: {
             home: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.home);
                 setResults(null);
                 history.push(PAGES.home);
             },
             login: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.login);
                 setResults(null);
@@ -233,12 +235,15 @@ function App() {
                 history.push(PAGES.result);
             },
             bookmarks: () => {
+                // clear filterState
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
                 fetchBookmarks();
             },
             account: () => {
+                // clear filterState
+                clearFilterStateAndSearchTerms();
                 setPage(PAGES.account);
                 history.push(PAGES.account);
             },
