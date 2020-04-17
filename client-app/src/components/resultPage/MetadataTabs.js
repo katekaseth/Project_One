@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import {
     Grid,
     Typography,
-    Button,
     Tooltip,
-    Icon,
     ClickAwayListener,
     makeStyles,
     IconButton,
 } from '@material-ui/core';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import formatDate from '../../helpers/formatDate';
 import sqlFormatter from 'sql-formatter';
 import copy from 'clipboard-copy';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 export const TechnicalInfo = ({
     toolType,
@@ -151,11 +151,11 @@ export const SqlQuery = ({ sqlQuery, title }) => {
                 (classes.infoBox, classes.inheritHeight, classes.leftPadding, classes.scrollable)
             }
         >
-            <Grid item xs={12} className={classes.grayBg}>
+            <Grid item xs={12} className={classes.sqlContainer}>
                 <ClickAwayListener onClickAway={handleTooltipClose}>
-                    <div className={classes.floatRight}>
+                    <Grid className={classes.sqlIcons}>
                         <IconButton onClick={handleFileDownload}>
-                            <GetAppIcon></GetAppIcon>
+                            <GetAppIcon className={classes.icon} />
                         </IconButton>
                         <Tooltip
                             onClose={handleTooltipClose}
@@ -164,15 +164,20 @@ export const SqlQuery = ({ sqlQuery, title }) => {
                             title='Copied to clipboard!'
                         >
                             <IconButton onClick={handleOnClick}>
-                                <FileCopyIcon />
+                                <FileCopyIcon className={classes.icon} />
                             </IconButton>
                         </Tooltip>
-                    </div>
+                    </Grid>
                 </ClickAwayListener>
-
-                <pre id='sqlCode' className={classes.sqlFormat}>
+                <SyntaxHighlighter
+                    id='sqlCode'
+                    language='sql'
+                    style={monokai}
+                    showLineNumbers={true}
+                    wrapLines={true}
+                >
                     {sqlFormatter.format(sqlQuery, { indent: '    ' })}
-                </pre>
+                </SyntaxHighlighter>
             </Grid>
         </Grid>
     );
@@ -253,29 +258,12 @@ const useStyles = makeStyles({
         fontFamily: 'IBM Plex Mono, monospace',
         fontSize: '1rem',
     },
-    grayBg: {
-        backgroundColor: '#d9d9d9',
-        minHeight: 'inherit',
-        paddingLeft: '1rem',
-        paddingRight: '1rem',
-    },
-    sqlFormat: {
-        whiteSpace: 'pre-wrap',
-        wordBreak: 'keep-all',
-        color: '#005CB0',
-        fontFamily: 'IBM Plex Mono, monospace',
-        fontSize: '1rem',
-    },
     inheritHeight: {
         height: 'inherit',
     },
     scrollable: {
         maxHeight: '700px',
         overflowY: 'auto',
-    },
-    floatRight: {
-        float: 'right',
-        marginRight: '1rem',
     },
     leftPadding: {
         paddingLeft: '1rem',
@@ -302,6 +290,20 @@ const useStyles = makeStyles({
         fontFamily: 'Roboto, sans-serif',
         fontSize: '.9rem',
         paddingRight: '.5rem',
+    },
+    sqlIcons: {
+        position: 'absolute',
+        top: '0',
+        right: '0',
+        marginTop: '15px',
+        marginRight: '10px',
+    },
+    sqlContainer: {
+        position: 'relative',
+        width: '100px',
+    },
+    icon: {
+        color: '#e5e5e5',
     },
 });
 
