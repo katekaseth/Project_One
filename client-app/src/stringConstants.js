@@ -20,7 +20,7 @@ export const API = {
 export const PAGES = {
     home: '/',
     search: '/search',
-    result: '/result/',
+    result: '/result',
     login: '/login',
     bookmarks: '/bookmarks',
     account: '/account',

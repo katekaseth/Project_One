@@ -13,18 +13,30 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-export const SearchFilter = props => {
+export const SearchFilter = ({
+    filterState,
+    updateFilterState,
+    expandedFilterGroups,
+    changeFilterExpansion,
+}) => {
     return (
         <Paper square>
-            {Object.keys(props.filterState).map(subjectKey => {
-                return <FilterGroup {...props} subjectKey={subjectKey}></FilterGroup>;
+            {Object.keys(filterState).map((subjectKey) => {
+                return (
+                    <FilterGroup
+                        filterState={filterState}
+                        updateFilterState={updateFilterState}
+                        expanded={expandedFilterGroups[subjectKey]}
+                        setExpanded={() => changeFilterExpansion(subjectKey)}
+                        subjectKey={subjectKey}
+                    ></FilterGroup>
+                );
             })}
         </Paper>
     );
 };
 
-const FilterGroup = ({ filterState, updateFilterState, subjectKey }) => {
-    const [expanded, setExpanded] = useState(Object.values(filterState[subjectKey]).includes(true));
+const FilterGroup = ({ expanded, setExpanded, filterState, updateFilterState, subjectKey }) => {
     const classes = useStyles();
 
     const changeFilter = (subjectKey, filterKey) => {
@@ -33,21 +45,13 @@ const FilterGroup = ({ filterState, updateFilterState, subjectKey }) => {
 
     return (
         <Grid>
-            <ExpansionPanel
-                className={classes.panel}
-                defaultExpanded={
-                    expanded || subjectKey === 'Subject Area' || subjectKey === 'Tool Type'
-                }
-                onChange={(e, expanded) => {
-                    setExpanded(expanded);
-                }}
-            >
+            <ExpansionPanel className={classes.panel} expanded={expanded} onClick={setExpanded}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography variant='h6'>{subjectKey}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <FormControl>
-                        {Object.keys(filterState[subjectKey]).map(filterKey => {
+                        {Object.keys(filterState[subjectKey]).map((filterKey) => {
                             return (
                                 <FormControlLabel
                                     value={filterKey}
@@ -55,7 +59,10 @@ const FilterGroup = ({ filterState, updateFilterState, subjectKey }) => {
                                     control={
                                         <Checkbox
                                             color='primary'
-                                            onClick={() => changeFilter(subjectKey, filterKey)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                changeFilter(subjectKey, filterKey);
+                                            }}
                                             checked={filterState[subjectKey][filterKey]}
                                         />
                                     }
