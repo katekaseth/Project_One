@@ -81,7 +81,8 @@ html {
 
 .result-page-container,
 .search-page-container,
-.bookmark-page-container {
+.bookmark-page-container,
+.account-page-container {
     padding-top: 40px;
     padding-right: 8vw;
     padding-left: 8vw;
