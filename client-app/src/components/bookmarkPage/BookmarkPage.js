@@ -1,17 +1,29 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, CardMedia } from '@material-ui/core';
+
+import bookmarkedIcon from '../../icons/svg/bookmarked.svg';
 
 import { SearchResults } from '../searchPage/SearchResults';
+import { SearchBar } from '../SearchBar';
+import { Bookmark } from '../Bookmark';
 
 export default ({ setPage, bookmarks, alertError }) => {
     const classes = useStyles();
     return (
         <Grid container direction='column'>
-            <Grid xs item className={classes.bookmarkTitle}>
-                <Typography paragraph={true} color='primary' variant='h4'>
-                    Bookmarks
-                </Typography>
+            <Grid xs container item>
+                <Grid item>
+                    <CardMedia src={bookmarkedIcon} component='img' className={classes.bookmark} />
+                </Grid>
+                <Grid item>
+                    <Typography className={classes.bookmarkTitle} variant='h4'>
+                        Your Bookmarks -
+                    </Typography>
+                    <Typography className={classes.bookmarkNum} variant='h4'>
+                        {bookmarks ? bookmarks.length : 'None'}
+                    </Typography>
+                </Grid>
             </Grid>
             <Grid item container>
                 <SearchResults setPage={setPage} results={bookmarks} alertError={alertError} />
@@ -21,5 +33,21 @@ export default ({ setPage, bookmarks, alertError }) => {
 };
 
 const useStyles = makeStyles({
-    bookmarkTitle: {},
+    bookmarkTitle: {
+        color: '#5E5B5B',
+        fontFamily: 'Encode-sans, sans-serif',
+        fontWeight: 'bold',
+        display: 'inline-block',
+        paddingRight: '1rem',
+    },
+    bookmarkNum: {
+        color: '#5E5B5B',
+        fontFamily: 'Encode-sans, sans-serif',
+        display: 'inline-block',
+    },
+    bookmark: {
+        width: '35px',
+        height: 'auto',
+        paddingRight: '1rem',
+    },
 });
