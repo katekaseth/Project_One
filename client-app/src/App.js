@@ -9,7 +9,7 @@ import ResultPage from './components/resultPage/ResultPage';
 import LoginPage from './components/loginPage/LoginPage';
 import BookmarkPage from './components/bookmarkPage/BookmarkPage';
 import { getFiltersApi } from './api/getFilters';
-import { searchEndpoint } from './api/search';
+import { searchEndpoint, searchBookmarkEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
 import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
@@ -48,6 +48,16 @@ function App() {
         searchEndpoint(filterState, searchedTerms)
             .then((response) => {
                 // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
+                setResults(response.data);
+            })
+            .catch((err) => {
+                alertError("Couldn't fetch search results", true);
+            });
+    };
+
+    const fetchBookmarkResults = async () => {
+        searchBookmarkEndpoint(searchedTerms)
+            .then((response) => {
                 setResults(response.data);
             })
             .catch((err) => {
@@ -228,6 +238,13 @@ function App() {
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
                 fetchBookmarks();
+            },
+            searchBookmarks: () => {
+                setPage(PAGES.bookmarks);
+                history.push(PAGES.bookmarks);
+                if (results === null) {
+                    fetchBookmarkResults();
+                }
             },
             account: () => {
                 // clear filterState

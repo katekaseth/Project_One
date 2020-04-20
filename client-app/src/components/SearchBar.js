@@ -3,7 +3,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, InputBase, Paper } from '@material-ui/core';
 
-export function SearchBar({ setPage, updateSearchTerms, searchedTerms }) {
+export function SearchBar({ setPage, updateSearchTerms, searchedTerms, isBookmark }) {
     const classes = useStyles();
 
     const handleKeyPress = (event) => {
@@ -13,7 +13,7 @@ export function SearchBar({ setPage, updateSearchTerms, searchedTerms }) {
                 return searchTerm.trim();
             });
             updateSearchTerms(inputArray);
-            setPage.search();
+            isBookmark ? setPage.searchBookmarks() : setPage.search();
         }
     };
 

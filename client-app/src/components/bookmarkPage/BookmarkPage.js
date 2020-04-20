@@ -8,11 +8,11 @@ import { SearchResults } from '../searchPage/SearchResults';
 import { SearchBar } from '../SearchBar';
 import { Bookmark } from '../Bookmark';
 
-export default ({ setPage, bookmarks, alertError }) => {
+export default ({ setPage, bookmarks, alertError, updateSearchTerms, searchedTerms }) => {
     const classes = useStyles();
     return (
         <Grid container direction='column'>
-            <Grid xs container item>
+            <Grid xs container item className={classes.bottomSpacing}>
                 <Grid item>
                     <CardMedia src={bookmarkedIcon} component='img' className={classes.bookmark} />
                 </Grid>
@@ -24,6 +24,14 @@ export default ({ setPage, bookmarks, alertError }) => {
                         {bookmarks ? bookmarks.length : 'None'}
                     </Typography>
                 </Grid>
+            </Grid>
+            <Grid item className={classes.bottomSpacing}>
+                <SearchBar
+                    setPage={setPage}
+                    updateSearchTerms={updateSearchTerms}
+                    searchedTerms={searchedTerms}
+                    isBookmark={true}
+                ></SearchBar>
             </Grid>
             <Grid item container>
                 <SearchResults setPage={setPage} results={bookmarks} alertError={alertError} />
@@ -49,5 +57,8 @@ const useStyles = makeStyles({
         width: '35px',
         height: 'auto',
         paddingRight: '1rem',
+    },
+    bottomSpacing: {
+        marginBottom: '1rem',
     },
 });

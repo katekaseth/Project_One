@@ -83,6 +83,67 @@ func (ctx *HandlerContext) SearchHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(documentBytes)
 }
 
+// SearchBookmarkHandler handles requests to /search/bookmarks. It responds with all
+// bookmarks that match the query terms.
+func (ctx *HandlerContext) SearchBookmarkHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
+		return
+	}
+
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
+
+	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
+		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	if r.Body == nil {
+		http.Error(w, "Request is nil", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	// check that request body can be decoded into DocumentQuery struct
+	query := &documents.DocumentQuery{}
+	dec := json.NewDecoder(r.Body)
+	err = dec.Decode(query)
+	if err != nil {
+		http.Error(w, "Bad request body", http.StatusInternalServerError)
+		return
+	}
+
+	var documents []documents.DocumentSummary
+	// if there are no filters, return all bookmarks
+	if len(query.SearchTerm) == 0 {
+		documents, err = ctx.UserStore.GetBookmarks(userID)
+		if err != nil {
+			http.Error(w, "Error getting documents", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		documents, err = ctx.UserStore.GetSearchedBookmarks(query, userID)
+	}
+
+	// add the bookmark field
+	for i := 0; i < len(documents); i++ {
+		documents[i].Bookmarked = true
+	}
+
+	// marshal to json
+	documentBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentBytes)
+}
+
 // TODO: make this logn at some point
 func contains(arr []int, n int) bool {
 	for _, elem := range arr {
@@ -176,7 +237,7 @@ func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *htt
 	w.Write(documentBytes)
 }
 
-// SpecificBookmarkHandler handles POST and DELETE requests to /bookmark/:documentID to add or remove
+// SpecificBookmarkHandler handles POST and DELETE requests to /bookmarks/:documentID to add or remove
 // a bookmark for the specified report.
 func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" && r.Method != "DELETE" {
@@ -192,6 +253,10 @@ func (ctx *HandlerContext) SpecificBookmarkHandler(w http.ResponseWriter, r *htt
 
 	// get document id from the url path
 	// NOTE: for some reason mux.Vars only works when it's deployed.
+	// so for testing use this:
+	// url := r.URL.Path
+	// documentID, err := strconv.Atoi(url[len("/bookmarks/"):])
+
 	vars := mux.Vars(r)
 	documentID, err := strconv.Atoi(vars["documentID"])
 	if err != nil {

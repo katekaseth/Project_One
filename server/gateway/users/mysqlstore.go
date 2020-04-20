@@ -4,7 +4,6 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
-	"log"
 	"strings"
 
 	// need it for mysql
@@ -134,10 +133,9 @@ func addFilterQuery(termList []string, filterType string, currentStmt string) st
 	return stmt
 }
 
-//GetSearchedDocuments returns and array of DocumentSummary that meet the criteria of
+//GetSearchedDocuments returns an array of DocumentSummary that meet the criteria of
 //the passed in query.
 func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]documents.DocumentSummary, error) {
-	log.Println(query)
 	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where "
 	stmt += addFilterQuery(query.SubjectArea, "subject_area", stmt)
 	stmt += addFilterQuery(query.ToolType, "tool_type", stmt)
@@ -154,10 +152,37 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]do
 	return allDocuments, nil
 }
 
+//GetSearchedBookmarks returns an array of DocumentSummary that meet the search terms
+//from the given user's bookmarks.
+func (ms *MySQLStore) GetSearchedBookmarks(query *documents.DocumentQuery, userID int) ([]documents.DocumentSummary, error) {
+	stmt := fmt.Sprintf("SELECT d.document_id, d.title, d.tool_type, d.created, d.updated, d.description, d.subject_area, d.database_name FROM bookmarks b JOIN documents d ON d.document_id = b.document_id  where b.user_id = (%d)", userID)
+	if len(query.SearchTerm) != 0 {
+		stmt += " AND "
+		// title
+		stmt += "( (d.title like '%" + query.SearchTerm[0] + "%'"
+		for i := 1; i < len(query.SearchTerm); i++ {
+			stmt += " AND d.title like '%" + query.SearchTerm[i] + "%'"
+		}
+		stmt += ") OR "
+		// description
+		stmt += "(d.description like '%" + query.SearchTerm[0] + "%'"
+		for i := 1; i < len(query.SearchTerm); i++ {
+			stmt += " AND d.description like '%" + query.SearchTerm[i] + "%'"
+		}
+		stmt += ") )"
+	}
+
+	allDocuments, err := ms.scanDocSummaryQuery(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	return allDocuments, nil
+}
+
 //Given a statment to query Documents, returns an array of Document Summary returned by the
 //database query.
 func (ms *MySQLStore) scanDocSummaryQuery(stmt string) ([]documents.DocumentSummary, error) {
-	log.Println(stmt)
 	allDocuments := []documents.DocumentSummary{}
 	rows, err := ms.Db.Query(stmt)
 	if err != nil {
