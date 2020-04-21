@@ -56,7 +56,7 @@ export const TechnicalInfo = ({
                 spacing={3}
                 xs={5}
             >
-                <Grid item container direction='row' justify='space-evenly' alignItems='flex-start'>
+                <Grid item container direction='row' justify='space-evenly' alignItems='flex-start' spacing={8} style={{padding: 20}}>
                     <Grid item xs={4}>
                         <Typography className={classes.techInfoTitle}>Subject Area</Typography>
                         <Typography className={classes.techInfoDetail}>{subjectArea}</Typography>
