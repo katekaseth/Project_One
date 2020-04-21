@@ -75,7 +75,7 @@ export const SearchResult = ({ setPage, result, alertError }) => {
                     </Typography>
                 </Grid>
                 <Divider />
-                <Grid item container alignItems='center' justify='space-between' style={{paddingTop: 10}}>
+                <Grid item container className={classes.tagContainer} alignItems='center' justify='space-between'>
                     <Grid item>
                         <Typography variant='body2'>
                             <b>Tags:</b>     {result.subjectArea}, {result.toolType} 
@@ -124,5 +124,8 @@ const useStyles = makeStyles({
         marginBottom: '15px',
         marginRight: '15px',
         marginTop: '5px',
+    },
+    tagContainer: {
+        marginTop: '10px',
     },
 });

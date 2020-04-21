@@ -14,7 +14,7 @@ export function SubjectAreaCard({ title, icon, onClick }) {
                         direction="column"
                         justify="space-between"
                     >
-                        <Grid xs item container direction="column" alignItems="center">
+                        <Grid xs item container direction="column" alignItems="center" justify="space-evenly">
                             <CardMedia className={classes.icon} src={icon} component="img" />
                             <Typography className={classes.cardTitle} variant="h6">
                                 {title}
