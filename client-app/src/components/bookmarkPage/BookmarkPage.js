@@ -6,6 +6,7 @@ import { SearchResults } from '../searchPage/SearchResults';
 
 export default ({ setPage, bookmarks, alertError }) => {
     const classes = useStyles();
+
     return (
         <Grid container direction='column'>
             <Grid xs item className={classes.bookmarkTitle}>
