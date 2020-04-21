@@ -246,7 +246,6 @@ function App() {
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
-                fetchBookmarks();
             },
             searchBookmarks: () => {
                 setPage(PAGES.bookmarks);
@@ -296,6 +295,12 @@ function App() {
             fetchResults();
         }
     }, [searchedTerms, filterState]);
+
+    useEffect(() => {
+        if (page === PAGES.bookmarks) {
+            fetchBookmarks();
+        }
+    }, [page]);
 
     if (sessionStorage.getItem(SESSION.SESSION_ID) === null) {
         return (

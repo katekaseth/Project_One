@@ -9,6 +9,7 @@ import { SearchBar } from '../SearchBar';
 
 export default ({ setPage, bookmarks, alertError, updateSearchBookmarkTerms }) => {
     const classes = useStyles();
+
     return (
         <Grid container direction='column'>
             <Grid xs container item className={classes.bottomSpacing}>
