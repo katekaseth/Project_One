@@ -7,7 +7,13 @@ import bookmarkedIcon from '../../icons/svg/bookmarked.svg';
 import { SearchResults } from '../searchPage/SearchResults';
 import { SearchBar } from '../SearchBar';
 
-export default ({ setPage, bookmarks, alertError, updateSearchBookmarkTerms }) => {
+export default ({
+    setPage,
+    bookmarks,
+    alertError,
+    updateSearchBookmarkTerms,
+    searchedBookmarkTerms,
+}) => {
     const classes = useStyles();
 
     return (
@@ -29,7 +35,7 @@ export default ({ setPage, bookmarks, alertError, updateSearchBookmarkTerms }) =
                 <SearchBar
                     setPage={setPage}
                     updateSearchTerms={updateSearchBookmarkTerms}
-                    searchedTerms={[]}
+                    searchedTerms={[searchedBookmarkTerms]}
                     isBookmark={true}
                 ></SearchBar>
             </Grid>

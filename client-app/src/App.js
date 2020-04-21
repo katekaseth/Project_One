@@ -58,10 +58,9 @@ function App() {
     };
 
     const fetchBookmarkResults = async () => {
-        searchBookmarkEndpoint(['credit'])
+        searchBookmarkEndpoint(searchedBookmarkTerms)
             .then((response) => {
-                console.log(response);
-                setResults(response.data);
+                setBookmarks(response.data);
             })
             .catch((err) => {
                 alertError("Couldn't fetch search results", true);
@@ -119,8 +118,7 @@ function App() {
     };
 
     const updateSearchBookmarkTerms = (searchTerms) => {
-        console.log(searchTerms);
-        setSearchedBookmarkTerms(searchTerms.slice());
+        setSearchedBookmarkTerms(searchTerms);
         console.log(searchedBookmarkTerms);
     };
 
@@ -206,6 +204,7 @@ function App() {
         page,
         filterState,
         searchedTerms,
+        searchedBookmarkTerms,
         results,
         bookmarks,
     };
@@ -250,9 +249,7 @@ function App() {
             searchBookmarks: () => {
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
-                if (results === null) {
-                    fetchBookmarkResults();
-                }
+                fetchBookmarkResults();
             },
             account: () => {
                 // clear filterState
