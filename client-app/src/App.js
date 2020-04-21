@@ -26,6 +26,8 @@ function App() {
     const [selectedSubject, setSelectedSubject] = useState('');
     // Terms the user has searched on
     const [searchedTerms, setSearchedTerms] = useState([]);
+    // Terms the user has searched on in bookmarks
+    const [searchedBookmarkTerms, setSearchedBookmarkTerms] = useState([]);
     // Search results
     const [results, setResults] = useState(null);
     // Bookmark results
@@ -56,8 +58,9 @@ function App() {
     };
 
     const fetchBookmarkResults = async () => {
-        searchBookmarkEndpoint(searchedTerms)
+        searchBookmarkEndpoint(['credit'])
             .then((response) => {
+                console.log(response);
                 setResults(response.data);
             })
             .catch((err) => {
@@ -113,6 +116,12 @@ function App() {
 
     const updateSearchTerms = (searchTerms) => {
         setSearchedTerms(searchTerms.slice());
+    };
+
+    const updateSearchBookmarkTerms = (searchTerms) => {
+        console.log(searchTerms);
+        setSearchedBookmarkTerms(searchTerms.slice());
+        console.log(searchedBookmarkTerms);
     };
 
     const clearFilterStateAndSearchTerms = () => {
@@ -256,6 +265,7 @@ function App() {
         clearFilterState,
         updateFilterState,
         updateSearchTerms: updateSearchTerms,
+        updateSearchBookmarkTerms: updateSearchBookmarkTerms,
         setSelectedSubject: (subjectArea) => {
             if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea);
