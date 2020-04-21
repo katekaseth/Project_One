@@ -33,7 +33,7 @@ export const ResultOverview = ({ result, alertError }) => {
                     </Typography>
                 </Grid>
                 <Divider />
-                <Grid item container style={{paddingTop: 12}}>
+                <Grid item container className={classes.tagContainer}>
                     <Grid item xs container spacing={3} alignItems='center' justify='flex-start'>
                         <Grid item>
                             <Typography variant='body2'>
@@ -75,6 +75,7 @@ const useStyles = makeStyles({
     result: {
         marginBottom: '20px',
         padding: '30px',
+        paddingBottom: '25px',
     },
     description: {
         width: '60%',
@@ -92,5 +93,8 @@ const useStyles = makeStyles({
     },
     runButton: {
         marginLeft: '20px',
+    },
+    tagContainer: {
+        marginTop: '15px',
     },
 });
