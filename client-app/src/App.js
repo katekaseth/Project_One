@@ -119,12 +119,12 @@ function App() {
 
     const updateSearchBookmarkTerms = (searchTerms) => {
         setSearchedBookmarkTerms(searchTerms);
-        console.log(searchedBookmarkTerms);
     };
 
     const clearFilterStateAndSearchTerms = () => {
         clearFilterState();
         setSearchedTerms([]);
+        setSearchedBookmarkTerms([]);
     };
 
     const login = async (username, password) => {
@@ -292,6 +292,12 @@ function App() {
             fetchResults();
         }
     }, [searchedTerms, filterState]);
+
+    useEffect(() => {
+        if (searchedBookmarkTerms !== null && page === PAGES.bookmarks) {
+            fetchBookmarkResults();
+        }
+    }, [searchedBookmarkTerms]);
 
     useEffect(() => {
         if (page === PAGES.bookmarks) {
