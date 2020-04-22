@@ -103,6 +103,7 @@ function App() {
                 }
             });
         });
+        sessionStorage.setItem(SESSION.AVAILABLE_FILTERS, JSON.stringify(tempFilterState));
         setFilterState(tempFilterState);
     };
 
@@ -232,9 +233,6 @@ function App() {
                 // when going to search page
                 setPage(PAGES.search);
                 history.push(PAGES.search);
-                if (results === null) {
-                    fetchResults();
-                }
             },
             result: (resultId) => {
                 // don't clear filterState
@@ -248,11 +246,6 @@ function App() {
                 clearFilterStateAndSearchTerms();
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
-            },
-            searchBookmarks: () => {
-                setPage(PAGES.bookmarks);
-                history.push(PAGES.bookmarks);
-                fetchBookmarkResults();
             },
             account: () => {
                 // clear filterState
@@ -282,8 +275,10 @@ function App() {
             setPage(window.location.pathname);
         }
 
-        if (filterState === null) {
+        if (filterState === null && sessionStorage.getItem(SESSION.AVAILABLE_FILTERS) === null) {
             fetchFilters();
+        } else if (filterState === null) {
+            setFilterState(JSON.parse(sessionStorage.getItem(SESSION.AVAILABLE_FILTERS)));
         }
     }, []);
 
@@ -303,7 +298,11 @@ function App() {
     }, [searchedBookmarkTerms]);
 
     useEffect(() => {
-        if (page === PAGES.bookmarks) {
+        if (page === PAGES.search && results === null) {
+            fetchResults();
+        }
+
+        if (page === PAGES.bookmarks && bookmarks === null) {
             fetchBookmarks();
         }
     }, [page]);

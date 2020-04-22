@@ -33,7 +33,7 @@ export default ({
             </Grid>
             <Grid item className={classes.bottomSpacing}>
                 <SearchBar
-                    setPage={setPage}
+                    redirect={() => {}}
                     updateSearchTerms={updateSearchBookmarkTerms}
                     searchedTerms={[searchedBookmarkTerms]}
                     isBookmark={true}

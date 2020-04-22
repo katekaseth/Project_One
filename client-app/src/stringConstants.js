@@ -52,4 +52,5 @@ export const SESSION = {
     EXPIRE_SESSION: 'expireSession',
     CHANNEL_NAME: 'uw_analytics_bc',
     SESSION_EXPIRED_MESSAGE: 'Error: Sesion expired, you need to log in again.',
+    AVAILABLE_FILTERS: 'availableFilters',
 };
