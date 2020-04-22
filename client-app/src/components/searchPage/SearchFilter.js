@@ -56,6 +56,9 @@ const FilterGroup = ({ expanded, setExpanded, filterState, updateFilterState, su
                                 <FormControlLabel
                                     value={filterKey}
                                     label={filterKey}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                    }}
                                     control={
                                         <Checkbox
                                             color='primary'
