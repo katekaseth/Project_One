@@ -18,6 +18,8 @@ import AccountPage from './components/accountPage/AccountPage';
 function App() {
     // Page route, / is root
     const [page, setPage] = useState('/');
+    // Previous page, used in bread crumbs on /result only
+    const [previousPage, setPreviousPage] = useState(null);
     // Error set to null, set message if error
     const [error, setError] = useState(null);
     // What is currently being filtered on
@@ -237,6 +239,7 @@ function App() {
             result: (resultId) => {
                 // don't clear filterState
                 // when going to result page
+                setPreviousPage(page);
                 setPage(PAGES.result + '/' + resultId);
                 history.push(PAGES.result + '/' + resultId);
             },
@@ -331,7 +334,11 @@ function App() {
                 </Route>
                 <Route path={new RegExp(PAGES.result)}>
                     <div className='result-page-container'>
-                        <ResultPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
+                        <ResultPage
+                            previousPage={previousPage}
+                            {...GLOBAL_STATE}
+                            {...GLOBAL_ACTIONS}
+                        />
                     </div>
                 </Route>
                 <Route path={PAGES.login}>
