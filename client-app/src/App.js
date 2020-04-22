@@ -14,6 +14,8 @@ import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
 import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
 import AccountPage from './components/accountPage/AccountPage';
+import { Typography, makeStyles } from '@material-ui/core';
+import { version } from '../package.json';
 
 function App() {
     // Page route, / is root
@@ -35,6 +37,7 @@ function App() {
     // Bookmark results
     const [bookmarks, setBookmarks] = useState(null);
     const history = useHistory();
+    const classes = useStyles();
 
     // Fetches filters and calls /search for
     // results relating to that filter
@@ -331,7 +334,7 @@ function App() {
                         <SearchPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
-                <Route path={new RegExp(PAGES.result)}>
+                <Route path={new RegExp(`${PAGES.result}$|${PAGES.result}\/`)}>
                     <div className='result-page-container'>
                         <ResultPage
                             previousPage={previousPage}
@@ -356,9 +359,21 @@ function App() {
                     </div>
                 </Route>
             </Switch>
+            <Typography className={classes.version}>v{version}</Typography>
         </div>
     );
 }
+
+const useStyles = makeStyles({
+    version: {
+        zIndex: 100,
+        position: 'absolute',
+        color: 'gray',
+        fontSize: '7pt',
+        right: '5px',
+        bottom: '5px',
+    },
+});
 
 const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
 bc.onmessage = function (e) {
