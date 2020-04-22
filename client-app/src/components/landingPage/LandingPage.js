@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { SubjectAreaCards } from './SubjectAreaCards';
 import { SearchBar } from '../SearchBar';
 
-export default props => {
+export default (props) => {
     const classes = useStyles();
 
     return (
@@ -22,7 +22,7 @@ export default props => {
                 </Typography>
             </Grid>
             <Grid item className={classes.searchBarContainer}>
-                <SearchBar {...props} />
+                <SearchBar redirect={() => props.setPage.search()} {...props} />
             </Grid>
             <Grid item container justify='center'>
                 <SubjectAreaCards {...props} />

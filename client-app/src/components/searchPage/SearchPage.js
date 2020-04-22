@@ -48,7 +48,7 @@ export default (props) => {
             </Grid>
 
             <Grid xs item container direction='column' className={classes.searchArea}>
-                <SearchBar {...props} />
+                <SearchBar redirect={() => props.setPage.search()} {...props} />
 
                 <Grid item container className={classes.filterChips}>
                     <FilterChipDisplay changeFilterExpansion={changeFilterExpansion} {...props} />
