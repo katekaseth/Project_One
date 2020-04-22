@@ -9,7 +9,7 @@ import { PAGES } from '../../stringConstants';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ filterState, setPage, alertError }) => {
+export default ({ previousPage, filterState, setPage, alertError }) => {
     const [result, setResult] = useState(null);
     const classes = useStyles();
 
@@ -45,7 +45,8 @@ export default ({ filterState, setPage, alertError }) => {
         <Grid>
             <Grid>
                 <NavPath
-                    searchPath={getSearchPath(filterState)}
+                    previousPage={previousPage}
+                    filterState={filterState}
                     setPage={setPage}
                     resultTitle={result.title}
                 />
@@ -60,25 +61,32 @@ export default ({ filterState, setPage, alertError }) => {
     );
 };
 
-const getSearchPath = (filterState) => {
-    if (filterState === null) {
-        return 'Search';
-    }
+const NavPath = ({ previousPage, filterState, searchPath, setPage, resultTitle }) => {
+    const BOOKMARK_PAGE = 'Bookmark Page';
+    const getSearchPath = (filterState) => {
+        if (filterState === null) {
+            return 'Search';
+        }
 
-    let filters = [];
-    Object.keys(filterState).forEach((subjectKey) => {
-        Object.keys(filterState[subjectKey]).forEach((filterKey) => {
-            filterState[subjectKey][filterKey] && filters.push(filterKey);
+        let filters = [];
+        Object.keys(filterState).forEach((subjectKey) => {
+            Object.keys(filterState[subjectKey]).forEach((filterKey) => {
+                filterState[subjectKey][filterKey] && filters.push(filterKey);
+            });
         });
-    });
-    if (filters.length === 0) {
-        return 'Search Page';
-    } else {
-        return filters.join(', ') + '...';
-    }
-};
+        if (filters.length === 0) {
+            return 'Search Page';
+        } else {
+            return filters.join(', ') + '...';
+        }
+    };
 
-const NavPath = ({ searchPath, setPage, resultTitle }) => {
+    let path = BOOKMARK_PAGE;
+    if (previousPage === PAGES.bookmarks) {
+        path = 'Bookmark Page';
+    } else {
+        path = getSearchPath(filterState);
+    }
     const classes = useStyles();
     return (
         <Grid container>
@@ -91,10 +99,12 @@ const NavPath = ({ searchPath, setPage, resultTitle }) => {
             <Grid item className={classes.item}>
                 <Typography
                     variant='body2'
-                    onClick={() => setPage.search()}
+                    onClick={() =>
+                        path === BOOKMARK_PAGE ? setPage.bookmarks() : setPage.search()
+                    }
                     className={classes.link}
                 >
-                    {searchPath}
+                    {path}
                 </Typography>
             </Grid>
             <Grid item className={classes.item}>
