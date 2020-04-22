@@ -10,7 +10,7 @@ import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
-export const SearchResult = ({ setPage, result, alertError }) => {
+export const SearchResult = ({ key, setPage, result, alertError }) => {
     const classes = useStyles();
 
     const toolTypes = {
@@ -62,6 +62,7 @@ export const SearchResult = ({ setPage, result, alertError }) => {
                     </Grid>
                     <Grid item>
                         <Bookmark
+                            key={key}
                             style={{ marginTop: '-15px' }}
                             isBookmarked={result.isBookmarked}
                             documentId={result.documentID}
@@ -75,13 +76,19 @@ export const SearchResult = ({ setPage, result, alertError }) => {
                     </Typography>
                 </Grid>
                 <Divider />
-                <Grid item container className={classes.tagContainer} alignItems='center' justify='space-between'>
+                <Grid
+                    item
+                    container
+                    className={classes.tagContainer}
+                    alignItems='center'
+                    justify='space-between'
+                >
                     <Grid item>
                         <Typography variant='body2'>
-                            <b>Tags:</b>     {result.subjectArea}, {result.toolType} 
+                            <b>Tags:</b> {result.subjectArea}, {result.toolType}
                         </Typography>
                     </Grid>
-                    <Grid item> 
+                    <Grid item>
                         <Typography variant='body2'>
                             {`Updated ${formatDate(result.updated)}`}
                         </Typography>
