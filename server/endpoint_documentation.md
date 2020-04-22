@@ -112,6 +112,8 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `415`: Request body must be in JSON, Request is nil
     - `500`: Decoding failed, Error getting documents
 
+- `POST /search/bookmarks`: Returns a list of bookmarked documents matching the query. Only searches on searchTerms.
+
 - `GET /filter`: Returns a list of current filters available in the database.
   - Response body:
 	``` Javascript

@@ -9,7 +9,7 @@ import ResultPage from './components/resultPage/ResultPage';
 import LoginPage from './components/loginPage/LoginPage';
 import BookmarkPage from './components/bookmarkPage/BookmarkPage';
 import { getFiltersApi } from './api/getFilters';
-import { searchEndpoint } from './api/search';
+import { searchEndpoint, searchBookmarkEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
 import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
@@ -26,6 +26,8 @@ function App() {
     const [selectedSubject, setSelectedSubject] = useState('');
     // Terms the user has searched on
     const [searchedTerms, setSearchedTerms] = useState([]);
+    // Terms the user has searched on in bookmarks
+    const [searchedBookmarkTerms, setSearchedBookmarkTerms] = useState([]);
     // Search results
     const [results, setResults] = useState(null);
     // Bookmark results
@@ -49,6 +51,16 @@ function App() {
             .then((response) => {
                 // TODO: Want to parse and standardize the data ie documentID -> documentId, etc...
                 setResults(response.data);
+            })
+            .catch((err) => {
+                alertError("Couldn't fetch search results", true);
+            });
+    };
+
+    const fetchBookmarkResults = async () => {
+        searchBookmarkEndpoint(searchedBookmarkTerms)
+            .then((response) => {
+                setBookmarks(response.data);
             })
             .catch((err) => {
                 alertError("Couldn't fetch search results", true);
@@ -105,9 +117,14 @@ function App() {
         setSearchedTerms(searchTerms.slice());
     };
 
+    const updateSearchBookmarkTerms = (searchTerms) => {
+        setSearchedBookmarkTerms(searchTerms);
+    };
+
     const clearFilterStateAndSearchTerms = () => {
         clearFilterState();
         setSearchedTerms([]);
+        setSearchedBookmarkTerms([]);
     };
 
     const login = async (username, password) => {
@@ -187,6 +204,7 @@ function App() {
         page,
         filterState,
         searchedTerms,
+        searchedBookmarkTerms,
         results,
         bookmarks,
     };
@@ -228,6 +246,11 @@ function App() {
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
             },
+            searchBookmarks: () => {
+                setPage(PAGES.bookmarks);
+                history.push(PAGES.bookmarks);
+                fetchBookmarkResults();
+            },
             account: () => {
                 // clear filterState
                 clearFilterStateAndSearchTerms();
@@ -238,6 +261,7 @@ function App() {
         clearFilterState,
         updateFilterState,
         updateSearchTerms: updateSearchTerms,
+        updateSearchBookmarkTerms: updateSearchBookmarkTerms,
         setSelectedSubject: (subjectArea) => {
             if (filterState !== null && filterState['Subject Area'][subjectArea] !== undefined) {
                 updateFilterState('Subject Area', subjectArea);
@@ -268,6 +292,12 @@ function App() {
             fetchResults();
         }
     }, [searchedTerms, filterState]);
+
+    useEffect(() => {
+        if (searchedBookmarkTerms !== null && page === PAGES.bookmarks) {
+            fetchBookmarkResults();
+        }
+    }, [searchedBookmarkTerms]);
 
     useEffect(() => {
         if (page === PAGES.bookmarks) {

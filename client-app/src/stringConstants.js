@@ -11,6 +11,7 @@ export const API = {
     SIGN_OUT: 'sessions/',
     FILTER: 'filter',
     SEARCH: 'search',
+    SEARCH_BOOKMARK: 'search/bookmarks',
     DOCUMENTS: 'documents',
     BOOKMARK: 'bookmarks',
     PING: 'ping',
