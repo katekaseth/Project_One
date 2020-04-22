@@ -18,9 +18,14 @@ export const SearchResults = ({ setPage, results, alertError }) => {
         <Grid container direction='column' className='search-result-container' alignItems='center'>
             {results
                 .slice(pagination * NUM_PER_PAGE, (pagination + 1) * NUM_PER_PAGE)
-                .map((result) => {
+                .map((result, i) => {
                     return (
-                        <SearchResult setPage={setPage} result={result} alertError={alertError} />
+                        <SearchResult
+                            setPage={setPage}
+                            result={result}
+                            alertError={alertError}
+                            key={i}
+                        />
                     );
                 })}
             {numOfPages > 1 && (

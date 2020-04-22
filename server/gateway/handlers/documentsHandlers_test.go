@@ -170,6 +170,47 @@ func TestGetQuerySearch(t *testing.T) {
 	}
 }
 
+func TestSearchBookmarks(t *testing.T) {
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+
+	// insert some bookmarks
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "/bookmarks/1", nil)
+	if err != nil {
+		t.Error("Request not working")
+	}
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+	if w.Code != 200 {
+		t.Error("insert failed")
+	}
+	r, err = http.NewRequest("POST", "/bookmarks/3", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+	r, err = http.NewRequest("POST", "/bookmarks/5", nil)
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	ctx.SpecificBookmarkHandler(w, r)
+
+	// search bookmarks
+	w = httptest.NewRecorder()
+	query := &documents.DocumentQuery{
+		SearchTerm: []string{"college"},
+	}
+	queryBody, _ := json.Marshal(query)
+	r, _ = http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	r.Header.Set("Content-Type", "application/json")
+
+	ctx.SearchBookmarkHandler(w, r)
+	recievedDocSummaries := []documents.DocumentSummary{}
+	dec := json.NewDecoder(w.Body)
+	if err := dec.Decode(&recievedDocSummaries); err == nil {
+		t.Error(recievedDocSummaries)
+		t.Errorf("failed decoding")
+	}
+}
+
 func TestGetFilters(t *testing.T) {
 	ctx := getContextHandler()
 	sid, _ := GetSID(ctx, t)

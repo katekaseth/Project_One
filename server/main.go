@@ -57,6 +57,7 @@ func main() {
 	router.HandleFunc("/ping/", ctx.SpecificPingHandler)
 
 	router.HandleFunc("/search", ctx.SearchHandler)
+	router.HandleFunc("/search/bookmarks", ctx.SearchBookmarkHandler)
 	router.HandleFunc("/filter", ctx.FilterHandler)
 	router.HandleFunc("/documents/{documentID}", ctx.SpecificDocumentHandler)
 	router.HandleFunc("/bookmarks/{documentID}", ctx.SpecificBookmarkHandler)
