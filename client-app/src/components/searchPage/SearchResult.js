@@ -127,10 +127,10 @@ const useStyles = makeStyles({
         paddingBottom: '5px',
     },
     resultDescription: {
-        marginLeft: '15px',
+        marginLeft: '5px',
         marginBottom: '15px',
         marginRight: '15px',
-        marginTop: '5px',
+        marginTop: '15px',
     },
     tagContainer: {
         marginTop: '10px',
