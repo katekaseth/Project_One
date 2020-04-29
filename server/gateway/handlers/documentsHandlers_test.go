@@ -6,6 +6,7 @@ import (
 	"Project_One/server/gateway/users"
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -110,7 +111,7 @@ func TestGetSpecificDocument(t *testing.T) {
 	ctx.SpecificDocumentHandler(w, r)
 	receivedDoc := documents.Document{}
 	dec := json.NewDecoder(w.Body)
-	if err := dec.Decode(&receivedDoc); err != nil {
+	if err := dec.Decode(&receivedDoc); err == nil {
 		t.Error(receivedDoc)
 		t.Error(w.Code)
 	}
@@ -145,11 +146,12 @@ func TestGetQuerySearch(t *testing.T) {
 
 	query := &documents.DocumentQuery{
 		// SubjectArea: []string{"Services & Resources"},
-		// ToolType:     []string{"Report", "Cube"},
+		// ToolType: []string{"Report", "Cube"},
 		// Database: []string{"EDWAdminMart"},
 		// SupportGroup: []string{"ORIS"},
-		UWProfile: []string{"TRUE"},
-		// SearchTerm: []string{"academic"},
+		// UWProfile:   []string{"Yes"},
+		AllowAccess: []bool{false},
+		SearchTerm:  []string{"credit"},
 	}
 	queryBody, _ := json.Marshal(query)
 	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
@@ -162,11 +164,6 @@ func TestGetQuerySearch(t *testing.T) {
 	if err := dec.Decode(&recievedDocSummaries); err == nil {
 		t.Error(recievedDocSummaries)
 		t.Errorf("failed decoding")
-	}
-
-	if len(recievedDocSummaries) != 56 {
-		t.Error(recievedDocSummaries)
-		t.Errorf("did not get expected number of documents %d", len(recievedDocSummaries))
 	}
 }
 
@@ -226,7 +223,8 @@ func TestGetFilters(t *testing.T) {
 
 	receivedFilters := documents.DocumentQuery{}
 	dec := json.NewDecoder(w.Body)
-	if err := dec.Decode(&receivedFilters); err != nil {
+	if err := dec.Decode(&receivedFilters); err == nil {
+		log.Println(receivedFilters)
 		t.Errorf("cannot decode")
 	}
 }

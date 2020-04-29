@@ -10,6 +10,7 @@ type DocumentQuery struct {
 	SupportGroup []string `json:"Support Group"`
 	UWProfile    []string `json:"Is UW Profile"`
 	SearchTerm   []string `json:"searchTerms"`
+	AllowAccess  []string `json:"Accessable"`
 }
 
 // Filters represents the possible filters in our database.
@@ -19,6 +20,7 @@ type Filters struct {
 	Database     []string `json:"Database"`
 	SupportGroup []string `json:"Support Group"`
 	UWProfile    []string `json:"Is UW Profile"`
+	AllowAccess  []bool   `json:"Accessable"`
 }
 
 // Term represents a term with its definition.
@@ -43,6 +45,7 @@ type Document struct {
 	Database     string    `json:"database"`
 	Terms        []Term    `json:"terms"`
 	Bookmarked   bool      `json:"isBookmarked"`
+	AllowAccess  bool      `json:"Accessable"`
 	JoinedTerms  string    `json:"-"`
 	JoinedDefs   string    `json:"-"`
 }

@@ -55,7 +55,11 @@ const FilterGroup = ({ expanded, setExpanded, filterState, updateFilterState, su
                             return (
                                 <FormControlLabel
                                     value={filterKey}
-                                    label={filterKey}
+                                    label={
+                                        subjectKey === 'Accessable'
+                                            ? filterKey.charAt(0).toUpperCase() + filterKey.slice(1)
+                                            : filterKey
+                                    }
                                     onClick={(e) => {
                                         e.stopPropagation();
                                     }}
