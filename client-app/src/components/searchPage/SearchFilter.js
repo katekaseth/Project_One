@@ -56,7 +56,7 @@ const FilterGroup = ({ expanded, setExpanded, filterState, updateFilterState, su
                                 <FormControlLabel
                                     value={filterKey}
                                     label={
-                                        subjectKey === 'Accessable'
+                                        subjectKey === 'Accessible'
                                             ? filterKey.charAt(0).toUpperCase() + filterKey.slice(1)
                                             : filterKey
                                     }

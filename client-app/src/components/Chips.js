@@ -14,7 +14,7 @@ export const DeletableTagChip = ({ subjectKey, filterKey, updateFilterState }) =
         <Chip
             className={classes.chip}
             label={
-                subjectKey === 'Accessable'
+                subjectKey === 'Accessible'
                     ? filterKey.charAt(0).toUpperCase() + filterKey.slice(1)
                     : filterKey
             }
