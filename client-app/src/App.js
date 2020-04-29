@@ -13,7 +13,6 @@ import { searchEndpoint, searchBookmarkEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
 import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
-import AccountPage from './components/accountPage/AccountPage';
 import { Typography, makeStyles } from '@material-ui/core';
 import { version } from '../package.json';
 
@@ -271,6 +270,7 @@ function App() {
         login,
         createAccount,
         alertError,
+        signOut,
     };
 
     useEffect(() => {
@@ -351,11 +351,6 @@ function App() {
                 <Route path={PAGES.bookmarks}>
                     <div className='bookmark-page-container'>
                         <BookmarkPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
-                    </div>
-                </Route>
-                <Route path={PAGES.account}>
-                    <div className='account-page-container'>
-                        <AccountPage signOut={signOut} />
                     </div>
                 </Route>
             </Switch>

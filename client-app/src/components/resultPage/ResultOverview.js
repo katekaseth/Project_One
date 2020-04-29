@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Paper, Typography, Button, Box, Divider } from '@material-ui/core';
 
-import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
@@ -22,7 +21,12 @@ export const ResultOverview = ({ result, alertError }) => {
                             documentId={result.documentID}
                             alertError={alertError}
                         />
-                        <Button className={classes.runButton} variant='contained' color='primary'>
+                        <Button
+                            disabled={!result.allowAccess}
+                            className={classes.runButton}
+                            variant='contained'
+                            color='primary'
+                        >
                             Run Report
                         </Button>
                     </Grid>
@@ -37,14 +41,12 @@ export const ResultOverview = ({ result, alertError }) => {
                     <Grid item xs container spacing={3} alignItems='center' justify='flex-start'>
                         <Grid item>
                             <Typography variant='body2'>
-                                <b>Tags:</b>     {result.subjectArea}, {result.toolType} 
+                                <b>Tags:</b> {result.subjectArea}, {result.toolType}
                             </Typography>
                         </Grid>
-                        <Grid item>
-                            <NoAccess />
-                        </Grid>
+                        <Grid item>{!result.allowAccess && <NoAccess />}</Grid>
                     </Grid>
-                    
+
                     <Grid item container xs={2} justify='flex-end' alignItems='center'>
                         <Typography variant='body2'>
                             {'Updated ' + formatDate(result.updated)}

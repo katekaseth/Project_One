@@ -6,7 +6,6 @@ import VisualizationIcon from '../../icons/svg/visualizationIcon.svg';
 import CubeIcon from '../../icons/svg/cubeIcon.svg';
 import ReportIcon from '../../icons/svg/reportIcon.svg';
 
-import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
