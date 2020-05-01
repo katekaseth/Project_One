@@ -56,7 +56,15 @@ export const TechnicalInfo = ({
                 spacing={3}
                 xs={5}
             >
-                <Grid item container direction='row' justify='space-evenly' alignItems='flex-start' spacing={8} style={{padding: 20}}>
+                <Grid
+                    item
+                    container
+                    direction='row'
+                    justify='space-evenly'
+                    alignItems='flex-start'
+                    spacing={8}
+                    style={{ padding: 20 }}
+                >
                     <Grid item xs={4}>
                         <Typography className={classes.techInfoTitle}>Subject Area</Typography>
                         <Typography className={classes.techInfoDetail}>{subjectArea}</Typography>
@@ -114,18 +122,8 @@ export const SecurityInfo = () => {
 
 export const SqlQuery = ({ sqlQuery, title }) => {
     let classes = useStyles();
-    const [showTooltip, setShowTooltip] = useState(false);
-
-    const handleTooltipClose = () => {
-        setShowTooltip(false);
-    };
-
-    const handleTooltipOpen = () => {
-        setShowTooltip(true);
-    };
 
     const handleOnClick = () => {
-        handleTooltipOpen();
         copy(sqlFormatter.format(sqlQuery, { indent: '    ' }));
     };
 
@@ -152,23 +150,18 @@ export const SqlQuery = ({ sqlQuery, title }) => {
             }
         >
             <Grid item xs={12} className={classes.sqlContainer}>
-                <ClickAwayListener onClickAway={handleTooltipClose}>
-                    <Grid className={classes.sqlIcons}>
+                <Grid className={classes.sqlIcons}>
+                    <Tooltip title='Download'>
                         <IconButton onClick={handleFileDownload}>
                             <GetAppIcon className={classes.icon} />
                         </IconButton>
-                        <Tooltip
-                            onClose={handleTooltipClose}
-                            open={showTooltip}
-                            leaveDelay={1000}
-                            title='Copied to clipboard!'
-                        >
-                            <IconButton onClick={handleOnClick}>
-                                <FileCopyIcon className={classes.icon} />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
-                </ClickAwayListener>
+                    </Tooltip>
+                    <Tooltip title='Copy'>
+                        <IconButton onClick={handleOnClick}>
+                            <FileCopyIcon className={classes.icon} />
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
                 <SyntaxHighlighter
                     id='sqlCode'
                     language='sql'
@@ -187,7 +180,8 @@ export const Definitions = ({ terms }) => {
     let classes = useStyles();
 
     return (
-        <Grid alignItems='flex-start'
+        <Grid
+            alignItems='flex-start'
             container
             direction='row'
             className={(classes.inheritHeight, classes.leftPadding, classes.scrollable)}
