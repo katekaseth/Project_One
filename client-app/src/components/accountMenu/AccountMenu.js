@@ -43,19 +43,6 @@ export const AccountMenu = ({ className, signOut }) => {
                 onClose={handlePopoverClose}
             >
                 <Grid container direction='column' className={classes.popupContent}>
-                    <Typography
-                        className={classes.signedInText}
-                        variant='body2'
-                    >{`${username}, you are currently sign in.`}</Typography>
-                    <Button
-                        onClick={signOut}
-                        className={classes.space}
-                        variant='contained'
-                        color='primary'
-                    >
-                        Sign Out
-                    </Button>
-                    <Divider className={classes.space} light />
                     <Typography variant='body2'>
                         <Grid component='span' className={classes.gray}>
                             Access Level:{' '}
@@ -74,6 +61,19 @@ export const AccountMenu = ({ className, signOut }) => {
                         </Grid>
                         <Grid component='span'>Math</Grid>
                     </Typography>
+                    <Divider className={classes.space} light />
+                    <Typography
+                        className={classes.signedInText}
+                        variant='body2'
+                    >{`${username}, you are currently sign in.`}</Typography>
+                    <Button
+                        onClick={signOut}
+                        className={classes.space}
+                        variant='contained'
+                        color='primary'
+                    >
+                        Sign Out
+                    </Button>
                 </Grid>
             </Popover>
         </div>
@@ -92,9 +92,10 @@ const useStyles = makeStyles({
     },
     signedInText: {
         color: 'gray',
-        marginBottom: '10px',
+        marginBottom: '5px',
     },
     space: {
+        marginTop: '15px',
         marginBottom: '15px',
     },
     gray: {

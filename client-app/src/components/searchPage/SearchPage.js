@@ -7,6 +7,7 @@ import { SearchBar } from '../SearchBar';
 import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
+import { STANDARDIZED_CATEOGRY_KEYS } from '../../stringConstants';
 
 export default (props) => {
     const classes = useStyles();
@@ -76,7 +77,9 @@ const FilterChipDisplay = (props) => {
                     onClick={() => props.changeFilterExpansion(subjectKey)}
                     component='span'
                 >
-                    {subjectKey}
+                    {STANDARDIZED_CATEOGRY_KEYS[subjectKey] === undefined
+                        ? subjectKey
+                        : STANDARDIZED_CATEOGRY_KEYS[subjectKey]}
                 </Grid>,
                 ',   ',
             );

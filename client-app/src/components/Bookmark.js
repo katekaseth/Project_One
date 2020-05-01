@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CardMedia } from '@material-ui/core';
+import { CardMedia, Tooltip } from '@material-ui/core';
 
 import bookmarkedIcon from '../icons/svg/bookmarked.svg';
 import unbookmarkedIcon from '../icons/svg/unbookmarked.svg';
@@ -33,13 +33,15 @@ export const Bookmark = ({ style, documentId, isBookmarked, alertError }) => {
     };
 
     return (
-        <CardMedia
-            style={style}
-            className={classes.bookmark}
-            src={bookmarkState ? bookmarkedIcon : unbookmarkedIcon}
-            component='img'
-            onClick={handleClick}
-        />
+        <Tooltip title={'Click to ' + (bookmarkState ? 'unbookmark' : 'bookmark')}>
+            <CardMedia
+                style={style}
+                className={classes.bookmark}
+                src={bookmarkState ? bookmarkedIcon : unbookmarkedIcon}
+                component='img'
+                onClick={handleClick}
+            />
+        </Tooltip>
     );
 };
 
