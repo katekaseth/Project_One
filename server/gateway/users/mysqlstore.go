@@ -142,6 +142,16 @@ func (ms *MySQLStore) GetSearchedDocuments(query *documents.DocumentQuery) ([]do
 	stmt += addFilterQuery(query.Database, "database_name", stmt)
 	stmt += addFilterQuery(query.SupportGroup, "support_group", stmt)
 	stmt += addFilterQuery(query.UWProfile, "uw_profile", stmt)
+	// convert the AllowAccess bool to string for querying database
+	var allowAccessString []string
+	for i := 0; i < len(query.AllowAccess); i++ {
+		if query.AllowAccess[i] == "true" {
+			allowAccessString = append(allowAccessString, "1")
+		} else {
+			allowAccessString = append(allowAccessString, "0")
+		}
+	}
+	stmt += addFilterQuery(allowAccessString, "accessable", stmt)
 	stmt += addFilterQuery(query.SearchTerm, "search", stmt)
 
 	allDocuments, err := ms.scanDocSummaryQuery(stmt)
@@ -233,6 +243,23 @@ func (ms *MySQLStore) GetFilters() (*documents.Filters, error) {
 	}
 	allFilters.UWProfile = uwProfile
 
+	// allow access needs to scan bool
+	rows, err := ms.Db.Query(`SELECT DISTINCT accessable FROM documents`)
+	if err != nil {
+		return nil, err
+	}
+
+	var allowAcess []bool
+	for rows.Next() {
+		var entry bool
+		err := rows.Scan(&entry)
+		if err != nil {
+			return nil, err
+		}
+		allowAcess = append(allowAcess, entry)
+	}
+
+	allFilters.AllowAccess = allowAcess
 	return allFilters, nil
 }
 
@@ -259,17 +286,17 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 //GetSpecificDocument returns a Document object that matches the given documentID.
 func (ms *MySQLStore) GetSpecificDocument(documentID int) (*documents.Document, error) {
 	document := documents.Document{}
-	row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name, t.term, t.definition
+	row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.accessable, d.database_name, t.term, t.definition
 						 	FROM documents d JOIN terms t ON t.document_id = d.document_id WHERE d.document_id = ?`, documentID)
 	err := row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
 		&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
-		&document.SqlQuery, &document.Database, &document.JoinedTerms, &document.JoinedDefs)
+		&document.SqlQuery, &document.AllowAccess, &document.Database, &document.JoinedTerms, &document.JoinedDefs)
 	if err == sql.ErrNoRows {
-		row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.database_name
+		row := ms.Db.QueryRow(`SELECT d.document_id, d.tool_type, d.title, d.created, d.updated, d.custodian, d.author, d.description, d.subject_area, d.support_group, d.sql_query, d.accessable, d.database_name
 								FROM documents d WHERE d.document_id = ?`, documentID)
 		err = row.Scan(&document.DocumentID, &document.ToolType, &document.Title, &document.Created, &document.Updated,
 			&document.Custodian, &document.Author, &document.Description, &document.SubjectArea, &document.SupportGroup,
-			&document.SqlQuery, &document.Database)
+			&document.SqlQuery, &document.AllowAccess, &document.Database)
 		if err != nil {
 			return nil, err
 		}
