@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 
-import { PAGES, SESSION } from './stringConstants';
+import { PAGES, SESSION, SORT_BY } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
@@ -13,7 +13,6 @@ import { searchEndpoint, searchBookmarkEndpoint } from './api/search';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
 import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
-import AccountPage from './components/accountPage/AccountPage';
 import { Typography, makeStyles } from '@material-ui/core';
 import { version } from '../package.json';
 
@@ -133,12 +132,27 @@ function App() {
         setSearchedBookmarkTerms([]);
     };
 
+    const addRecent = (documentId) => {
+        let recents = JSON.parse(localStorage.getItem(SORT_BY.recents));
+        if (recents === null) {
+            recents = [];
+        }
+        if (recents.includes(documentId)) {
+            let index = recents.indexOf(documentId);
+            recents.splice(index, 1);
+        }
+        recents.push(documentId);
+        if (recents.length > 50) {
+            recents.splice(0, 1);
+        }
+        localStorage.setItem(SORT_BY.recents, JSON.stringify(recents));
+    };
+
     const login = async (username, password) => {
         loginApi(username, password)
             .then((response) => {
                 let sessionId = response.headers.authorization;
                 sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
-                newSessionId(sessionId);
                 let username = response.data.userName;
                 sessionStorage.setItem(SESSION.USERNAME, username);
                 GLOBAL_ACTIONS.setPage.home();
@@ -158,7 +172,6 @@ function App() {
             .then((response) => {
                 let sessionId = response.headers.authorization;
                 sessionStorage.setItem(SESSION.SESSION_ID, sessionId);
-                newSessionId(sessionId);
                 let username = response.data.userName;
                 sessionStorage.setItem(SESSION.USERNAME, username);
                 GLOBAL_ACTIONS.setPage.home();
@@ -271,19 +284,23 @@ function App() {
         login,
         createAccount,
         alertError,
+        signOut,
+        addRecent,
     };
 
     useEffect(() => {
-        if (page !== window.location.pathname) {
-            setPage(window.location.pathname);
-        }
-
         if (filterState === null && sessionStorage.getItem(SESSION.AVAILABLE_FILTERS) === null) {
             fetchFilters();
         } else if (filterState === null) {
             setFilterState(JSON.parse(sessionStorage.getItem(SESSION.AVAILABLE_FILTERS)));
         }
     }, []);
+
+    useEffect(() => {
+        if (page !== window.location.pathname) {
+            setPage(window.location.pathname);
+        }
+    });
 
     useEffect(() => {
         // When searchedTerms or filterState is changed
@@ -301,11 +318,11 @@ function App() {
     }, [searchedBookmarkTerms]);
 
     useEffect(() => {
-        if (page === PAGES.search && results === null) {
+        if (page === PAGES.search) {
             fetchResults();
         }
 
-        if (page === PAGES.bookmarks && bookmarks === null) {
+        if (page === PAGES.bookmarks) {
             fetchBookmarks();
         }
     }, [page]);
@@ -353,11 +370,6 @@ function App() {
                         <BookmarkPage {...GLOBAL_STATE} {...GLOBAL_ACTIONS} />
                     </div>
                 </Route>
-                <Route path={PAGES.account}>
-                    <div className='account-page-container'>
-                        <AccountPage signOut={signOut} />
-                    </div>
-                </Route>
             </Switch>
             <Typography className={classes.version}>v{version}</Typography>
         </div>
@@ -367,40 +379,12 @@ function App() {
 const useStyles = makeStyles({
     version: {
         zIndex: 100,
-        position: 'absolute',
+        position: 'fixed',
+        right: '0px',
+        bottom: '0px',
         color: 'gray',
         fontSize: '7pt',
-        right: '5px',
-        bottom: '5px',
     },
 });
-
-const bc = new BroadcastChannel(SESSION.CHANNEL_NAME);
-bc.onmessage = function (e) {
-    if (e.data.messageType === SESSION.NEW_SESSION) {
-        sessionStorage.setItem(SESSION.SESSION_ID, e.data.sessionId);
-        window.location.reload();
-    } else if (e.data.messageType === SESSION.EXPIRE_SESSION) {
-        let sessionId = sessionStorage.getItem(SESSION.SESSION_ID);
-        if (sessionId === e.data.sessionId) {
-            sessionStorage.removeItem(SESSION.SESSION_ID);
-            window.location.reload();
-        }
-    }
-};
-
-const newSessionId = (sessionId) => {
-    bc.postMessage({
-        messageType: SESSION.NEW_SESSION,
-        sessionId: sessionId,
-    });
-};
-
-const expireSession = (sessionId) => {
-    bc.postMessage({
-        messageType: SESSION.EXPIRE_SESSION,
-        sessionId: sessionId,
-    });
-};
 
 export default App;

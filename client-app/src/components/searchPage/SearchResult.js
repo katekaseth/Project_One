@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, CardMedia, Divider } from '@material-ui/core';
+import { Grid, Paper, Typography, CardMedia, Divider, Collapse } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 
 import VisualizationIcon from '../../icons/svg/visualizationIcon.svg';
 import CubeIcon from '../../icons/svg/cubeIcon.svg';
 import ReportIcon from '../../icons/svg/reportIcon.svg';
 
-import { TagChip } from '../Chips';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
-export const SearchResult = ({ key, setPage, result, alertError }) => {
+export const SearchResult = ({ setPage, result, alertError }) => {
     const classes = useStyles();
+    const [expanded, setExpanded] = useState(false);
 
     const toolTypes = {
         visualization: 'Visualization',
@@ -33,6 +34,11 @@ export const SearchResult = ({ key, setPage, result, alertError }) => {
         default:
             toolTypeIcon = <div></div>;
     }
+
+    const changeExpanded = (e) => {
+        setExpanded(!expanded);
+        e.stopPropagation();
+    };
 
     return (
         <Paper
@@ -62,7 +68,7 @@ export const SearchResult = ({ key, setPage, result, alertError }) => {
                     </Grid>
                     <Grid item>
                         <Bookmark
-                            key={key}
+                            key={uuidv4()}
                             style={{ marginTop: '-15px' }}
                             isBookmarked={result.isBookmarked}
                             documentId={result.documentID}
@@ -71,8 +77,21 @@ export const SearchResult = ({ key, setPage, result, alertError }) => {
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <Typography className={classes.resultDescription} variant='body2'>
-                        {result.description}
+                    <Collapse in={expanded} collapsedHeight={54}>
+                        <Typography
+                            onClick={changeExpanded}
+                            className={classes.resultDescription}
+                            variant='body2'
+                        >
+                            {result.description}
+                        </Typography>
+                    </Collapse>
+                    <Typography
+                        className={classes.seeMore}
+                        variant='body2'
+                        onClick={changeExpanded}
+                    >
+                        {expanded ? 'See less' : 'See more'}
                     </Typography>
                 </Grid>
                 <Divider />
@@ -127,12 +146,19 @@ const useStyles = makeStyles({
         paddingBottom: '5px',
     },
     resultDescription: {
-        marginLeft: '5px',
-        marginBottom: '15px',
         marginRight: '15px',
         marginTop: '15px',
+        cursor: 'pointer',
     },
     tagContainer: {
         marginTop: '10px',
+    },
+    seeMore: {
+        color: 'gray',
+        marginBottom: '15px',
+        cursor: 'pointer',
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 });

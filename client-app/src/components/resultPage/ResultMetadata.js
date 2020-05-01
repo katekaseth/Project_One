@@ -4,12 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { COLORS } from '../../theme';
 import { METADATA_TABS } from '../../stringConstants';
-import {
-    TechnicalInfo,
-    SecurityInfo,
-    SqlQuery,
-    Definitions
-} from './MetadataTabs';
+import { TechnicalInfo, SecurityInfo, SqlQuery, Definitions } from './MetadataTabs';
 
 export const ResultMetadata = ({ result }) => {
     const [metadataTab, setMetadataTab] = useState('technicalInfo');
@@ -17,10 +12,7 @@ export const ResultMetadata = ({ result }) => {
     return (
         <Grid container>
             <Grid item>
-                <MetadataMenu
-                    metadataTab={metadataTab}
-                    setMetadataTab={setMetadataTab}
-                />
+                <MetadataMenu metadataTab={metadataTab} setMetadataTab={setMetadataTab} />
             </Grid>
             <Grid xs item>
                 <Metadata result={result} metadataTab={metadataTab} />
@@ -51,7 +43,7 @@ const Metadata = ({ metadataTab, result }) => {
 
     return (
         <Paper square className={classes.metadata}>
-            <Typography variant="h5" className={classes.tabTitle}>
+            <Typography variant='h5' className={classes.tabTitle}>
                 {METADATA_TABS[metadataTab]}
             </Typography>
             {tabContent}
@@ -63,7 +55,7 @@ const MetadataMenu = ({ metadataTab, setMetadataTab }) => {
     const classes = useStyles();
     return (
         <Grid className={classes.background}>
-            {Object.keys(METADATA_TABS).map(tabKey => {
+            {Object.keys(METADATA_TABS).map((tabKey) => {
                 let isSelected = metadataTab === tabKey;
                 return (
                     <Paper
@@ -71,13 +63,8 @@ const MetadataMenu = ({ metadataTab, setMetadataTab }) => {
                         className={classes.metadataTab}
                         onClick={() => setMetadataTab(tabKey)}
                     >
-                        <Grid container justify="flex-start">
-                            <Grid
-                                xs
-                                item
-                                container
-                                className={classes.leftWrapper}
-                            >
+                        <Grid container justify='flex-start'>
+                            <Grid xs item container className={classes.leftWrapper}>
                                 <Grid
                                     item
                                     className={
@@ -94,7 +81,7 @@ const MetadataMenu = ({ metadataTab, setMetadataTab }) => {
                                 xs
                                 item
                                 container
-                                justify="flex-end"
+                                justify='flex-end'
                                 className={classes.rightWrapper}
                             >
                                 <Grid
@@ -118,15 +105,15 @@ const useStyles = makeStyles({
     metadata: {
         padding: '40px',
         minHeight: '400px',
-       // height: '100%',
         maxHeight: '800px !important',
-        zIndex: '1'
+        zIndex: '1',
     },
     metadataTab: {
         marginBottom: '2px',
         paddingTop: '10px',
         paddingBottom: '10px',
-        width: '130px'
+        width: '130px',
+        cursor: 'pointer',
     },
     tabTitle: {
         marginBottom: '1rem',
@@ -134,13 +121,13 @@ const useStyles = makeStyles({
         fontSize: '1.5rem',
         fontWeight: 'bold',
         color: '#5E5B5B',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
     },
     background: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     rightWrapper: {
-        justify: 'flex-end'
+        justify: 'flex-end',
     },
     selectedBlockRight: {
         width: '20px',
@@ -148,29 +135,29 @@ const useStyles = makeStyles({
         marginBottom: '-10px',
         marginRight: '-10px',
         backgroundColor: 'white',
-        zIndex: '2'
+        zIndex: '2',
     },
     unselectedBlockRight: {
         width: '20px',
         marginTop: '-10px',
         marginBottom: '-10px',
         marginRight: '-10px',
-        zIndex: '2'
+        zIndex: '2',
     },
     leftWrapper: {
-        justify: 'flex-start'
+        justify: 'flex-start',
     },
     selectedBlockLeft: {
         width: '6px',
         marginTop: '-10px',
         marginBottom: '-10px',
         backgroundColor: COLORS.PURPLE,
-        zIndex: '2'
+        zIndex: '2',
     },
     unselectedBlockLeft: {
         width: '6px',
         marginTop: '-10px',
         marginBottom: '-10px',
-        zIndex: '2'
-    }
+        zIndex: '2',
+    },
 });

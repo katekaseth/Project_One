@@ -5,11 +5,11 @@ import { makeStyles } from '@material-ui/styles';
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
 import { getResultEndpoint } from '../../api/documents';
-import { PAGES } from '../../stringConstants';
+import { PAGES, STANDARDIZED_CATEOGRY_KEYS } from '../../stringConstants';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ previousPage, filterState, setPage, alertError }) => {
+export default ({ previousPage, filterState, setPage, alertError, addRecent }) => {
     const [result, setResult] = useState(null);
     const classes = useStyles();
 
@@ -41,6 +41,8 @@ export default ({ previousPage, filterState, setPage, alertError }) => {
                 to find more results!
             </Typography>
         );
+
+    addRecent(result.documentID);
     return (
         <Grid>
             <Grid>
@@ -71,7 +73,14 @@ const NavPath = ({ previousPage, filterState, searchPath, setPage, resultTitle }
         let filters = [];
         Object.keys(filterState).forEach((subjectKey) => {
             Object.keys(filterState[subjectKey]).forEach((filterKey) => {
-                filterState[subjectKey][filterKey] && filters.push(filterKey);
+                filterState[subjectKey][filterKey] &&
+                    filters.push(
+                        STANDARDIZED_CATEOGRY_KEYS[subjectKey] === undefined
+                            ? filterKey.toUpperCase().slice(0, 1) + filterKey.slice(1)
+                            : `${STANDARDIZED_CATEOGRY_KEYS[subjectKey]}: ${
+                                  filterKey.toUpperCase().slice(0, 1) + filterKey.slice(1)
+                              }`,
+                    );
             });
         });
         if (filters.length === 0) {
@@ -91,10 +100,10 @@ const NavPath = ({ previousPage, filterState, searchPath, setPage, resultTitle }
     return (
         <Grid container>
             <Grid item className={classes.item}>
-                <CardMedia 
-                    className={classes.icon} 
+                <CardMedia
+                    className={classes.icon}
                     src={homeIcon}
-                    component='img' 
+                    component='img'
                     onClick={() => setPage.home()}
                 />
             </Grid>

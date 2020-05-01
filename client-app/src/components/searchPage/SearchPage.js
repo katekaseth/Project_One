@@ -7,6 +7,7 @@ import { SearchBar } from '../SearchBar';
 import { SearchFilter } from './SearchFilter';
 import { SearchResults } from './SearchResults';
 import { FilterChips } from '../Chips';
+import { STANDARDIZED_CATEOGRY_KEYS } from '../../stringConstants';
 
 export default (props) => {
     const classes = useStyles();
@@ -51,7 +52,12 @@ export default (props) => {
                 <SearchBar redirect={() => props.setPage.search()} {...props} />
 
                 <Grid item container className={classes.filterChips}>
-                    <FilterChipDisplay changeFilterExpansion={changeFilterExpansion} {...props} />
+                    <FilterChipDisplay
+                        nothingFound={props.results && props.results.length === 0}
+                        numResults={props.results && props.results.length}
+                        changeFilterExpansion={changeFilterExpansion}
+                        {...props}
+                    />
                     <SearchResults {...props} />
                 </Grid>
             </Grid>
@@ -72,7 +78,9 @@ const FilterChipDisplay = (props) => {
                     onClick={() => props.changeFilterExpansion(subjectKey)}
                     component='span'
                 >
-                    {subjectKey}
+                    {STANDARDIZED_CATEOGRY_KEYS[subjectKey] === undefined
+                        ? subjectKey
+                        : STANDARDIZED_CATEOGRY_KEYS[subjectKey]}
                 </Grid>,
                 ',   ',
             );
@@ -93,10 +101,37 @@ const FilterChipDisplay = (props) => {
             <Grid item className={classes.allResults}>
                 {displayingAll.length !== 0 && (
                     <Typography variant='body2'>
-                        Displaying all results for {displayingAll}
+                        Found {props.numResults} results. Displaying all options for {displayingAll}
                     </Typography>
                 )}
             </Grid>
+            {props.nothingFound && <NothingFound searchedTerms={props.searchedTerms} />}
+        </Grid>
+    );
+};
+
+const NothingFound = ({ searchedTerms }) => {
+    const classes = useStyles();
+    let message = 'Uh oh! No results found';
+    let disclaimer =
+        'Our search is still in beta, here are some tips to help you navigate in the meantime:';
+    let help = ['Search with single word phrases', 'Use just one or two filters'];
+    if (searchedTerms.length > 0) {
+        message = `Uh oh! No results found for "${searchedTerms}"`;
+    }
+    return (
+        <Grid className={classes.nothingFound}>
+            <Typography variant='h6'>{message}</Typography>
+            <Typography variant='body1'>{disclaimer}</Typography>
+            <ul>
+                {help.map((tip) => {
+                    return (
+                        <li>
+                            <Typography variant='body1'>{tip}</Typography>
+                        </li>
+                    );
+                })}
+            </ul>
         </Grid>
     );
 };
@@ -125,5 +160,8 @@ const useStyles = makeStyles({
             cursor: 'pointer',
             color: '#4f4f4f',
         },
+    },
+    nothingFound: {
+        marginTop: '30px',
     },
 });

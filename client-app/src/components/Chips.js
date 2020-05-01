@@ -1,19 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import { Chip, Typography, Grid } from '@material-ui/core';
 
-export const TagChip = ({ label }) => {
-    const classes = useStyles();
-    return <Chip className={classes.chip} label={label} color='secondary' />;
-};
+import { STANDARDIZED_CATEOGRY_KEYS } from '../stringConstants';
 
 export const DeletableTagChip = ({ subjectKey, filterKey, updateFilterState }) => {
     const classes = useStyles();
     return (
         <Chip
             className={classes.chip}
-            label={filterKey}
+            label={
+                STANDARDIZED_CATEOGRY_KEYS[subjectKey] === undefined
+                    ? filterKey.toUpperCase().slice(0, 1) + filterKey.slice(1)
+                    : `${STANDARDIZED_CATEOGRY_KEYS[subjectKey]}: ${
+                          filterKey.toUpperCase().slice(0, 1) + filterKey.slice(1)
+                      }`
+            }
             onClick={() => updateFilterState(subjectKey, filterKey)}
             onDelete={() => updateFilterState(subjectKey, filterKey)}
             color='secondary'

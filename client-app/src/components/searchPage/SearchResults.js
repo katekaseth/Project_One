@@ -14,10 +14,8 @@ export const SearchResults = ({ setPage, results, alertError }) => {
     if (results === null) return <div></div>;
     let numOfPages = Math.ceil(results.length / NUM_PER_PAGE);
 
-    let resultCards = results.map((result, index) => {
-        return (
-            <SearchResult key={index} setPage={setPage} result={result} alertError={alertError} />
-        );
+    let resultCards = results.map((result) => {
+        return <SearchResult setPage={setPage} result={result} alertError={alertError} />;
     });
 
     return (
