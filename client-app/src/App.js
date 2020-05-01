@@ -274,16 +274,18 @@ function App() {
     };
 
     useEffect(() => {
-        if (page !== window.location.pathname) {
-            setPage(window.location.pathname);
-        }
-
         if (filterState === null && sessionStorage.getItem(SESSION.AVAILABLE_FILTERS) === null) {
             fetchFilters();
         } else if (filterState === null) {
             setFilterState(JSON.parse(sessionStorage.getItem(SESSION.AVAILABLE_FILTERS)));
         }
     }, []);
+
+    useEffect(() => {
+        if (page !== window.location.pathname) {
+            setPage(window.location.pathname);
+        }
+    });
 
     useEffect(() => {
         // When searchedTerms or filterState is changed

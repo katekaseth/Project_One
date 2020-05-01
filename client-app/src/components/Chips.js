@@ -1,7 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import { Chip, Typography, Grid } from '@material-ui/core';
+
+import { STANDARDIZED_CATEOGRY_KEYS } from '../stringConstants';
 
 export const TagChip = ({ label }) => {
     const classes = useStyles();
@@ -13,7 +14,11 @@ export const DeletableTagChip = ({ subjectKey, filterKey, updateFilterState }) =
     return (
         <Chip
             className={classes.chip}
-            label={filterKey}
+            label={
+                STANDARDIZED_CATEOGRY_KEYS[subjectKey] === undefined
+                    ? filterKey
+                    : `${STANDARDIZED_CATEOGRY_KEYS[subjectKey]}: ${filterKey}`
+            }
             onClick={() => updateFilterState(subjectKey, filterKey)}
             onDelete={() => updateFilterState(subjectKey, filterKey)}
             color='secondary'

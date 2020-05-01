@@ -22,7 +22,7 @@ export const ResultOverview = ({ result, alertError }) => {
                             alertError={alertError}
                         />
                         <Button
-                            disabled={!result.allowAccess}
+                            disabled={!result['Accessible']}
                             className={classes.runButton}
                             variant='contained'
                             color='primary'
@@ -44,7 +44,7 @@ export const ResultOverview = ({ result, alertError }) => {
                                 <b>Tags:</b> {result.subjectArea}, {result.toolType}
                             </Typography>
                         </Grid>
-                        <Grid item>{!result.allowAccess && <NoAccess />}</Grid>
+                        <Grid item>{!result['Accessible'] && <NoAccess />}</Grid>
                     </Grid>
 
                     <Grid item container xs={2} justify='flex-end' alignItems='center'>

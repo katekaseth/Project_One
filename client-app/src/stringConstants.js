@@ -29,6 +29,16 @@ export const PAGES = {
 
 export const SEARCH_TERMS = 'SEARCH_TERMS';
 
+export const STANDARDIZED_CATEOGRY_KEYS = {
+    'Is UW Profile': 'Sourced from UW Profile',
+    Accessible: 'Has Acceess',
+};
+
+export const CATEGORY_DESCRIPTIONS = {
+    'Is UW Profile': 'Filter on reports that were sourced from UW Profile',
+    Accessible: 'Filter on reports that you have access to',
+};
+
 export const SUBJECT_AREA_ICONS = {
     Academic: academicIcon,
     'Research Administration': researchIcon,

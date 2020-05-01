@@ -51,7 +51,11 @@ export default (props) => {
                 <SearchBar redirect={() => props.setPage.search()} {...props} />
 
                 <Grid item container className={classes.filterChips}>
-                    <FilterChipDisplay changeFilterExpansion={changeFilterExpansion} {...props} />
+                    <FilterChipDisplay
+                        nothingFound={props.results && props.results.length === 0}
+                        changeFilterExpansion={changeFilterExpansion}
+                        {...props}
+                    />
                     <SearchResults {...props} />
                 </Grid>
             </Grid>
@@ -97,6 +101,33 @@ const FilterChipDisplay = (props) => {
                     </Typography>
                 )}
             </Grid>
+            {props.nothingFound && <NothingFound searchedTerms={props.searchedTerms} />}
+        </Grid>
+    );
+};
+
+const NothingFound = ({ searchedTerms }) => {
+    const classes = useStyles();
+    let message = 'Uh oh! No results found';
+    let disclaimer =
+        'Our search is still in beta, here are some tips to help you navigate in the meantime:';
+    let help = ['Search with single word phrases', 'Use just one or two filters'];
+    if (searchedTerms.length > 0) {
+        message = `Uh oh! No results found for "${searchedTerms}"`;
+    }
+    return (
+        <Grid className={classes.nothingFound}>
+            <Typography variant='h6'>{message}</Typography>
+            <Typography variant='body1'>{disclaimer}</Typography>
+            <ul>
+                {help.map((tip) => {
+                    return (
+                        <li>
+                            <Typography variant='body1'>{tip}</Typography>
+                        </li>
+                    );
+                })}
+            </ul>
         </Grid>
     );
 };
@@ -125,5 +156,8 @@ const useStyles = makeStyles({
             cursor: 'pointer',
             color: '#4f4f4f',
         },
+    },
+    nothingFound: {
+        marginTop: '30px',
     },
 });
