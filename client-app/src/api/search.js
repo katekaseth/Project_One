@@ -13,7 +13,6 @@ export const searchEndpoint = (filterState, searchedTerms) => {
         });
     });
     body.searchTerms = searchedTerms;
-    console.log(body);
     return axios({
         method: 'post',
         url: API.URL + API.SEARCH,

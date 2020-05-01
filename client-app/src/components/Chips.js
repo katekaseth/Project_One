@@ -13,11 +13,7 @@ export const DeletableTagChip = ({ subjectKey, filterKey, updateFilterState }) =
     return (
         <Chip
             className={classes.chip}
-            label={
-                subjectKey === 'Accessible'
-                    ? filterKey.charAt(0).toUpperCase() + filterKey.slice(1)
-                    : filterKey
-            }
+            label={filterKey}
             onClick={() => updateFilterState(subjectKey, filterKey)}
             onDelete={() => updateFilterState(subjectKey, filterKey)}
             color='secondary'
