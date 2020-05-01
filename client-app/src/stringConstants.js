@@ -31,7 +31,7 @@ export const SEARCH_TERMS = 'SEARCH_TERMS';
 
 export const STANDARDIZED_CATEOGRY_KEYS = {
     'Is UW Profile': 'Sourced from UW Profile',
-    Accessible: 'Has Acceess',
+    Accessible: 'Has Access',
 };
 
 export const CATEGORY_DESCRIPTIONS = {

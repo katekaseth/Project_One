@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography, CardMedia, Divider } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 
 import VisualizationIcon from '../../icons/svg/visualizationIcon.svg';
 import CubeIcon from '../../icons/svg/cubeIcon.svg';
@@ -9,7 +10,7 @@ import ReportIcon from '../../icons/svg/reportIcon.svg';
 import { Bookmark } from '../Bookmark';
 import formatDate from '../../helpers/formatDate';
 
-export const SearchResult = ({ key, setPage, result, alertError }) => {
+export const SearchResult = ({ setPage, result, alertError }) => {
     const classes = useStyles();
 
     const toolTypes = {
@@ -61,7 +62,7 @@ export const SearchResult = ({ key, setPage, result, alertError }) => {
                     </Grid>
                     <Grid item>
                         <Bookmark
-                            key={key}
+                            key={uuidv4()}
                             style={{ marginTop: '-15px' }}
                             isBookmarked={result.isBookmarked}
                             documentId={result.documentID}

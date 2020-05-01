@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
 import { getResultEndpoint } from '../../api/documents';
-import { PAGES } from '../../stringConstants';
+import { PAGES, STANDARDIZED_CATEOGRY_KEYS } from '../../stringConstants';
 
 import homeIcon from '../../icons/svg/home.svg';
 
@@ -71,7 +71,12 @@ const NavPath = ({ previousPage, filterState, searchPath, setPage, resultTitle }
         let filters = [];
         Object.keys(filterState).forEach((subjectKey) => {
             Object.keys(filterState[subjectKey]).forEach((filterKey) => {
-                filterState[subjectKey][filterKey] && filters.push(filterKey);
+                filterState[subjectKey][filterKey] &&
+                    filters.push(
+                        STANDARDIZED_CATEOGRY_KEYS[subjectKey] === undefined
+                            ? filterKey
+                            : `${STANDARDIZED_CATEOGRY_KEYS[subjectKey]}: ${filterKey}`,
+                    );
             });
         });
         if (filters.length === 0) {
@@ -91,10 +96,10 @@ const NavPath = ({ previousPage, filterState, searchPath, setPage, resultTitle }
     return (
         <Grid container>
             <Grid item className={classes.item}>
-                <CardMedia 
-                    className={classes.icon} 
+                <CardMedia
+                    className={classes.icon}
                     src={homeIcon}
-                    component='img' 
+                    component='img'
                     onClick={() => setPage.home()}
                 />
             </Grid>
