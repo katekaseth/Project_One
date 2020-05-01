@@ -367,11 +367,11 @@ function App() {
 const useStyles = makeStyles({
     version: {
         zIndex: 100,
-        position: 'absolute',
+        position: 'fixed',
         color: 'gray',
         fontSize: '7pt',
-        right: '5px',
-        bottom: '5px',
+        right: '0px',
+        bottom: '0px',
     },
 });
 
