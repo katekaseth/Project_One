@@ -91,7 +91,12 @@ const NavPath = ({ previousPage, filterState, searchPath, setPage, resultTitle }
     return (
         <Grid container>
             <Grid item className={classes.item}>
-                <CardMedia className={classes.icon} src={homeIcon} component='img' />
+                <CardMedia 
+                    className={classes.icon} 
+                    src={homeIcon}
+                    component='img' 
+                    onClick={() => setPage.home()}
+                />
             </Grid>
             <Grid item className={classes.item}>
                 <Typography variant='body2'>{'>'}</Typography>
@@ -131,6 +136,7 @@ const useStyles = makeStyles({
         padding: '5px',
     },
     icon: {
+        cursor: 'pointer',
         width: '20px',
         height: '20px',
     },
