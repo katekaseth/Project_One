@@ -54,6 +54,7 @@ export default (props) => {
                 <Grid item container className={classes.filterChips}>
                     <FilterChipDisplay
                         nothingFound={props.results && props.results.length === 0}
+                        numResults={props.results && props.results.length}
                         changeFilterExpansion={changeFilterExpansion}
                         {...props}
                     />
@@ -100,7 +101,7 @@ const FilterChipDisplay = (props) => {
             <Grid item className={classes.allResults}>
                 {displayingAll.length !== 0 && (
                     <Typography variant='body2'>
-                        Displaying all results for {displayingAll}
+                        Found {props.numResults} results. Displaying all options for {displayingAll}
                     </Typography>
                 )}
             </Grid>

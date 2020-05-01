@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 
-import { PAGES, SESSION } from './stringConstants';
+import { PAGES, SESSION, SORT_BY } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
@@ -130,6 +130,22 @@ function App() {
         clearFilterState();
         setSearchedTerms([]);
         setSearchedBookmarkTerms([]);
+    };
+
+    const addRecent = (documentId) => {
+        let recents = JSON.parse(localStorage.getItem(SORT_BY.recents));
+        if (recents === null) {
+            recents = [];
+        }
+        if (recents.includes(documentId)) {
+            let index = recents.indexOf(documentId);
+            recents.splice(index, 1);
+        }
+        recents.push(documentId);
+        if (recents.length > 50) {
+            recents.splice(0, 1);
+        }
+        localStorage.setItem(SORT_BY.recents, JSON.stringify(recents));
     };
 
     const login = async (username, password) => {
@@ -269,6 +285,7 @@ function App() {
         createAccount,
         alertError,
         signOut,
+        addRecent,
     };
 
     useEffect(() => {

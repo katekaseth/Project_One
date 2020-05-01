@@ -67,7 +67,9 @@ const FilterGroup = ({ expanded, setExpanded, filterState, updateFilterState, su
                                 return (
                                     <FormControlLabel
                                         value={filterKey}
-                                        label={filterKey}
+                                        label={
+                                            filterKey.toUpperCase().slice(0, 1) + filterKey.slice(1)
+                                        }
                                         onClick={(e) => {
                                             e.stopPropagation();
                                         }}

@@ -27,6 +27,10 @@ export const PAGES = {
     account: '/account',
 };
 
+export const SORT_BY = {
+    recents: 'Recently Viewed',
+};
+
 export const SEARCH_TERMS = 'SEARCH_TERMS';
 
 export const STANDARDIZED_CATEOGRY_KEYS = {
