@@ -59,7 +59,7 @@ func main() {
 	router.HandleFunc("/search", ctx.SearchHandler)
 	router.HandleFunc("/search/bookmarks", ctx.SearchBookmarkHandler)
 	router.HandleFunc("/filter", ctx.FilterHandler)
-	router.HandleFunc("/documents", ctx.DocumentsHandler)
+	router.HandleFunc("/documents", ctx.DocumentHandler)
 	router.HandleFunc("/documents/{documentID}", ctx.SpecificDocumentHandler)
 	router.HandleFunc("/bookmarks/{documentID}", ctx.SpecificBookmarkHandler)
 	router.HandleFunc("/bookmarks", ctx.BookmarkHandler)
