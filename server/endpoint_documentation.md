@@ -164,6 +164,16 @@ All endpoints require authenticated user in the form of an authorization bearer 
     - `405`: Method must be GET
     - `500`: Internal server error
 
+- `POST /documents`: Returns document summaries with the given documentIDs.
+  - Request body:
+  ```Javascript
+  {
+      "documentIDs": [1,3,187]
+  }
+  ```
+  - Response body: see /search for document summary fields
+  - Responses: same as above
+
 - `POST /bookmarks/:documentID`: Adds the specifed document to the current authenticated user's bookmarks.
   - Responses:
     - `200`: Success
