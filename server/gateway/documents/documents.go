@@ -69,3 +69,8 @@ type Bookmark struct {
 	DocumentID int `json:"documentID"`
 	UserID     int `json:"userID"`
 }
+
+// DocumentRequest represents a request for documents.
+type DocumentRequest struct {
+	DocumentIDs []int `json:"documentIDs"`
+}
