@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 
 import era_logo from '../icons/era_logo.png';
 import { AccountMenu } from './accountMenu/AccountMenu';
+import { RecentsMenu } from './recentsMenu/RecentsMenu';
 
-export default ({ setPage, transparent, signOut }) => {
+export default ({ setPage, transparent, signOut, recents }) => {
     const classes = useStyles();
 
     return (
@@ -17,11 +18,12 @@ export default ({ setPage, transparent, signOut }) => {
             ></img>
             <ul className={classes.menuList}>
                 <AccountMenu className={classes.menuItem} signOut={signOut} />
-                <li className={classes.menuItem} onClick={() => setPage.search()}>
-                    Search
-                </li>
+                <RecentsMenu recents={recents} className={classes.menuItem} setPage={setPage} />
                 <li className={classes.menuItem} onClick={() => setPage.bookmarks()}>
                     Bookmarks
+                </li>
+                <li className={classes.menuItem} onClick={() => setPage.search()}>
+                    Search
                 </li>
                 <li className={classes.menuItem} onClick={() => setPage.home()}>
                     Home

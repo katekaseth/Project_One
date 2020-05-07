@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 
-import { PAGES, SESSION, SORT_BY } from './stringConstants';
+import { PAGES, SESSION, RECENTS } from './stringConstants';
 import Navbar from './components/Navbar';
 import LandingPage from './components/landingPage/LandingPage';
 import SearchPage from './components/searchPage/SearchPage';
@@ -10,9 +10,11 @@ import LoginPage from './components/loginPage/LoginPage';
 import BookmarkPage from './components/bookmarkPage/BookmarkPage';
 import { getFiltersApi } from './api/getFilters';
 import { searchEndpoint, searchBookmarkEndpoint } from './api/search';
+import { getResultEndpoint } from './api/documents';
 import { getBookmarksEndpoint } from './api/bookmarks';
 import { ErrorDialog } from './components/Dialogs';
 import { loginApi, pingApi, createAccountApi, signOutApi } from './api/login';
+import { getRecentsEndpoint } from './api/recents';
 import { Typography, makeStyles } from '@material-ui/core';
 import { version } from '../package.json';
 
@@ -33,8 +35,12 @@ function App() {
     const [searchedBookmarkTerms, setSearchedBookmarkTerms] = useState([]);
     // Search results
     const [results, setResults] = useState(null);
+    // Search result (singular)
+    const [result, setResult] = useState(null);
     // Bookmark results
     const [bookmarks, setBookmarks] = useState(null);
+    // Recents result
+    const [recents, setRecents] = useState(null);
     const history = useHistory();
     const classes = useStyles();
 
@@ -78,6 +84,33 @@ function App() {
             })
             .catch((err) => {
                 alertError("Couldn't fetch bookmarks", true);
+            });
+    };
+
+    const fetchRecents = async () => {
+        let documentIds = localStorage.getItem(RECENTS);
+        if (documentIds !== null) {
+            getRecentsEndpoint(documentIds)
+                .then((response) => {
+                    setRecents(response.data);
+                })
+                .catch((err) => {
+                    alertError("Couldn't fetch recents", true);
+                });
+        } else {
+            setRecents(null);
+        }
+    };
+
+    const fetchResult = async () => {
+        const selectedResult = window.location.pathname.replace(PAGES.result, '').replace('/', '');
+
+        getResultEndpoint(selectedResult)
+            .then((response) => {
+                setResult(response.data);
+            })
+            .catch((err) => {
+                alertError('Error fetching result.', true);
             });
     };
 
@@ -133,19 +166,25 @@ function App() {
     };
 
     const addRecent = (documentId) => {
-        let recents = JSON.parse(localStorage.getItem(SORT_BY.recents));
+        // Last element is newest!
+        const NUM_RECENTS_SAVED = 10;
+        let recents = JSON.parse(localStorage.getItem(RECENTS));
         if (recents === null) {
             recents = [];
         }
-        if (recents.includes(documentId)) {
-            let index = recents.indexOf(documentId);
-            recents.splice(index, 1);
+        if (recents[recents.length - 1] !== documentId) {
+            if (recents.includes(documentId)) {
+                let index = recents.indexOf(documentId);
+                recents.splice(index, 1);
+            }
+            recents.push(documentId);
+            if (recents.length > NUM_RECENTS_SAVED) {
+                recents.splice(0, 1);
+            }
+            localStorage.setItem(RECENTS, JSON.stringify(recents));
+
+            fetchRecents();
         }
-        recents.push(documentId);
-        if (recents.length > 50) {
-            recents.splice(0, 1);
-        }
-        localStorage.setItem(SORT_BY.recents, JSON.stringify(recents));
     };
 
     const login = async (username, password) => {
@@ -226,6 +265,8 @@ function App() {
         searchedBookmarkTerms,
         results,
         bookmarks,
+        recents,
+        result,
     };
 
     const GLOBAL_ACTIONS = {
@@ -263,6 +304,12 @@ function App() {
                 setPage(PAGES.bookmarks);
                 history.push(PAGES.bookmarks);
             },
+            recents: () => {
+                // clear filterState
+                clearFilterStateAndSearchTerms();
+                setPage(PAGES.recents);
+                history.push(PAGES.recents);
+            },
             account: () => {
                 // clear filterState
                 clearFilterStateAndSearchTerms();
@@ -293,6 +340,9 @@ function App() {
             fetchFilters();
         } else if (filterState === null) {
             setFilterState(JSON.parse(sessionStorage.getItem(SESSION.AVAILABLE_FILTERS)));
+        }
+        if (recents === null) {
+            fetchRecents();
         }
     }, []);
 
@@ -325,7 +375,17 @@ function App() {
         if (page === PAGES.bookmarks) {
             fetchBookmarks();
         }
+
+        if (page.startsWith(PAGES.result)) {
+            fetchResult();
+        }
     }, [page]);
+
+    useEffect(() => {
+        if (result !== null) {
+            addRecent(result.documentID);
+        }
+    }, [result]);
 
     if (sessionStorage.getItem(SESSION.SESSION_ID) === null) {
         return (
@@ -338,7 +398,7 @@ function App() {
 
     return (
         <div className='app'>
-            <Navbar {...GLOBAL_ACTIONS} transparent={page === PAGES.home} />
+            <Navbar {...GLOBAL_ACTIONS} {...GLOBAL_STATE} transparent={page === PAGES.home} />
             <ErrorDialog {...GLOBAL_ACTIONS} message={error} setError={setError} />
             <Switch>
                 <Route exact path={PAGES.home}>

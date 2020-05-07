@@ -3,6 +3,8 @@ import { Grid, Popover, Button, Typography, Divider } from '@material-ui/core/';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/styles';
 
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+
 import { SESSION } from '../../stringConstants';
 
 export const AccountMenu = ({ className, signOut }) => {
@@ -26,6 +28,7 @@ export const AccountMenu = ({ className, signOut }) => {
             <Grid container onClick={handlePopoverOpen} className={className}>
                 <AccountCircleIcon className={classes.accountIcon} />
                 {username}
+                <ArrowDropDownIcon />
             </Grid>
             <Popover
                 PaperProps={{ square: true }}
