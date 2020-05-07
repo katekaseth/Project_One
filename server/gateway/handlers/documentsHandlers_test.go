@@ -117,6 +117,29 @@ func TestGetSpecificDocument(t *testing.T) {
 	}
 }
 
+func TestGetRequestedDocuments(t *testing.T) {
+	ctx := getContextHandler()
+	sid, _ := GetSID(ctx, t)
+
+	w := httptest.NewRecorder()
+
+	query := &documents.DocumentRequest{
+		DocumentIDs: []int{1, 3, 170},
+	}
+	queryBody, _ := json.Marshal(query)
+	r, _ := http.NewRequest("POST", "", bytes.NewBuffer(queryBody))
+	r.Header.Add("Authorization", "Bearer "+string(sid))
+	r.Header.Set("Content-Type", "application/json")
+
+	ctx.DocumentHandler(w, r)
+	recievedDocSummaries := []documents.DocumentSummary{}
+	dec := json.NewDecoder(w.Body)
+	if err := dec.Decode(&recievedDocSummaries); err == nil {
+		t.Error(recievedDocSummaries)
+		t.Errorf("failed decoding %d", w.Code)
+	}
+}
+
 func TestGetAllSearch(t *testing.T) {
 	ctx := getContextHandler()
 	sid, _ := GetSID(ctx, t)
@@ -150,7 +173,7 @@ func TestGetQuerySearch(t *testing.T) {
 		// Database: []string{"EDWAdminMart"},
 		// SupportGroup: []string{"ORIS"},
 		// UWProfile:   []string{"Yes"},
-		AllowAccess: []bool{false},
+		AllowAccess: []string{"false"},
 		SearchTerm:  []string{"credit"},
 	}
 	queryBody, _ := json.Marshal(query)

@@ -4,6 +4,8 @@ import (
 	"Project_One/server/gateway/documents"
 	"database/sql"
 	"fmt"
+	"log"
+	"strconv"
 	"strings"
 
 	// need it for mysql
@@ -281,6 +283,22 @@ func (ms *MySQLStore) scanSingleFilter(stmt string) ([]string, error) {
 		types = append(types, entry)
 	}
 	return types, nil
+}
+
+// GetRequestedDocuments returns an array of DocumentSummary that matches the given document IDs.
+func (ms *MySQLStore) GetRequestedDocuments(docIDs []int) ([]documents.DocumentSummary, error) {
+	stmt := "SELECT document_id, title, tool_type, created, updated, description, subject_area, database_name FROM documents where document_id = "
+	stmt += strconv.Itoa(docIDs[0])
+	for i := 1; i < len(docIDs); i++ {
+		stmt += " OR document_id = " + strconv.Itoa(docIDs[i])
+	}
+	log.Println(stmt)
+	allDocuments, err := ms.scanDocSummaryQuery(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	return allDocuments, nil
 }
 
 //GetSpecificDocument returns a Document object that matches the given documentID.

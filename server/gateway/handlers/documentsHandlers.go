@@ -4,6 +4,7 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -176,7 +177,74 @@ func (ctx *HandlerContext) FilterHandler(w http.ResponseWriter, r *http.Request)
 	w.Write(filtersBytes)
 }
 
-// SpecificDocumentHandler handles GET requests to /document/:documentID and responds with all information
+// DocumentHandler handles POST requests to /documents and responds with the
+// requested document summaries.
+func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
+		return
+	}
+
+	sessionState, err := CheckUserAuthenticated(ctx, w, r)
+	if err != nil {
+		return
+	}
+	userID := int(sessionState.User.ID)
+
+	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
+		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	if r.Body == nil {
+		http.Error(w, "Request is nil", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	// check that request body can be decoded into int array
+	docRequest := &documents.DocumentRequest{}
+	dec := json.NewDecoder(r.Body)
+	err = dec.Decode(docRequest)
+	if err != nil {
+		log.Printf("here 1")
+		http.Error(w, "Bad request body", http.StatusInternalServerError)
+		return
+	}
+
+	var documents []documents.DocumentSummary
+	// if there are no filters, return all bookmarks
+	documents, err = ctx.UserStore.GetRequestedDocuments(docRequest.DocumentIDs)
+	if err != nil {
+		log.Printf("here 2")
+
+		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+
+	// add bookmarked field
+	bookmarkedIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
+	if err != nil {
+		log.Printf("here 3")
+
+		http.Error(w, "Error getting documents", http.StatusInternalServerError)
+		return
+	}
+	for i := 0; i < len(documents); i++ {
+		documents[i].Bookmarked = contains(bookmarkedIDs, documents[i].DocumentID)
+	}
+
+	// marshal to json
+	documentBytes, err := json.Marshal(documents)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(documentBytes)
+}
+
+// SpecificDocumentHandler handles GET requests to /documents/:documentID and responds with all information
 // for that report.
 func (ctx *HandlerContext) SpecificDocumentHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
