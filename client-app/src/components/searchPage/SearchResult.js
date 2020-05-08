@@ -42,7 +42,7 @@ export const SearchResult = ({ setPage, result, alertError }) => {
     };
 
     const calcHeight = (node, documentId) => {
-        if (node && !descriptionHeights[documentId]) {
+        if (node && descriptionHeights[documentId] !== node.offsetHeight) {
             let temp = { ...descriptionHeights };
             temp[documentId] = node.offsetHeight;
             setDescriptionHeights(temp);
