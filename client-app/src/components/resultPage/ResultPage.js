@@ -1,37 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Grid, Typography, CardMedia } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { ResultOverview } from './ResultOverview';
 import { ResultMetadata } from './ResultMetadata';
-import { getResultEndpoint } from '../../api/documents';
 import { PAGES, STANDARDIZED_CATEOGRY_KEYS } from '../../stringConstants';
 
 import homeIcon from '../../icons/svg/home.svg';
 
-export default ({ previousPage, filterState, setPage, alertError, addRecent }) => {
-    const [result, setResult] = useState(null);
+export default ({ previousPage, filterState, setPage, result, alertError }) => {
     const classes = useStyles();
 
-    const selectedResult = window.location.pathname.replace(PAGES.result, '').replace('/', '');
-
-    const fetchResult = async (selectedResult) => {
-        getResultEndpoint(selectedResult)
-            .then((response) => {
-                setResult(response.data);
-            })
-            .catch((err) => {
-                alertError('Error fetching result.', true);
-            });
-    };
-
-    useEffect(() => {
-        if (selectedResult !== '') {
-            fetchResult(selectedResult);
-        }
-    }, []);
-
-    if (selectedResult === '' || result === null)
+    if (result === null)
         return (
             <Typography variant='body1'>
                 Nothing selected, go back to{' '}
@@ -42,7 +22,6 @@ export default ({ previousPage, filterState, setPage, alertError, addRecent }) =
             </Typography>
         );
 
-    addRecent(result.documentID);
     return (
         <Grid>
             <Grid>

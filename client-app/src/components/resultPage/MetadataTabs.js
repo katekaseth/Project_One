@@ -1,12 +1,5 @@
-import React, { useState } from 'react';
-import {
-    Grid,
-    Typography,
-    Tooltip,
-    ClickAwayListener,
-    makeStyles,
-    IconButton,
-} from '@material-ui/core';
+import React from 'react';
+import { Grid, Typography, Tooltip, makeStyles, IconButton } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import formatDate from '../../helpers/formatDate';
