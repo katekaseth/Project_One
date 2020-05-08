@@ -13,6 +13,7 @@ import formatDate from '../../helpers/formatDate';
 export const SearchResult = ({ setPage, result, alertError }) => {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
+    const [descriptionHeights, setDescriptionHeights] = useState({});
 
     const toolTypes = {
         visualization: 'Visualization',
@@ -38,6 +39,14 @@ export const SearchResult = ({ setPage, result, alertError }) => {
     const changeExpanded = (e) => {
         setExpanded(!expanded);
         e.stopPropagation();
+    };
+
+    const calcHeight = (node, documentId) => {
+        if (node && descriptionHeights[documentId] !== node.offsetHeight) {
+            let temp = { ...descriptionHeights };
+            temp[documentId] = node.offsetHeight;
+            setDescriptionHeights(temp);
+        }
     };
 
     return (
@@ -79,19 +88,21 @@ export const SearchResult = ({ setPage, result, alertError }) => {
                 <Grid item>
                     <Collapse in={expanded} collapsedHeight={54}>
                         <Typography
-                            onClick={changeExpanded}
+                            ref={(node) => calcHeight(node, result.documentID)}
                             className={classes.resultDescription}
                             variant='body2'
                         >
                             {result.description}
                         </Typography>
                     </Collapse>
+
                     <Typography
                         className={classes.seeMore}
                         variant='body2'
                         onClick={changeExpanded}
                     >
-                        {expanded ? 'See less' : 'See more'}
+                        {descriptionHeights[result.documentID] > 54 &&
+                            (expanded ? 'See less' : 'See more')}
                     </Typography>
                 </Grid>
                 <Divider />
@@ -148,7 +159,6 @@ const useStyles = makeStyles({
     resultDescription: {
         marginRight: '15px',
         marginTop: '15px',
-        cursor: 'pointer',
     },
     tagContainer: {
         marginTop: '10px',
