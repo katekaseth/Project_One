@@ -43,10 +43,13 @@ export default (props) => {
             });
             setExpandedFilterGroups(expandedObject);
         }
-        if (sortedResults === null && props.results !== null) {
-            setSortedResults(props.results);
-        }
     });
+
+    useEffect(() => {
+        if (props.results !== null) {
+            setSortedResults(props.results.slice(0));
+        }
+    }, [props.results]);
 
     const handleSortChange = (sortBy) => {
         if (sortBy === SORT_VALUES.A_Z) {
@@ -58,7 +61,7 @@ export default (props) => {
         } else if (sortBy === SORT_VALUES.LEAST_RECENTLY_UPDATED) {
             setSortedResults(props.results.sort(leastRecentSort).slice(0));
         } else {
-            setSortedResults(props.results);
+            setSortedResults(props.results.slice(0));
         }
     };
 
