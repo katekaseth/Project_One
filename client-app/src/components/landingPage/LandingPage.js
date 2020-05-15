@@ -44,5 +44,6 @@ const useStyles = makeStyles({
     },
     title: {
         color: 'white',
+        textShadow: '1px 1px 2px #000000',
     },
 });

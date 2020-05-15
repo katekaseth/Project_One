@@ -5,6 +5,7 @@ import academicIcon from './icons/svg/academicIcon.svg';
 import humanResourcesIcon from './icons/svg/humanResourcesIcon.svg';
 import servicesIcon from './icons/svg/servicesIcon.svg';
 
+
 export const API = {
     URL: 'https://api.katekaseth.me/',
     LOGIN: 'sessions',
