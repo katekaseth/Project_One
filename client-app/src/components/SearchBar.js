@@ -3,7 +3,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, InputBase, Paper, Typography } from '@material-ui/core';
 
-export function SearchBar({ redirect, updateSearchTerms, searchedTerms }) {
+export function SearchBar({ redirect, updateSearchTerms, searchedTerms, isBookmark}) {
     const classes = useStyles();
     const textInput = useRef(null);
 
@@ -40,7 +40,7 @@ export function SearchBar({ redirect, updateSearchTerms, searchedTerms }) {
                 <InputBase
                     ref={textInput}
                     classes={classes}
-                    placeholder='Hit enter to search...'
+                    placeholder={isBookmark ? 'Hit enter to search your bookmarks...' : 'Hit enter to search...'}
                     className='search-input'
                     label='search'
                     defaultValue={searchedTerms.length ? searchedTerms : ''}
