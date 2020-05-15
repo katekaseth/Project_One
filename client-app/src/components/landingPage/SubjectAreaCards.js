@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
 
 import { SubjectAreaCard } from './SubjectAreaCard';
 import { SUBJECT_AREA_ICONS } from '../../stringConstants';
@@ -11,7 +10,6 @@ export function SubjectAreaCards({ setPage, setSelectedSubject }) {
         setSelectedSubject(filterKey);
         setPage.search();
     };
-    const classes = useStyles();
     return (
         <Grid container xs={10} justify='center'>
             {Object.keys(SUBJECT_AREA_ICONS).map(filterKey => {
@@ -27,7 +25,7 @@ export function SubjectAreaCards({ setPage, setSelectedSubject }) {
                 );
             })}
             <Grid item >
-                 <SubjectAreaCard className={classes.bookmarkCard}
+                 <SubjectAreaCard 
                     onClick={() => setPage.bookmarks()}
                     title={"Bookmarks"}
                     icon={bookmarkIcon}
@@ -37,9 +35,3 @@ export function SubjectAreaCards({ setPage, setSelectedSubject }) {
         </Grid>
     );
 }
-
-const useStyles = makeStyles({
-    bookmarkCard: {
-        backgroundColor: "#f2d9ff",
-    },
-});
