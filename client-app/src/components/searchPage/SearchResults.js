@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
@@ -27,7 +27,10 @@ export const SearchResults = ({ setPage, results, alertError }) => {
             {numOfPages > 1 && (
                 <Pagination
                     className={classes.pagination}
-                    onChange={(e, value) => setPagination(value)}
+                    onChange={(e, value) => {
+                        setPagination(value);
+                        window.scrollTo(0, 0);
+                    }}
                     count={numOfPages}
                 />
             )}
