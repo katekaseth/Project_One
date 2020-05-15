@@ -4,6 +4,8 @@ import (
 	"Project_One/server/gateway/handlers"
 	"Project_One/server/gateway/sessions"
 	"Project_One/server/gateway/users"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +13,7 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
+	"github.com/olivere/elastic"
 )
 
 func main() {
@@ -47,7 +50,37 @@ func main() {
 	})
 	sessionStore := sessions.NewRedisStore(client, time.Hour*9)
 
+	// set up elastic search
+	elasticsearchAddr := os.Getenv("ESADDR")
+	if len(elasticsearchAddr) == 0 {
+		elasticsearchAddr = "http://localhost:9200"
+	}
+	var elasticClient *elastic.Client
+	for {
+		elasticClient, err = elastic.NewClient(
+			elastic.SetURL(elasticsearchAddr),
+			elastic.SetSniff(false),
+		)
+		if err != nil {
+			log.Println(err)
+			time.Sleep(3 * time.Second)
+		} else {
+			// Ping ES and print version number
+			context := context.Background()
+			info, code, err := elasticClient.Ping(elasticsearchAddr).Do(context)
+			if err != nil {
+				log.Println(err)
+			}
+			fmt.Printf("Elasticsearch returned with code %d and version %s\n", code, info.Version.Number)
+			break
+		}
+	}
+
 	ctx := handlers.NewHandlerContext(signingKey, sessionStore, userStore)
+	err = ctx.PopulateElasticSearch(elasticClient)
+	if err != nil {
+		log.Fatalf("can't insert into elasticsearch: %s", err)
+	}
 
 	router := mux.NewRouter()
 	router.HandleFunc("/users", ctx.UsersHandler)
@@ -74,6 +107,5 @@ func main() {
 	} else {
 		log.Printf("server is now online at %s...", addr)
 		log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
-
 	}
 }

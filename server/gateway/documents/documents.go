@@ -74,3 +74,11 @@ type Bookmark struct {
 type DocumentRequest struct {
 	DocumentIDs []int `json:"documentIDs"`
 }
+
+// ElasticDocument represents a document stored in ElasticSearch.
+type ElasticDocument struct {
+	DocumentID  int       `json:"documentID"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created"`
+}

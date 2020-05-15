@@ -4,7 +4,6 @@ import (
 	"Project_One/server/gateway/documents"
 	"Project_One/server/gateway/sessions"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -206,7 +205,6 @@ func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Reques
 	dec := json.NewDecoder(r.Body)
 	err = dec.Decode(docRequest)
 	if err != nil {
-		log.Printf("here 1")
 		http.Error(w, "Bad request body", http.StatusInternalServerError)
 		return
 	}
@@ -215,8 +213,6 @@ func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Reques
 	// if there are no filters, return all bookmarks
 	documents, err = ctx.UserStore.GetRequestedDocuments(docRequest.DocumentIDs)
 	if err != nil {
-		log.Printf("here 2")
-
 		http.Error(w, "Error getting documents", http.StatusInternalServerError)
 		return
 	}
@@ -224,8 +220,6 @@ func (ctx *HandlerContext) DocumentHandler(w http.ResponseWriter, r *http.Reques
 	// add bookmarked field
 	bookmarkedIDs, err := ctx.UserStore.GetBookmarkedDocumentID(userID)
 	if err != nil {
-		log.Printf("here 3")
-
 		http.Error(w, "Error getting documents", http.StatusInternalServerError)
 		return
 	}

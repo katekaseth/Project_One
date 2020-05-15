@@ -103,6 +103,25 @@ func (ms *MySQLStore) GetAllDocuments() ([]documents.DocumentSummary, error) {
 	return allDocuments, nil
 }
 
+//GetAllElasticDocuments returns an array of ElasticDocument of all available documents.
+func (ms *MySQLStore) GetAllElasticDocuments() ([]documents.ElasticDocument, error) {
+	stmt := "SELECT document_id, title, description FROM documents"
+	allDocuments := []documents.ElasticDocument{}
+	rows, err := ms.Db.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var doc documents.ElasticDocument
+		err := rows.Scan(&doc.DocumentID, &doc.Title, &doc.Description)
+		if err != nil {
+			return nil, err
+		}
+		allDocuments = append(allDocuments, doc)
+	}
+	return allDocuments, nil
+}
+
 // Returns a string that queries the given termList and filterType.
 func addFilterQuery(termList []string, filterType string, currentStmt string) string {
 	var stmt string

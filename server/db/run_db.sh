@@ -13,3 +13,8 @@ kateks/capstone_store
 # runs local redisServer
 docker rm -f redisServer
 docker run -d -p 6379:6379 --name redisServer redis
+
+# runs local elastic search 
+docker rm -f elasticsearch
+docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --name elasticsearch docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+
